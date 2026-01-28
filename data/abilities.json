@@ -12,7 +12,7 @@
   "rapid-fire": {
     "name": "Rapid Fire",
     "type": "Weapon Ability",
-    "description": "<strong>+'x' to attacks</strong> when targeting units within <strong>half range</strong>."
+    "description": "<strong>+X to attacks</strong> when targeting units within <strong>half range</strong>."
   },
   "ignores-cover": {
     "name": "Ignores Cover",
