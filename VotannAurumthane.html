@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Votann Army Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root{--gold:#D4A84B;--gold-bright:#F5D77A;--gold-dark:#8B6914;--bg:#0A0A0C;--bg2:#111116;--bg3:#18181E;--border:#2A2A35;--border-gold:#3D2E0A;--text:#E8E8EC;--text2:#9090A0;--text3:#9494A6;--red:#C94444;--blue:#4A8ED4;--green:#4AC978;--purple:#8B5CF6}
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:rgba(212,168,75,0.3)}
+        body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.4;padding-bottom:60px}
+        .header{background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem;position:sticky;top:0;z-index:100}
+        .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
+        .logo-title{font-family:'Orbitron',sans-serif;font-weight:700;font-size:1rem;color:var(--gold);letter-spacing:.05em}
+        .logo-sub{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--text3)}
+        .army-stats{display:flex;gap:1rem}
+        .stat-block{text-align:center}
+        .stat-value{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;color:var(--gold-bright)}
+        .stat-label{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em}
+        .det-banner{background:linear-gradient(90deg,rgba(212,168,75,.15),transparent);padding:.5rem .75rem;border-radius:4px;border-left:3px solid var(--gold);cursor:pointer;touch-action:manipulation}
+        .det-name{font-family:'Orbitron',sans-serif;font-size:.7rem;color:var(--gold);letter-spacing:.1em}
+        .det-brief{font-size:.65rem;color:var(--text2);margin-top:.2rem}
+        .container{padding:1rem}
+        .section{margin-bottom:1.5rem}
+        .section-header{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+        .section-icon{width:6px;height:6px;background:var(--gold);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%)}
+        .section-title{font-family:'Orbitron',sans-serif;font-size:.75rem;font-weight:500;color:var(--gold);letter-spacing:.15em;text-transform:uppercase}
+        .section-count{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--text3);margin-left:auto}
+        .unit-card{background:var(--bg3);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:1rem}
+        .unit-card.attached{border-color:var(--gold-dark);box-shadow:inset 0 0 0 1px var(--border-gold)}
+        .card-header{padding:.875rem 1rem;display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;border-bottom:1px solid var(--border);background:linear-gradient(90deg,rgba(212,168,75,.05),transparent)}
+        .unit-name{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:600;color:var(--text);letter-spacing:.03em}
+        .unit-type{font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-top:.2rem}
+        .unit-points{font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--gold);background:rgba(212,168,75,.1);padding:.25rem .6rem;border-radius:3px;white-space:nowrap}
+        .attached-banner{background:linear-gradient(90deg,var(--gold-dark),transparent);padding:.5rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid var(--border-gold)}
+        .attached-icon{width:14px;height:14px;border:2px solid var(--gold);border-radius:50%;position:relative}
+        .attached-icon::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:5px;height:5px;background:var(--gold);border-radius:50%}
+        .attached-text{font-size:.7rem;color:var(--gold-bright);text-transform:uppercase;letter-spacing:.1em}
+        .leader-bonus{background:linear-gradient(90deg,rgba(74,201,120,.1),transparent);border-left:3px solid var(--green);padding:.625rem .875rem;margin:.75rem;border-radius:0 4px 4px 0}
+        .bonus-label{font-size:.6rem;color:var(--green);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.2rem}
+        .bonus-text{font-size:.8rem;color:var(--text);font-weight:500}
+        .card-section{padding:.875rem 1rem;border-bottom:1px solid var(--border)}
+        .card-section:last-child{border-bottom:none}
+        .card-section.leader{background:linear-gradient(180deg,rgba(212,168,75,.03),transparent)}
+        .sec-label{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.625rem;display:flex;align-items:center;gap:.4rem}
+        .sec-label::before{content:'';width:10px;height:1px;background:var(--text3)}
+        .stats-row{display:flex;gap:.35rem;margin-bottom:.875rem;flex-wrap:wrap}
+        .stat{background:var(--bg2);padding:.35rem .5rem;border-radius:3px;text-align:center;min-width:42px;flex:1;max-width:60px}
+        .stat-n{font-size:.90rem;color:var(--text3);text-transform:uppercase;letter-spacing:.05em}
+        .stat-v{font-family:'Share Tech Mono',monospace;font-size:.9rem;color:var(--text);font-weight:600}
+        .stat.hl{background:rgba(212,168,75,.15);border:1px solid var(--border-gold)}
+        .stat.hl .stat-v{color:var(--gold-bright)}
+        .model-count{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--text3);margin-bottom:.625rem}
+        .model-count span{color:var(--text)}
+        .weapons{margin-bottom:.875rem}
+        .weapons-title{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+        .weapon{padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
+        .weapon:last-child{border-bottom:none}
+        .weapon-header{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-bottom:.4rem}
+        .weapon-name{color:var(--text);font-weight:500;font-size:.8rem}
+        .wtype{font-size:.5rem;padding:.12rem .3rem;border-radius:2px;text-transform:uppercase;font-weight:700}
+        .wtype.r{background:rgba(74,142,212,.3);color:var(--blue)}
+        .wtype.m{background:rgba(201,68,68,.3);color:var(--red)}
+        .weapon-stats-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin-top:.35rem}
+        .weapon-stats-grid.ranged{grid-template-columns:45px repeat(5,1fr)}
+        .ws{background:var(--bg2);padding:.25rem .2rem;border-radius:2px;text-align:center}
+        .ws-label{font-size:.90rem;color:var(--text3);text-transform:uppercase;letter-spacing:.02em;display:block}
+        .ws-val{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--text);font-weight:600}
+        .wabs{display:flex;flex-wrap:wrap;gap:.25rem;margin-top:.35rem}
+        .wab{font-size:.55rem;padding:.25rem .5rem;background:rgba(139,92,246,.2);color:var(--purple);border-radius:2px;text-transform:uppercase;cursor:pointer;border:none;font-family:inherit;touch-action:manipulation;min-height:28px;display:inline-flex;align-items:center}
+        .abilities{display:flex;flex-wrap:wrap;gap:.4rem}
+        .ab{font-size:.65rem;padding:.5rem .7rem;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3);color:var(--purple);border-radius:3px;text-transform:uppercase;letter-spacing:.03em;cursor:pointer;user-select:none;touch-action:manipulation;min-height:36px;display:inline-flex;align-items:center}
+        .ab.core{background:rgba(74,142,212,.15);border-color:rgba(74,142,212,.3);color:var(--blue)}
+        .ab.wg{background:rgba(212,168,75,.15);border-color:rgba(212,168,75,.3);color:var(--gold)}
+        .enh{display:inline-flex;align-items:center;gap:.3rem;font-size:.65rem;padding:.4rem .6rem;background:linear-gradient(90deg,rgba(212,168,75,.2),rgba(212,168,75,.1));border:1px solid var(--gold-dark);color:var(--gold-bright);border-radius:3px;margin-top:.5rem;cursor:pointer;touch-action:manipulation;min-height:36px}
+        .enh::before{content:'★';font-size:.55rem}
+        .total-wounds{display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;background:rgba(74,201,120,.05);border-top:1px solid var(--border)}
+        .tw-label{font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em}
+        .tw-val{font-family:'Share Tech Mono',monospace;font-size:.95rem;color:var(--green);font-weight:600}
+        .keywords{font-size:.6rem;color:var(--text3);padding:.625rem 1rem;background:var(--bg2);border-top:1px solid var(--border);line-height:1.5}
+        .warlord{display:inline-flex;font-size:.55rem;padding:.15rem .4rem;background:rgba(201,68,68,.2);border:1px solid rgba(201,68,68,.4);color:var(--red);border-radius:2px;text-transform:uppercase;letter-spacing:.05em;margin-left:.4rem;vertical-align:middle}
+        #modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.9);z-index:9999;display:none;justify-content:center;align-items:flex-end;padding:1rem}
+        #modal.show{display:flex}
+        .modal-content{background:var(--bg3);border:1px solid var(--border-gold);border-radius:12px 12px 0 0;width:100%;max-width:500px;max-height:70vh;overflow-y:auto}
+        .modal-header{padding:1rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--bg3)}
+        .modal-title{font-family:'Orbitron',sans-serif;font-size:.9rem;color:var(--gold);letter-spacing:.05em}
+        .modal-close{width:44px;height:44px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation}
+        .modal-body{padding:1rem}
+        .modal-type{font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+        .modal-desc{font-size:.9rem;color:var(--text);line-height:1.7}
+        .modal-desc strong{color:var(--gold-bright)}
+        footer{text-align:center;padding:1.5rem 1rem;color:var(--text3);font-size:.65rem;border-top:1px solid var(--border)}
+        @media(min-width:768px){.container{max-width:800px;margin:0 auto;padding:1.5rem}#modal{align-items:center}.modal-content{border-radius:12px;max-height:60vh}}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <div><div class="logo-title">LEAGUES OF VOTANN</div><div class="logo-sub">STRIKE FORCE // HEARTHBAND</div></div>
+            <div class="army-stats"><div class="stat-block"><div class="stat-value">2000</div><div class="stat-label">Points</div></div><div class="stat-block"><div class="stat-value">16</div><div class="stat-label">Units</div></div></div>
+        </div>
+        <div class="det-banner tappable" data-ab="methodical-annihilation"><div class="det-name">HEARTHBAND — METHODICAL ANNIHILATION</div><div class="det-brief">Tap for details</div></div>
+    </header>
+    <main class="container">
+        <section class="section">
+            <div class="section-header"><div class="section-icon"></div><div class="section-title">Attached Units</div><div class="section-count">4</div></div>
+
+            <div class="unit-card attached">
+                <div class="attached-banner"><div class="attached-icon"></div><div class="attached-text">Attached • Deep Strike</div></div>
+                <div class="leader-bonus"><div class="bonus-label">Leader Bonus</div><div class="bonus-text">LETHAL HITS • Deep Strike</div></div>
+                <div class="card-section leader">
+                    <div class="sec-label">Leader</div>
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem"><div><div class="unit-name">Kâhl</div><div class="unit-type">Character • Infantry</div></div><div class="unit-points">80 pts</div></div>
+                    <div class="model-count">Models: <span>1</span></div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">3+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">4</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Volkanite disintegrator</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">2+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">5</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="devastating-wounds">Dev. Wounds</button></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype m">M</span><span class="weapon-name">Mass gauntlet</span></div>
+                            <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">8</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-3</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">3</span></div></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab wg tappable" data-ab="teleport-crest">Teleport Crest</span><span class="ab tappable" data-ab="kindred-hero">Kindred Hero</span></div>
+                    <div class="enh tappable" data-ab="quake-multigenerator">Quake Multigenerator</div>
+                </div>
+                <div class="card-section">
+                    <div class="sec-label">Bodyguard</div>
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem"><div><div class="unit-name">Einhyr Hearthguard</div><div class="unit-type">Infantry • Exoarmour</div></div><div class="unit-points">135 pts</div></div>
+                    <div class="model-count">Models: <span>5</span> (1 Hesyr + 4 Hearthguard)</div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">2+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">2</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">EtaCarn plasma gun</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">7</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-3</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="rapid-fire">Rapid Fire 1</button></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype m">M</span><span class="weapon-name">Concussion gauntlet (×4)</span></div>
+                            <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">2</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">8</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-2</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype m">M</span><span class="weapon-name">Graviton hammer (Hesyr)</span></div>
+                            <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">9</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-1</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">3</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="anti-vehicle">Anti-Vehicle 3+</button></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab wg tappable" data-ab="weavefield-crest">Weavefield Crest</span><span class="ab tappable" data-ab="decisive-destruction">Decisive Destruction</span></div>
+                </div>
+                <div class="total-wounds"><div class="tw-label">Total Wounds:</div><div class="tw-val">14 (4 + 10)</div></div>
+                <div class="keywords">INFANTRY, EXOARMOUR, EINHYR HEARTHGUARD, KÂHL, CHARACTER</div>
+            </div>
+
+            <div class="unit-card attached">
+                <div class="attached-banner"><div class="attached-icon"></div><div class="attached-text">Attached • Deep Strike</div></div>
+                <div class="leader-bonus"><div class="bonus-label">Leader Bonus</div><div class="bonus-text">+1 Advance & Charge • Deep Strike</div></div>
+                <div class="card-section leader">
+                    <div class="sec-label">Leader</div>
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem"><div><div class="unit-name">Einhyr Champion</div><div class="unit-type">Character • Infantry • Exoarmour</div></div><div class="unit-points">95 pts</div></div>
+                    <div class="model-count">Models: <span>1</span></div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">2+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Autoch-pattern combi-bolter</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">2+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype m">M</span><span class="weapon-name">Mass hammer</span></div>
+                            <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">12</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-3</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">D6+1</span></div></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab wg tappable" data-ab="teleport-crest">Teleport Crest</span><span class="ab tappable" data-ab="exemplar-of-the-einhyr">Exemplar of the Einhyr</span><span class="ab tappable" data-ab="mass-driver-accelerators">Mass Driver Accelerators</span></div>
+                    <div class="enh tappable" data-ab="bastion-shield">Bastion Shield</div>
+                </div>
+                <div class="card-section">
+                    <div class="sec-label">Bodyguard</div>
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem"><div><div class="unit-name">Einhyr Hearthguard</div><div class="unit-type">Infantry • Exoarmour</div></div><div class="unit-points">135 pts</div></div>
+                    <div class="model-count">Models: <span>5</span> (1 Hesyr + 4 Hearthguard)</div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">2+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">2</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">EtaCarn plasma gun</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">7</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-3</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="rapid-fire">Rapid Fire 1</button></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype m">M</span><span class="weapon-name">Concussion gauntlet (×4)</span></div>
+                            <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">2</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">8</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-2</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype m">M</span><span class="weapon-name">Graviton hammer (Hesyr)</span></div>
+                            <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">9</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-1</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">3</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="anti-vehicle">Anti-Vehicle 3+</button></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab wg tappable" data-ab="weavefield-crest">Weavefield Crest</span><span class="ab tappable" data-ab="decisive-destruction">Decisive Destruction</span></div>
+                </div>
+                <div class="total-wounds"><div class="tw-label">Total Wounds:</div><div class="tw-val">15 (5 + 10)</div></div>
+                <div class="keywords">INFANTRY, EXOARMOUR, EINHYR HEARTHGUARD, EINHYR CHAMPION, CHARACTER</div>
+            </div>
+            <div class="unit-card attached">
+                <div class="attached-banner"><div class="attached-icon"></div><div class="attached-text">Attached Unit</div></div>
+                <div class="leader-bonus"><div class="bonus-label">Leader Bonus</div><div class="bonus-text">5+ Invulnerable Save • 1CP discount 1/round</div></div>
+                <div class="card-section leader">
+                    <div class="sec-label">Leader</div>
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem"><div><div class="unit-name">Ûthar the Destined<span class="warlord">Epic Hero</span></div><div class="unit-type">Character • Infantry • Kâhl</div></div><div class="unit-points">95 pts</div></div>
+                    <div class="model-count">Models: <span>1</span></div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">3+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">6+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div><div class="stat hl"><div class="stat-n">Inv</div><div class="stat-v">4+</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Volkanite disintegrator</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">2+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">5</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="devastating-wounds">Dev. Wounds</button></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype m">M</span><span class="weapon-name">Blade of the Ancestors</span></div>
+                            <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">5</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">2+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">6</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-3</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="devastating-wounds">Dev. Wounds</button></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab wg tappable" data-ab="rampart-crest">Rampart Crest</span><span class="ab tappable" data-ab="ancestral-fortune">Ancestral Fortune</span><span class="ab tappable" data-ab="grim-efficiency">Grim Efficiency</span></div>
+                </div>
+                <div class="card-section">
+                    <div class="sec-label">Bodyguard</div>
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem"><div><div class="unit-name">Hearthkyn Warriors</div><div class="unit-type">Infantry • Battleline</div></div><div class="unit-points">50 pts</div></div>
+                    <div class="model-count">Models: <span>5</span> (split from 10)</div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">4+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">1</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">2</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Autoch-pattern bolter (×3)</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">2</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">L7 missile launcher (blast)</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">D6</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="blast">Blast</button></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">L7 missile launcher (focused)</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">9</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-2</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">D6</span></div></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Magna-rail rifle</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">18"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">5+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">12</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-3</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">D3+3</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="devastating-wounds">Dev. Wounds</button><button class="wab tappable" data-ab="heavy">Heavy</button></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab core tappable" data-ab="feel-no-pain">Feel No Pain 6+</span><span class="ab tappable" data-ab="panspectral-scanning">Panspectral Scanning</span></div>
+                </div>
+                <div class="total-wounds"><div class="tw-label">Total Wounds:</div><div class="tw-val">10 (5 + 5)</div></div>
+                <div class="keywords">INFANTRY, BATTLELINE, GRENADES, HEARTHKYN WARRIORS, KÂHL, CHARACTER, EPIC HERO</div>
+            </div>
+
+            <div class="unit-card attached">
+                <div class="attached-banner"><div class="attached-icon"></div><div class="attached-text">Attached Unit</div></div>
+                <div class="leader-bonus"><div class="bonus-label">Leader Bonus</div><div class="bonus-text">Re-roll Wound rolls of 1 (ranged)</div></div>
+                <div class="card-section leader">
+                    <div class="sec-label">Leader</div>
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem"><div><div class="unit-name">Brôkhyr Iron-master</div><div class="unit-type">Character • Infantry • Brôkhyr</div></div><div class="unit-points">85 pts</div></div>
+                    <div class="model-count">Models: <span>5</span> (Iron-master, Ironkin, 3 E-COGs)</div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">4+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">4+2</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Graviton rifle</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">18"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">5</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-1</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">3</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="anti-vehicle">Anti-Vehicle 3+</button></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype m">M</span><span class="weapon-name">Graviton hammer</span></div>
+                            <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">9</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-1</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">3</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="anti-vehicle">Anti-Vehicle 3+</button></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab tappable" data-ab="multispectral-visor">Multispectral Visor</span><span class="ab tappable" data-ab="forgewrought-expertise">Forgewrought Expertise</span></div>
+                    <div class="enh tappable" data-ab="ironskein">Ironskein</div>
+                </div>
+                <div class="card-section">
+                    <div class="sec-label">Bodyguard</div>
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem"><div><div class="unit-name">Brôkhyr Thunderkyn</div><div class="unit-type">Infantry • Exoframe</div></div><div class="unit-points">160 pts</div></div>
+                    <div class="model-count">Models: <span>6</span></div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">6</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">3+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">2</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Graviton blast cannon (×6)</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">5</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-2</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">3</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="anti-vehicle">Anti-Vehicle 3+</button></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab tappable" data-ab="breaching-fire">Breaching Fire</span></div>
+                </div>
+                <div class="total-wounds"><div class="tw-label">Total Wounds:</div><div class="tw-val">18 (6 + 12)</div></div>
+                <div class="keywords">INFANTRY, EXOFRAME, BRÔKHYR, THUNDERKYN, IRON-MASTER, CHARACTER</div>
+            </div>
+        </section>
+        <section class="section">
+            <div class="section-header"><div class="section-icon"></div><div class="section-title">Characters</div><div class="section-count">1</div></div>
+            <div class="unit-card">
+                <div class="card-header"><div><div class="unit-name">Buri Aegnirssen<span class="warlord">Warlord</span></div><div class="unit-type">Character • Epic Hero • Lone Operative</div></div><div class="unit-points">95 pts</div></div>
+                <div class="card-section">
+                    <div class="model-count">Models: <span>1</span></div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">6</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">3+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">6+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div><div class="stat hl"><div class="stat-n">Inv</div><div class="stat-v">4+</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Autoch-pattern bolt pistol</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">12"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">2+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="pistol">Pistol</button></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype m">M</span><span class="weapon-name">Bane – strike</span></div>
+                            <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">5</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">2+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">12</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-3</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">3</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="precision">Precision</button></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype m">M</span><span class="weapon-name">Bane – sweep</span></div>
+                            <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">10</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">2+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">6</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-2</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab core tappable" data-ab="lone-operative">Lone Operative</span><span class="ab core tappable" data-ab="stealth">Stealth</span><span class="ab tappable" data-ab="grudge-fuelled-fortitude">Grudge-fuelled Fortitude</span><span class="ab tappable" data-ab="unhinged-vengeance">Unhinged Vengeance</span></div>
+                </div>
+                <div class="keywords">INFANTRY, CHARACTER, EPIC HERO, BURI AEGNIRSSEN</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header"><div class="section-icon"></div><div class="section-title">Infantry</div><div class="section-count">5</div></div>
+
+            <div class="unit-card">
+                <div class="card-header"><div><div class="unit-name">Hearthkyn Warriors</div><div class="unit-type">Infantry • Battleline • In Sagitaur</div></div><div class="unit-points">50 pts</div></div>
+                <div class="card-section">
+                    <div class="model-count">Models: <span>5</span> (1 Theyn + 4 Warriors)</div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">4+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">1</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">2</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Autoch-pattern bolter (×5)</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">2</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab core tappable" data-ab="feel-no-pain">Feel No Pain 6+</span><span class="ab wg tappable" data-ab="weavefield-crest">Weavefield Crest</span><span class="ab tappable" data-ab="panspectral-scanning">Panspectral Scanning</span></div>
+                </div>
+                <div class="keywords">INFANTRY, BATTLELINE, GRENADES, HEARTHKYN WARRIORS</div>
+            </div>
+
+            <div class="unit-card">
+                <div class="card-header"><div><div class="unit-name">Brôkhyr Thunderkyn</div><div class="unit-type">Infantry • Exoframe</div></div><div class="unit-points">80 pts</div></div>
+                <div class="card-section">
+                    <div class="model-count">Models: <span>3</span></div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">6</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">3+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">2</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">SP conversion beamer (×3)</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">2</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">7</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-2</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">3</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="conversion">Conversion</button><button class="wab tappable" data-ab="lethal-hits">Lethal Hits</button></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab tappable" data-ab="breaching-fire">Breaching Fire</span></div>
+                </div>
+                <div class="keywords">INFANTRY, EXOFRAME, BRÔKHYR, THUNDERKYN</div>
+            </div>
+
+            <div class="unit-card">
+                <div class="card-header"><div><div class="unit-name">Hernkyn Yaegirs</div><div class="unit-type">Infantry • Hernkyn</div></div><div class="unit-points">90 pts</div></div>
+                <div class="card-section">
+                    <div class="model-count">Models: <span>10</span></div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">6"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">4+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">1</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Bolt revolver (×8)</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">9"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">5</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="pistol">Pistol</button></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">APM launcher</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">18"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">9</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-3</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">3</span></div></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Magna-coil rifle</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">5+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">7</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-2</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">3</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="heavy">Heavy</button><button class="wab tappable" data-ab="precision">Precision</button></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype m">M</span><span class="weapon-name">Plasma knife (×8)</span></div>
+                            <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">2</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-2</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab core tappable" data-ab="infiltrators">Infiltrators</span><span class="ab core tappable" data-ab="scouts">Scouts 6"</span></div>
+                </div>
+                <div class="keywords">INFANTRY, GRENADES, HERNKYN, YAEGIRS</div>
+            </div>
+
+            <div class="unit-card">
+                <div class="card-header"><div><div class="unit-name">Ironkin Steeljacks</div><div class="unit-type">Infantry • Volkanite</div></div><div class="unit-points">85 pts</div></div>
+                <div class="card-section">
+                    <div class="model-count">Models: <span>3</span></div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">7</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">3+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">3</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">2</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Heavy volkanite disintegrator (×3)</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">30"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">6</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="devastating-wounds">Dev. Wounds</button></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab wg tappable" data-ab="preymark-crest">Preymark Crest</span></div>
+                </div>
+                <div class="keywords">INFANTRY, IRONKIN, STEELJACKS</div>
+            </div>
+
+            <div class="unit-card">
+                <div class="card-header"><div><div class="unit-name">Ironkin Steeljacks</div><div class="unit-type">Infantry • Melee</div></div><div class="unit-points">85 pts</div></div>
+                <div class="card-section">
+                    <div class="model-count">Models: <span>3</span></div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">7</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">3+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">3</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">2</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Autoch-pattern bolter (×3)</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">2</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype m">M</span><span class="weapon-name">Plasma sword (×3)</span></div>
+                            <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">6</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-2</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab wg tappable" data-ab="preymark-crest">Preymark Crest</span></div>
+                </div>
+                <div class="keywords">INFANTRY, IRONKIN, STEELJACKS</div>
+            </div>
+        </section>
+        <section class="section">
+            <div class="section-header"><div class="section-icon"></div><div class="section-title">Vehicles</div><div class="section-count">4</div></div>
+
+            <div class="unit-card">
+                <div class="card-header"><div><div class="unit-name">Hekaton Land Fortress</div><div class="unit-type">Vehicle • Transport (12)</div></div><div class="unit-points">240 pts</div></div>
+                <div class="card-section">
+                    <div class="model-count">Models: <span>1</span></div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">10"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">12</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">2+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">16</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">5</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Heavy magna-rail cannon</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">30"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">2</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">18</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-4</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">D6+4</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="devastating-wounds">Dev. Wounds</button><button class="wab tappable" data-ab="heavy">Heavy</button></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">MATR autocannon</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">6</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">7</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-1</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="assault">Assault</button><button class="wab tappable" data-ab="sustained-hits">Sustained 1</button></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Twin bolt cannon (×2)</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">36"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">6</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-1</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="sustained-hits">Sustained 2</button><button class="wab tappable" data-ab="twin-linked">Twin-linked</button></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab core tappable" data-ab="deadly-demise">Deadly Demise D6</span><span class="ab wg tappable" data-ab="panspectral-scanner">Panspectral Scanner</span><span class="ab tappable" data-ab="fire-support">Fire Support</span></div>
+                </div>
+                <div class="keywords">VEHICLE, TRANSPORT, HEKATON LAND FORTRESS</div>
+            </div>
+
+            <div class="unit-card">
+                <div class="card-header"><div><div class="unit-name">Hekaton Land Fortress</div><div class="unit-type">Vehicle • Transport (12)</div></div><div class="unit-points">240 pts</div></div>
+                <div class="card-section">
+                    <div class="model-count">Models: <span>1</span></div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">10"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">12</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">2+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">16</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">5</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Heavy magna-rail cannon</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">30"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">2</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">18</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-4</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">D6+4</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="devastating-wounds">Dev. Wounds</button><button class="wab tappable" data-ab="heavy">Heavy</button></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">MATR autocannon</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">6</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">7</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-1</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="assault">Assault</button><button class="wab tappable" data-ab="sustained-hits">Sustained 1</button></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Twin bolt cannon (×2)</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">36"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">6</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-1</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="sustained-hits">Sustained 2</button><button class="wab tappable" data-ab="twin-linked">Twin-linked</button></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab core tappable" data-ab="deadly-demise">Deadly Demise D6</span><span class="ab wg tappable" data-ab="panspectral-scanner">Panspectral Scanner</span><span class="ab tappable" data-ab="fire-support">Fire Support</span></div>
+                </div>
+                <div class="keywords">VEHICLE, TRANSPORT, HEKATON LAND FORTRESS</div>
+            </div>
+
+            <div class="unit-card">
+                <div class="card-header"><div><div class="unit-name">Sagitaur</div><div class="unit-type">Vehicle • Transport (6)</div></div><div class="unit-points">90 pts</div></div>
+                <div class="card-section">
+                    <div class="model-count">Models: <span>1</span></div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">12"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">9</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">3+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">9</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">2</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">HYLas beam cannon</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">2</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">12</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-3</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">D6+1</span></div></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Twin bolt cannon</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">36"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">6</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-1</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="sustained-hits">Sustained 2</button><button class="wab tappable" data-ab="twin-linked">Twin-linked</button></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab core tappable" data-ab="deadly-demise">Deadly Demise 1</span><span class="ab tappable" data-ab="blistering-advance">Blistering Advance</span></div>
+                </div>
+                <div class="keywords">VEHICLE, TRANSPORT, DEDICATED TRANSPORT, SAGITAUR</div>
+            </div>
+
+            <div class="unit-card">
+                <div class="card-header"><div><div class="unit-name">Kapricus Carrier</div><div class="unit-type">Vehicle • Fly • Transport (5 Yaegirs)</div></div><div class="unit-points">75 pts</div></div>
+                <div class="card-section">
+                    <div class="model-count">Models: <span>1</span></div>
+                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">12"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">7</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">4+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">7</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">2</div></div></div>
+                    <div class="weapons"><div class="weapons-title">Weapons</div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Magna-coil autocannon</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">7</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-1</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
+                        </div>
+                        <div class="weapon">
+                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Twin magna-coil autocannon</span></div>
+                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">7</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-1</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
+                            <div class="wabs"><button class="wab tappable" data-ab="twin-linked">Twin-linked</button></div>
+                        </div>
+                    </div>
+                    <div class="abilities"><span class="ab core tappable" data-ab="deadly-demise">Deadly Demise 1</span><span class="ab core tappable" data-ab="firing-deck">Firing Deck 5</span><span class="ab core tappable" data-ab="scouts">Scouts 9"</span><span class="ab tappable" data-ab="scanner-uplinks">Scanner Uplinks</span></div>
+                </div>
+                <div class="keywords">VEHICLE, FLY, TRANSPORT, DEDICATED TRANSPORT, HERNKYN, KAPRICUS, CARRIER</div>
+            </div>
+        </section>
+    </main>
+    <footer>LEAGUES OF VOTANN — HEARTHBAND<br><span style="color:var(--gold);">2000 POINTS</span> • STRIKE FORCE</footer>
+
+    <div id="modal">
+        <div class="modal-content">
+            <div class="modal-header"><div class="modal-title" id="mtitle"></div><button class="modal-close" id="mclose">×</button></div>
+            <div class="modal-body"><div class="modal-type" id="mtype"></div><div class="modal-desc" id="mdesc"></div></div>
+        </div>
+    </div>
+    <script>
+const A={
+'methodical-annihilation':{n:'Methodical Annihilation',t:'Detachment Rule — Hearthband',d:'Each time a LEAGUES OF VOTANN model makes an attack targeting the <strong>closest eligible target</strong> or within <strong>Engagement Range</strong>:<br><br>• <strong>Re-roll Wound roll of 1</strong><br><br>While led by KÂHL, ÛTHAR, or EINHYR CHAMPION: <strong>+1 AP</strong> vs closest target.'},
+'devastating-wounds':{n:'Devastating Wounds',t:'Weapon Ability',d:'Critical Wounds cause <strong>mortal wounds</strong> equal to Damage, then attack sequence ends.'},
+'lethal-hits':{n:'Lethal Hits',t:'Weapon Ability',d:'Critical Hits <strong>automatically wound</strong>.'},
+'rapid-fire':{n:'Rapid Fire',t:'Weapon Ability',d:'At <strong>half range</strong>, add the number to Attacks.'},
+'blast':{n:'Blast',t:'Weapon Ability',d:'<strong>+1 Attack per 5 models</strong> in target. Cannot target units in Engagement Range of friendlies.'},
+'heavy':{n:'Heavy',t:'Weapon Ability',d:'If unit <strong>Remained Stationary</strong>, <strong>+1 to Hit</strong>.'},
+'assault':{n:'Assault',t:'Weapon Ability',d:'Can shoot after <strong>Advancing</strong>.'},
+'pistol':{n:'Pistol',t:'Weapon Ability',d:'Can shoot in <strong>Engagement Range</strong>, must target engaged enemies.'},
+'precision':{n:'Precision',t:'Weapon Ability',d:'On Critical Hit vs Attached unit, can <strong>target Character</strong>.'},
+'sustained-hits':{n:'Sustained Hits',t:'Weapon Ability',d:'Critical Hits score <strong>extra hits</strong> equal to number.'},
+'twin-linked':{n:'Twin-linked',t:'Weapon Ability',d:'<strong>Re-roll Wound roll</strong>.'},
+'anti-vehicle':{n:'Anti-Vehicle 3+',t:'Weapon Ability',d:'Against <strong>VEHICLE</strong>, Wound 3+ = <strong>Critical Wound</strong>.'},
+'conversion':{n:'Conversion',t:'Weapon Ability',d:'At <strong>12"+</strong>, Hit 4+ = <strong>Critical Hit</strong>.'},
+'feel-no-pain':{n:'Feel No Pain',t:'Core Ability',d:'When losing a wound, roll D6. On value+, <strong>wound not lost</strong>.'},
+'lone-operative':{n:'Lone Operative',t:'Core Ability',d:'Only targetable by ranged if attacker <strong>within 12"</strong>.'},
+'stealth':{n:'Stealth',t:'Core Ability',d:'Ranged attacks: <strong>-1 to Hit</strong>.'},
+'deadly-demise':{n:'Deadly Demise',t:'Core Ability',d:'When destroyed, on 6: units in 6" take <strong>mortal wounds</strong> = value.'},
+'infiltrators':{n:'Infiltrators',t:'Core Ability',d:'Deploy <strong>9"+ from enemy zone</strong> and models.'},
+'scouts':{n:'Scouts',t:'Core Ability',d:'Before first turn, <strong>Normal move</strong> up to distance. End 9"+ from enemies.'},
+'firing-deck':{n:'Firing Deck',t:'Core Ability',d:'Embarked models (up to #) can <strong>shoot from transport</strong>.'},
+'teleport-crest':{n:'Teleport Crest',t:'Wargear',d:'Unit gains <strong>Deep Strike</strong>. Deploy 9"+ from enemies.'},
+'rampart-crest':{n:'Rampart Crest',t:'Wargear',d:'Unit has <strong>5+ invulnerable save</strong>.'},
+'weavefield-crest':{n:'Weavefield Crest',t:'Wargear',d:'Unit has <strong>5+ invulnerable save</strong>.'},
+'panspectral-scanner':{n:'Panspectral Scanner',t:'Wargear',d:'Attacks ignore target\'s <strong>Stealth</strong>.'},
+'preymark-crest':{n:'Preymark Crest',t:'Wargear',d:'Enemy Reinforcements cannot deploy <strong>within 12"</strong>.'},
+'kindred-hero':{n:'Kindred Hero',t:'Leader — Kâhl',d:'While leading, weapons have <strong>LETHAL HITS</strong>.'},
+'exemplar-of-the-einhyr':{n:'Exemplar of the Einhyr',t:'Leader',d:'While leading, <strong>+1 Advance & Charge</strong>.'},
+'mass-driver-accelerators':{n:'Mass Driver Accelerators',t:'Ability',d:'After Charge, one enemy in Engagement: D6: <strong>2-5 = D3 MW</strong>, <strong>6 = D3+3 MW</strong>.'},
+'ancestral-fortune':{n:'Ancestral Fortune',t:'Ability — Ûthar',d:'1/turn, spend <strong>1YP</strong> to change Hit/Wound/Save to <strong>unmodified 6</strong>.'},
+'grim-efficiency':{n:'Grim Efficiency',t:'Ability — Ûthar',d:'1/round, friendly within 12" using Stratagem: <strong>-1CP cost</strong>.'},
+'decisive-destruction':{n:'Decisive Destruction',t:'Ability',d:'Ranged vs <strong>closest target</strong>: <strong>re-roll Hit 1</strong>.'},
+'multispectral-visor':{n:'Multispectral Visor',t:'Ability',d:'Ranged: <strong>re-roll Wound 1</strong>.'},
+'forgewrought-expertise':{n:'Forgewrought Expertise',t:'Ability',d:'End of Move: Repair VEHICLE/EXOFRAME/STEELJACKS in 3" for <strong>D3 wounds</strong> (3 if Ironkin alive).'},
+'breaching-fire':{n:'Breaching Fire',t:'Ability',d:'After shooting, one hit enemy <strong>loses Cover</strong> until next Shooting.'},
+'panspectral-scanning':{n:'Panspectral Scanning',t:'Ability',d:'Ranged: <strong>re-roll Hit 1</strong>.'},
+'grudge-fuelled-fortitude':{n:'Grudge-fuelled Fortitude',t:'Ability',d:'First time destroyed, end of phase, D6: <strong>2+ = return full wounds</strong>.'},
+'unhinged-vengeance':{n:'Unhinged Vengeance',t:'Ability',d:'Opponent Shooting, if wounded: move <strong>D6+2"</strong> toward nearest enemy.'},
+'blistering-advance':{n:'Blistering Advance',t:'Ability',d:'Units can <strong>disembark after Advancing</strong> (Normal move, no charge).'},
+'fire-support':{n:'Fire Support',t:'Ability',d:'After shooting, one Infantry hit: friendly attacks vs them get <strong>+1 AP</strong>.'},
+'scanner-uplinks':{n:'Scanner Uplinks',t:'Ability',d:'After shooting, one non-Monster/Vehicle hit: <strong>-1 to Hit</strong> until next turn.'},
+'quake-multigenerator':{n:'Quake Multigenerator',t:'Enhancement (15 pts)',d:'Kâhl model only. In your Shooting phase, after the bearer has shot, select one enemy unit (excluding <strong>TITANIC</strong> units) hit by one or more of those attacks. <strong>Until the start of your next turn</strong>, that enemy unit is suppressed. While a unit is suppressed, each time a model in that unit makes an attack, <strong>subtract 1 from the Hit roll</strong>'},
+'bastion-shield':{n:'Bastion Shield',t:'Enhancement (25 pts)',d:'Ranged from within 12": <strong>worsen AP by 1</strong>.'},
+'ironskein':{n:'Ironskein',t:'Enhancement (10 pts)',d:'Bearer has <strong>+2 Wounds</strong>.'}
+};
+
+const modal = document.getElementById('modal');
+const mtitle = document.getElementById('mtitle');
+const mtype = document.getElementById('mtype');
+const mdesc = document.getElementById('mdesc');
+const mclose = document.getElementById('mclose');
+
+function showModal(id) {
+    const a = A[id];
+    if (!a) return;
+    mtitle.textContent = a.n;
+    mtype.textContent = a.t;
+    mdesc.innerHTML = a.d;
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function hideModal() {
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('click', function(e) {
+    const target = e.target.closest('[data-ab]');
+    if (target) {
+        e.preventDefault();
+        showModal(target.getAttribute('data-ab'));
+    }
+});
+
+mclose.addEventListener('click', hideModal);
+modal.addEventListener('click', function(e) {
+    if (e.target === modal) hideModal();
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') hideModal();
+});
+    </script>
+</body>
+</html>
