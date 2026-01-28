@@ -54,17 +54,23 @@
         .stat.hl .stat-v{color:var(--gold-bright)}
         .model-count{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--text3);margin-bottom:.625rem}
         .model-count span{color:var(--text)}
-        .invuln-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.875rem;padding:.4rem .6rem;background:rgba(212,168,75,.1);border:1px solid var(--border-gold);border-radius:3px;width:fit-content;cursor:pointer}
-        .invuln-row.inherited{background:rgba(74,201,120,.1);border:2px dashed var(--green)}
-        .invuln-label{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.05em}
-        .invuln-row.inherited .invuln-label{color:var(--green)}
-        .invuln-val{font-family:'Share Tech Mono',monospace;font-size:1rem;color:var(--gold-bright);font-weight:700}
-        .invuln-row.inherited .invuln-val{color:var(--green)}
-        .invuln-row.inherited::before{content:'🔗 ';font-size:.7rem}
+        .invuln-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.875rem;padding:.4rem .6rem;background:rgba(212,168,75,.25);border:1px solid var(--border-gold);border-radius:3px;width:fit-content;cursor:pointer}
+        .invuln-row.inherited{background:rgba(74,201,120,.25);border:2px dashed var(--green)}
+        .invuln-label{font-size:.6rem;color:var(--text);text-transform:uppercase;letter-spacing:.05em}
+        .invuln-row.inherited .invuln-label{color:var(--text)}
+        .invuln-val{font-family:'Share Tech Mono',monospace;font-size:1rem;color:var(--text);font-weight:700}
+        .invuln-row.inherited .invuln-val{color:var(--text)}
+        .invuln-row.inherited::before{content:'';font-size:.7rem}
         .weapons{margin-bottom:.875rem}
         .weapons-title{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
         .weapon{padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
         .weapon:last-child{border-bottom:none}
+        .weapon-group{position:relative;margin:.5rem 0;padding-left:1rem;border-left:3px solid var(--text3)}
+        .weapon-group::before{content:'';position:absolute;left:-3px;top:0;width:8px;height:3px;background:var(--text3)}
+        .weapon-group::after{content:'';position:absolute;left:-3px;bottom:0;width:8px;height:3px;background:var(--text3)}
+        .weapon-group .weapon{border-bottom:1px dashed rgba(255,255,255,.1)}
+        .weapon-group .weapon:last-child{border-bottom:none}
+        .weapon-group-label{font-size:.5rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.25rem;font-style:italic}
         .weapon-header{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-bottom:.4rem}
         .weapon-name{color:var(--text);font-weight:500;font-size:.8rem}
         .wtype{font-size:.5rem;padding:.12rem .3rem;border-radius:2px;text-transform:uppercase;font-weight:700}
@@ -298,14 +304,17 @@
                             <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Autoch-pattern bolter (×8)</span></div>
                             <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">2</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
                         </div>
-                        <div class="weapon">
-                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">L7 missile launcher – Blast</span></div>
-                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">D6</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
-                            <div class="wabs"><button class="wab tappable" data-ab="blast">Blast</button></div>
-                        </div>
-                        <div class="weapon">
-                            <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">L7 missile launcher – Focused</span></div>
-                            <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">9</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-2</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">D6</span></div></div>
+                        <div class="weapon-group">
+                            <div class="weapon-group-label">Choose one profile per shooting phase</div>
+                            <div class="weapon">
+                                <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">L7 missile launcher – Blast</span></div>
+                                <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">D6</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
+                                <div class="wabs"><button class="wab tappable" data-ab="blast">Blast</button></div>
+                            </div>
+                            <div class="weapon">
+                                <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">L7 missile launcher – Focused</span></div>
+                                <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">9</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-2</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">D6</span></div></div>
+                            </div>
                         </div>
                         <div class="weapon">
                             <div class="weapon-header"><span class="wtype r">R</span><span class="weapon-name">Magna-rail rifle</span></div>
