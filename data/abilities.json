@@ -4,45 +4,115 @@
     "type": "Detachment Rule — Hearthband",
     "description": "Each time a <strong>LEAGUES OF VOTANN</strong> model from your army makes an attack with a weapon that targets the <strong>closest eligible target</strong> or a target that is within <strong>Engagement Range</strong> of that model's unit:<br><br>• <strong>Re-roll a Wound roll of 1</strong><br><br>• If your unit is a <strong>KÂHL</strong>, <strong>EINHYR HEARTHGUARD</strong> or <strong>ÛTHAR THE DESTINED</strong> unit, <strong>improve the AP</strong> of that attack by 1."
   },
-  "devastating-wounds": {
-    "name": "Devastating Wounds",
+  "assault": {
+    "name": "Assault",
     "type": "Weapon Ability",
-    "description": "Critical Wounds cause <strong>mortal wounds</strong> equal to Damage, then attack sequence ends."
-  },
-  "lethal-hits": {
-    "name": "Lethal Hits",
-    "type": "Weapon Ability",
-    "description": "Critical Hits <strong>automatically wound</strong>."
+    "description": "Can shoot after <strong>advancing</strong>."
   },
   "rapid-fire": {
     "name": "Rapid Fire",
     "type": "Weapon Ability",
-    "description": "At <strong>half range</strong>, add the number to Attacks."
+    "description": "<strong>+'x' to attacks</strong> when targeting units within <strong>half range</strong>."
+  },
+  "ignores-cover": {
+    "name": "Ignores Cover",
+    "type": "Weapon Ability",
+    "description": "Targets do not gain the <strong>benefit of cover</strong>."
+  },
+  "twin-linked": {
+    "name": "Twin-linked",
+    "type": "Weapon Ability",
+    "description": "<strong>Re-roll wounds</strong>."
+  },
+  "pistol": {
+    "name": "Pistol",
+    "type": "Weapon Ability",
+    "description": "Can shoot within <strong>Engagement Range</strong>, but must target engaged unit.<br><br>Cannot be shot alongside other weapons."
+  },
+  "torrent": {
+    "name": "Torrent",
+    "type": "Weapon Ability",
+    "description": "Attacks <strong>automatically hit</strong>."
+  },
+  "lethal-hits": {
+    "name": "Lethal Hits",
+    "type": "Weapon Ability",
+    "description": "Critical hits <strong>automatically wound</strong>."
+  },
+  "lance": {
+    "name": "Lance",
+    "type": "Weapon Ability",
+    "description": "<strong>+1 to wound</strong> after making a charge move."
+  },
+  "indirect-fire": {
+    "name": "Indirect Fire",
+    "type": "Weapon Ability",
+    "description": "Can target units that are <strong>not visible</strong> to the attacker with <strong>-1 to hit</strong> and the target gains the <strong>benefit of cover</strong>."
+  },
+  "precision": {
+    "name": "Precision",
+    "type": "Weapon Ability",
+    "description": "Can choose to allocate wounds to a unit's <strong>leader model</strong>.<br><br>The character must be <strong>visible</strong> to the attacker."
   },
   "blast": {
     "name": "Blast",
     "type": "Weapon Ability",
-    "description": "<strong>+1 Attack per 5 models</strong> in target. Cannot target units in Engagement Range of friendlies."
+    "description": "Add <strong>1 attack per 5 models</strong> in target unit.<br><br>Cannot target a unit in <strong>engagement range</strong> of allied unit."
+  },
+  "melta": {
+    "name": "Melta",
+    "type": "Weapon Ability",
+    "description": "<strong>+'x' to damage</strong> when targeting units within <strong>half range</strong>."
   },
   "heavy": {
     "name": "Heavy",
     "type": "Weapon Ability",
-    "description": "If unit <strong>Remained Stationary</strong>, <strong>+1 to Hit</strong>."
+    "description": "<strong>+1 to hit</strong> if the bearer <strong>remained stationary</strong>."
+  },
+  "hazardous": {
+    "name": "Hazardous",
+    "type": "Weapon Ability",
+    "description": "After attacking, roll a D6 for each hazardous weapon. For each <strong>1</strong>, destroy one model.<br><br>(Characters, Monsters and Vehicles suffer <strong>3 mortal wounds</strong> instead)"
+  },
+  "devastating-wounds": {
+    "name": "Devastating Wounds",
+    "type": "Weapon Ability",
+    "description": "Critical wounds inflict <strong>mortal wounds</strong> instead."
+  },
+  "sustained-hits": {
+    "name": "Sustained Hits",
+    "type": "Weapon Ability",
+    "description": "Critical hits score <strong>'x' additional hits</strong>."
+  },
+  "extra-attacks": {
+    "name": "Extra Attacks",
+    "type": "Weapon Ability",
+    "description": "Can fight with this weapon <strong>in addition to</strong> other weapons."
+  },
+  "anti-keyword": {
+    "name": "Anti-[Keyword] X+",
+    "type": "Weapon Ability",
+    "description": "Wound rolls of <strong>'x+'</strong> score a <strong>critical wound</strong> against targets with the specified keyword."
   },
   "anti-vehicle": {
     "name": "Anti-Vehicle 3+",
     "type": "Weapon Ability",
-    "description": "Against <strong>VEHICLE</strong>, unmodified Wound roll of 3+ = <strong>Critical Wound</strong>."
+    "description": "Against <strong>VEHICLE</strong>, unmodified Wound roll of <strong>3+</strong> = Critical Wound."
   },
   "anti-monster": {
     "name": "Anti-Monster 3+",
     "type": "Weapon Ability",
-    "description": "Against <strong>MONSTER</strong>, unmodified Wound roll of 3+ = <strong>Critical Wound</strong>."
+    "description": "Against <strong>MONSTER</strong>, unmodified Wound roll of <strong>3+</strong> = Critical Wound."
   },
   "feel-no-pain": {
     "name": "Feel No Pain 6+",
     "type": "Core Ability",
-    "description": "Each time this model would lose a wound, roll a D6. On a 6+, that wound is not lost."
+    "description": "Each time this model would lose a wound, roll a D6. On a <strong>6+</strong>, that wound is not lost."
+  },
+  "deep-strike": {
+    "name": "Deep Strike",
+    "type": "Core Ability",
+    "description": "Can be set up in Reserves. Deploy <strong>9\"+ from enemies</strong> during Reinforcements step."
   },
   "teleport-crest": {
     "name": "Teleport Crest",
@@ -118,11 +188,6 @@
     "name": "Breaching Fire",
     "type": "Ability — Thunderkyn",
     "description": "In your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks. Until the start of your next Shooting phase, that enemy unit cannot have the <strong>Benefit of Cover</strong>."
-  },
-  "deep-strike": {
-    "name": "Deep Strike",
-    "type": "Core Ability",
-    "description": "Can be set up in Reserves. Deploy <strong>9\"+ from enemies</strong> during Reinforcements step."
   },
   "invuln-5": {
     "name": "5+ Invulnerable Save",
