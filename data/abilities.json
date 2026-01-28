@@ -1,0 +1,137 @@
+{
+  "prioritised-efficiency": {
+    "name": "Prioritised Efficiency",
+    "type": "Detachment Rule — Hearthband",
+    "description": "Each time a <strong>LEAGUES OF VOTANN</strong> model from your army makes an attack with a weapon that targets the <strong>closest eligible target</strong> or a target that is within <strong>Engagement Range</strong> of that model's unit:<br><br>• <strong>Re-roll a Wound roll of 1</strong><br><br>• If your unit is a <strong>KÂHL</strong>, <strong>EINHYR HEARTHGUARD</strong> or <strong>ÛTHAR THE DESTINED</strong> unit, <strong>improve the AP</strong> of that attack by 1."
+  },
+  "devastating-wounds": {
+    "name": "Devastating Wounds",
+    "type": "Weapon Ability",
+    "description": "Critical Wounds cause <strong>mortal wounds</strong> equal to Damage, then attack sequence ends."
+  },
+  "lethal-hits": {
+    "name": "Lethal Hits",
+    "type": "Weapon Ability",
+    "description": "Critical Hits <strong>automatically wound</strong>."
+  },
+  "rapid-fire": {
+    "name": "Rapid Fire",
+    "type": "Weapon Ability",
+    "description": "At <strong>half range</strong>, add the number to Attacks."
+  },
+  "blast": {
+    "name": "Blast",
+    "type": "Weapon Ability",
+    "description": "<strong>+1 Attack per 5 models</strong> in target. Cannot target units in Engagement Range of friendlies."
+  },
+  "heavy": {
+    "name": "Heavy",
+    "type": "Weapon Ability",
+    "description": "If unit <strong>Remained Stationary</strong>, <strong>+1 to Hit</strong>."
+  },
+  "anti-vehicle": {
+    "name": "Anti-Vehicle 3+",
+    "type": "Weapon Ability",
+    "description": "Against <strong>VEHICLE</strong>, unmodified Wound roll of 3+ = <strong>Critical Wound</strong>."
+  },
+  "anti-monster": {
+    "name": "Anti-Monster 3+",
+    "type": "Weapon Ability",
+    "description": "Against <strong>MONSTER</strong>, unmodified Wound roll of 3+ = <strong>Critical Wound</strong>."
+  },
+  "feel-no-pain": {
+    "name": "Feel No Pain 6+",
+    "type": "Core Ability",
+    "description": "Each time this model would lose a wound, roll a D6. On a 6+, that wound is not lost."
+  },
+  "teleport-crest": {
+    "name": "Teleport Crest",
+    "type": "Wargear",
+    "description": "While the bearer is leading a unit, models in that unit have the <strong>Deep Strike</strong> ability."
+  },
+  "rampart-crest": {
+    "name": "Rampart Crest",
+    "type": "Wargear",
+    "description": "While the bearer is leading a unit, models in that unit have a <strong>5+ invulnerable save</strong>."
+  },
+  "weavefield-crest": {
+    "name": "Weavefield Crest",
+    "type": "Wargear",
+    "description": "Models in the bearer's unit have a <strong>5+ invulnerable save</strong>."
+  },
+  "weavefield-crest-theyn": {
+    "name": "Weavefield Crest (Theyn)",
+    "type": "Wargear",
+    "description": "Models in the bearer's unit have a <strong>5+ invulnerable save</strong>. Note: The Theyn has this, but Ûthar's Rampart Crest already provides 5+ to the unit."
+  },
+  "kindred-hero": {
+    "name": "Kindred Hero",
+    "type": "Leader — Kâhl",
+    "description": "While this model is leading a unit, weapons equipped by models in that unit have the <strong>[LETHAL HITS]</strong> ability."
+  },
+  "seized-opportunity": {
+    "name": "Seized Opportunity",
+    "type": "Ability — Kâhl",
+    "description": "Once per phase, one model from your army with this ability can use it when its unit destroys an enemy unit. If it does, you gain <strong>1YP</strong>."
+  },
+  "exemplar-of-the-einhyr": {
+    "name": "Exemplar of the Einhyr",
+    "type": "Leader — Champion",
+    "description": "While this model is leading a unit, add <strong>1 to Advance and Charge rolls</strong> made for that unit."
+  },
+  "mass-driver-accelerators": {
+    "name": "Mass Driver Accelerators",
+    "type": "Ability — Champion",
+    "description": "Each time this model ends a Charge move, select one enemy unit within Engagement Range and roll D6: <strong>2-5 = D3 mortal wounds</strong>, <strong>6 = D3+3 mortal wounds</strong>."
+  },
+  "ancestral-fortune": {
+    "name": "Ancestral Fortune",
+    "type": "Ability — Ûthar",
+    "description": "Once per turn, you can spend <strong>1YP</strong> to change one Hit roll, one Wound roll or one saving throw made for this model to an <strong>unmodified 6</strong>."
+  },
+  "grim-efficiency": {
+    "name": "Grim Efficiency",
+    "type": "Ability — Ûthar",
+    "description": "Once per battle round, when a friendly LEAGUES OF VOTANN unit within 12\" is targeted with a Stratagem, reduce the CP cost of that Stratagem by <strong>1CP</strong>."
+  },
+  "decisive-destruction": {
+    "name": "Decisive Destruction",
+    "type": "Ability — Hearthguard",
+    "description": "Each time a model in this unit makes a ranged attack that targets the closest eligible target, <strong>re-roll a Hit roll of 1</strong>."
+  },
+  "panspectral-scanning": {
+    "name": "Panspectral Scanning",
+    "type": "Ability — Hearthkyn",
+    "description": "Each time a model in this unit makes a ranged attack, <strong>re-roll a Hit roll of 1</strong>."
+  },
+  "multispectral-visor": {
+    "name": "Multispectral Visor",
+    "type": "Ability — Iron-master",
+    "description": "Each time a model in this unit makes a ranged attack, <strong>re-roll a Wound roll of 1</strong>."
+  },
+  "forgewrought-expertise": {
+    "name": "Forgewrought Expertise",
+    "type": "Ability — Iron-master",
+    "description": "At the end of your Movement phase, this unit can repair one friendly LEAGUES OF VOTANN VEHICLE, EXOFRAME, or IRONKIN STEELJACKS unit within 3\". One model regains up to <strong>D3 lost wounds</strong>, or up to <strong>3 lost wounds</strong> if this unit contains an Ironkin Assistant."
+  },
+  "breaching-fire": {
+    "name": "Breaching Fire",
+    "type": "Ability — Thunderkyn",
+    "description": "In your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks. Until the start of your next Shooting phase, that enemy unit cannot have the <strong>Benefit of Cover</strong>."
+  },
+  "deep-strike": {
+    "name": "Deep Strike",
+    "type": "Core Ability",
+    "description": "Can be set up in Reserves. Deploy <strong>9\"+ from enemies</strong> during Reinforcements step."
+  },
+  "invuln-5": {
+    "name": "5+ Invulnerable Save",
+    "type": "Inherited from Leader",
+    "description": "Models in this unit have a <strong>5+ invulnerable save</strong> while led by this Character (from Rampart Crest)."
+  },
+  "reroll-wound-1": {
+    "name": "Re-roll Wound Roll of 1",
+    "type": "Inherited from Leader",
+    "description": "While led by Iron-master, ranged attacks can <strong>re-roll Wound rolls of 1</strong> (from Multispectral Visor)."
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "quake-multigenerator": {
+    "name": "Quake Multigenerator",
+    "type": "Enhancement (15 pts)",
+    "restriction": "Kâhl only",
+    "points": 15,
+    "description": "In your Shooting phase, after the bearer has shot, select one enemy unit (excluding TITANIC) hit by one or more of those attacks. Until the start of your next turn, that enemy unit is <strong>suppressed</strong>. While suppressed, each time a model in that unit makes an attack, <strong>subtract 1 from the Hit roll</strong>."
+  },
+  "bastion-shield": {
+    "name": "Bastion Shield",
+    "type": "Enhancement (25 pts)",
+    "restriction": "Leagues of Votann only",
+    "points": 25,
+    "description": "Each time a ranged attack targets the bearer's unit, if the attacking model is within 12\", <strong>worsen the AP</strong> of that attack by 1. If you spend <strong>1YP</strong>, until the end of the phase, if the attacking model is within 18\", worsen the AP by 1 instead."
+  },
+  "ironskein": {
+    "name": "Ironskein",
+    "type": "Enhancement (10 pts)",
+    "restriction": "Leagues of Votann only",
+    "points": 10,
+    "description": "Add <strong>+2</strong> to the bearer's Wounds characteristic."
+  }
+}
