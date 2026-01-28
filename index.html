@@ -141,6 +141,8 @@
         .unit-card.leader-dead .attached-icon{border-color:var(--red)}
         .unit-card.leader-dead .attached-icon::after{background:var(--red)}
         .unit-card.leader-dead .attached-text{color:var(--red)}
+        .loading{text-align:center;padding:2rem;color:var(--text2)}
+        .model-profile-label{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin:.75rem 0 .4rem;border-bottom:1px dashed var(--border);padding-bottom:.3rem}
         @media(min-width:768px){.container{max-width:800px;margin:0 auto;padding:1.5rem}#modal{align-items:center}.modal-content{border-radius:12px;max-height:60vh}}
     </style>
 </head>
@@ -148,9 +150,9 @@
     <header class="header">
         <div class="header-top">
             <div><div class="logo-title">LEAGUES OF VOTANN</div><div class="logo-sub">LED UNITS REFERENCE</div></div>
-            <div class="army-stats"><div class="stat-block"><div class="stat-value">4</div><div class="stat-label">Units</div></div></div>
+            <div class="army-stats"><div class="stat-block"><div class="stat-value" id="unit-count">-</div><div class="stat-label">Units</div></div></div>
         </div>
-        <div class="det-banner tappable" data-ab="prioritised-efficiency"><div class="det-name">HEARTHBAND — PRIORITISED EFFICIENCY</div><div class="det-brief">Tap for details</div></div>
+        <div class="det-banner tappable" id="detachment-banner"><div class="det-name" id="detachment-name">Loading...</div><div class="det-brief">Tap for details</div></div>
     </header>
     <nav class="tabs">
         <button class="tab active" data-tab="units">Units</button>
@@ -158,379 +160,16 @@
     </nav>
     <main class="container">
         <div id="units-tab" class="tab-content active">
-        <section class="section">
-            <div class="section-header"><div class="section-icon"></div><div class="section-title">Led Units</div><div class="section-count">4</div></div>
-            <!-- KÂHL + HEARTHGUARD -->
-            <div class="unit-card attached" data-leader="kahl">
-                <div class="attached-banner"><div class="attached-icon"></div><div class="attached-text">Attached • Deep Strike</div></div>
-                <div class="leader-bonus"><div class="bonus-label">Leader Bonus</div><div class="bonus-text">LETHAL HITS (all weapons) • Deep Strike</div></div>
-                <div class="card-section leader">
-                    <div class="sec-label">Leader</div>
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem"><div><div class="unit-name">Kâhl</div><div class="unit-type">Character • Infantry</div></div><div class="unit-points">80 pts</div></div>
-                    <div class="model-count">Models: <span>1</span></div>
-                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">3+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">4</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div></div>
-                    <div class="invuln-row"><span class="invuln-label">Invulnerable Save:</span><span class="invuln-val">4+</span></div>
-                    <div class="weapons">
-                        <div class="weapon-category ranged">
-                            <div class="weapon-category-header">Ranged Weapons</div>
-                            <div class="weapon-category-content">
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Volkanite disintegrator</span></div>
-                                    <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">2+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">5</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
-                                    <div class="wabs"><button class="wab tappable" data-ab="devastating-wounds">Dev. Wounds</button><button class="wab inherited tappable" data-ab="lethal-hits">Lethal Hits</button></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="weapon-category melee">
-                            <div class="weapon-category-header">Melee Weapons</div>
-                            <div class="weapon-category-content">
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Mass gauntlet</span></div>
-                                    <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">8</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-3</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">3</span></div></div>
-                                    <div class="wabs"><button class="wab inherited tappable" data-ab="lethal-hits">Lethal Hits</button></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="abilities"><span class="ab wg tappable" data-ab="teleport-crest">Teleport Crest</span><span class="ab tappable" data-ab="kindred-hero">Kindred Hero</span><span class="ab tappable" data-ab="seized-opportunity">Seized Opportunity</span></div>
-                    <div class="enh tappable" data-ab="quake-multigenerator">Quake Multigenerator</div>
-                </div>
-                <div class="card-section">
-                    <div class="sec-label">Bodyguard</div>
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem"><div><div class="unit-name">Einhyr Hearthguard</div><div class="unit-type">Infantry • Exo-armour</div></div><div class="unit-points">135 pts</div></div>
-                    <div class="model-count">Models: <span>5</span> (1 Hesyr + 4 Hearthguard)</div>
-                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">2+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">2</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div></div>
-                    <div class="invuln-row tappable" data-ab="weavefield-crest"><span class="invuln-label">Invulnerable Save:</span><span class="invuln-val">5+</span></div>
-                    <div class="weapons">
-                        <div class="weapon-category ranged">
-                            <div class="weapon-category-header">Ranged Weapons</div>
-                            <div class="weapon-category-content">
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">EtaCarn plasma gun (×5)</span></div>
-                                    <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">7</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-3</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
-                                    <div class="wabs"><button class="wab tappable" data-ab="rapid-fire">Rapid Fire 1</button><button class="wab inherited tappable" data-ab="lethal-hits">Lethal Hits</button></div>
-                                </div>
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Exo-armour grenade launcher (×5)</span></div>
-                                    <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">D3</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
-                                    <div class="wabs"><button class="wab tappable" data-ab="blast">Blast</button><button class="wab inherited tappable" data-ab="lethal-hits">Lethal Hits</button></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="weapon-category melee">
-                            <div class="weapon-category-header">Melee Weapons</div>
-                            <div class="weapon-category-content">
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Concussion gauntlet (×4)</span></div>
-                                    <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">2</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">8</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-2</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
-                                    <div class="wabs"><button class="wab inherited tappable" data-ab="lethal-hits">Lethal Hits</button></div>
-                                </div>
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Graviton hammer (Hesyr)</span></div>
-                                    <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">9</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-1</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">3</span></div></div>
-                                    <div class="wabs"><button class="wab tappable" data-ab="anti-vehicle">Anti-Vehicle 3+</button><button class="wab tappable" data-ab="anti-monster">Anti-Monster 3+</button><button class="wab inherited tappable" data-ab="lethal-hits">Lethal Hits</button></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="abilities"><span class="ab wg tappable" data-ab="weavefield-crest">Weavefield Crest</span><span class="ab tappable" data-ab="decisive-destruction">Decisive Destruction</span><span class="ab inherited tappable" data-ab="deep-strike">Deep Strike</span></div>
-                </div>
-                <div class="total-wounds"><div class="tw-label">Total Wounds:</div><div class="tw-val">14 (4 + 10)</div></div>
-                <div class="keywords">INFANTRY, EXO-ARMOUR, EINHYR HEARTHGUARD, KÂHL, CHARACTER</div>
-            </div>
-
-            <!-- EINHYR CHAMPION + HEARTHGUARD -->
-            <div class="unit-card attached" data-leader="champion">
-                <div class="attached-banner"><div class="attached-icon"></div><div class="attached-text">Attached • Deep Strike</div></div>
-                <div class="leader-bonus"><div class="bonus-label">Leader Bonus</div><div class="bonus-text">+1 Advance & Charge • Deep Strike</div></div>
-                <div class="card-section leader">
-                    <div class="sec-label">Leader</div>
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem"><div><div class="unit-name">Einhyr Champion</div><div class="unit-type">Character • Infantry • Exo-armour</div></div><div class="unit-points">95 pts</div></div>
-                    <div class="model-count">Models: <span>1</span></div>
-                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">2+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div></div>
-                    <div class="weapons">
-                        <div class="weapon-category ranged">
-                            <div class="weapon-category-header">Ranged Weapons</div>
-                            <div class="weapon-category-content">
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Autoch-pattern combi-bolter</span></div>
-                                    <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">2+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="weapon-category melee">
-                            <div class="weapon-category-header">Melee Weapons</div>
-                            <div class="weapon-category-content">
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Mass hammer</span></div>
-                                    <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">12</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-3</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">D6+1</span></div></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="abilities"><span class="ab wg tappable" data-ab="teleport-crest">Teleport Crest</span><span class="ab tappable" data-ab="exemplar-of-the-einhyr">Exemplar of the Einhyr</span><span class="ab tappable" data-ab="mass-driver-accelerators">Mass Driver Accelerators</span></div>
-                    <div class="enh tappable" data-ab="bastion-shield">Bastion Shield</div>
-                </div>
-                <div class="card-section">
-                    <div class="sec-label">Bodyguard</div>
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem"><div><div class="unit-name">Einhyr Hearthguard</div><div class="unit-type">Infantry • Exo-armour</div></div><div class="unit-points">135 pts</div></div>
-                    <div class="model-count">Models: <span>5</span> (1 Hesyr + 4 Hearthguard)</div>
-                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">2+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">2</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div></div>
-                    <div class="invuln-row tappable" data-ab="weavefield-crest"><span class="invuln-label">Invulnerable Save:</span><span class="invuln-val">5+</span></div>
-                    <div class="weapons">
-                        <div class="weapon-category ranged">
-                            <div class="weapon-category-header">Ranged Weapons</div>
-                            <div class="weapon-category-content">
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">EtaCarn plasma gun (×5)</span></div>
-                                    <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">7</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-3</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
-                                    <div class="wabs"><button class="wab tappable" data-ab="rapid-fire">Rapid Fire 1</button></div>
-                                </div>
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Exo-armour grenade launcher (×5)</span></div>
-                                    <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">D3</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
-                                    <div class="wabs"><button class="wab tappable" data-ab="blast">Blast</button></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="weapon-category melee">
-                            <div class="weapon-category-header">Melee Weapons</div>
-                            <div class="weapon-category-content">
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Concussion gauntlet (×4)</span></div>
-                                    <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">2</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">8</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-2</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
-                                </div>
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Graviton hammer (Hesyr)</span></div>
-                                    <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">9</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-1</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">3</span></div></div>
-                                    <div class="wabs"><button class="wab tappable" data-ab="anti-vehicle">Anti-Vehicle 3+</button><button class="wab tappable" data-ab="anti-monster">Anti-Monster 3+</button></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="abilities"><span class="ab wg tappable" data-ab="weavefield-crest">Weavefield Crest</span><span class="ab tappable" data-ab="decisive-destruction">Decisive Destruction</span><span class="ab inherited tappable" data-ab="deep-strike">Deep Strike</span></div>
-                </div>
-                <div class="total-wounds"><div class="tw-label">Total Wounds:</div><div class="tw-val">15 (5 + 10)</div></div>
-                <div class="keywords">INFANTRY, EXO-ARMOUR, EINHYR HEARTHGUARD, EINHYR CHAMPION, CHARACTER</div>
-            </div>
-
-            <!-- ÛTHAR + HEARTHKYN WARRIORS -->
-            <div class="unit-card attached" data-leader="uthar">
-                <div class="attached-banner"><div class="attached-icon"></div><div class="attached-text">Attached Unit</div></div>
-                <div class="leader-bonus"><div class="bonus-label">Leader Bonus</div><div class="bonus-text">5+ Invulnerable Save • 1CP discount 1/round</div></div>
-                <div class="card-section leader">
-                    <div class="sec-label">Leader</div>
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem"><div><div class="unit-name">Ûthar the Destined</div><div class="unit-type">Character • Epic Hero • Kâhl</div></div><div class="unit-points">95 pts</div></div>
-                    <div class="model-count">Models: <span>1</span></div>
-                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">3+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">6+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div></div>
-                    <div class="invuln-row"><span class="invuln-label">Invulnerable Save:</span><span class="invuln-val">4+</span></div>
-                    <div class="weapons">
-                        <div class="weapon-category ranged">
-                            <div class="weapon-category-header">Ranged Weapons</div>
-                            <div class="weapon-category-content">
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Volkanite disintegrator</span></div>
-                                    <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">2+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">5</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
-                                    <div class="wabs"><button class="wab tappable" data-ab="devastating-wounds">Dev. Wounds</button></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="weapon-category melee">
-                            <div class="weapon-category-header">Melee Weapons</div>
-                            <div class="weapon-category-content">
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Blade of the Ancestors</span></div>
-                                    <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">5</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">2+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">6</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-3</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
-                                    <div class="wabs"><button class="wab tappable" data-ab="devastating-wounds">Dev. Wounds</button></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="abilities"><span class="ab wg tappable" data-ab="rampart-crest">Rampart Crest</span><span class="ab tappable" data-ab="ancestral-fortune">Ancestral Fortune</span><span class="ab tappable" data-ab="grim-efficiency">Grim Efficiency</span></div>
-                </div>
-                <div class="card-section">
-                    <div class="sec-label">Bodyguard</div>
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem"><div><div class="unit-name">Hearthkyn Warriors</div><div class="unit-type">Infantry • Battleline</div></div><div class="unit-points">100 pts</div></div>
-                    <div class="model-count">Models: <span>10</span> (1 Theyn + 9 Warriors)</div>
-                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">4+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">1</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">2</div></div></div>
-                    <div class="invuln-row inherited tappable" data-ab="invuln-5"><span class="invuln-label">Invulnerable Save:</span><span class="invuln-val">5+</span></div>
-                    <div class="weapons">
-                        <div class="weapon-category ranged">
-                            <div class="weapon-category-header">Ranged Weapons</div>
-                            <div class="weapon-category-content">
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Autoch-pattern bolter (×8)</span></div>
-                                    <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">2</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
-                                </div>
-                                <div class="weapon-group">
-                                    <div class="weapon-group-label">Choose one profile per shooting phase</div>
-                                    <div class="weapon">
-                                        <div class="weapon-header"><span class="weapon-name">L7 missile launcher – Blast</span></div>
-                                        <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">D6</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
-                                        <div class="wabs"><button class="wab tappable" data-ab="blast">Blast</button></div>
-                                    </div>
-                                    <div class="weapon">
-                                        <div class="weapon-header"><span class="weapon-name">L7 missile launcher – Focused</span></div>
-                                        <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">9</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-2</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">D6</span></div></div>
-                                    </div>
-                                </div>
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Magna-rail rifle</span></div>
-                                    <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">18"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">5+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">12</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-3</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">D3+3</span></div></div>
-                                    <div class="wabs"><button class="wab tappable" data-ab="devastating-wounds">Dev. Wounds</button><button class="wab tappable" data-ab="heavy">Heavy</button></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="weapon-category melee">
-                            <div class="weapon-category-header">Melee Weapons</div>
-                            <div class="weapon-category-content">
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Close combat weapon (×10)</span></div>
-                                    <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="abilities"><span class="ab core tappable" data-ab="feel-no-pain">Feel No Pain 6+</span><span class="ab wg tappable" data-ab="weavefield-crest-theyn">Weavefield Crest (Theyn)</span><span class="ab tappable" data-ab="panspectral-scanning">Panspectral Scanning</span></div>
-                </div>
-                <div class="total-wounds"><div class="tw-label">Total Wounds:</div><div class="tw-val">15 (5 + 10)</div></div>
-                <div class="keywords">INFANTRY, BATTLELINE, GRENADES, HEARTHKYN WARRIORS, KÂHL, CHARACTER, EPIC HERO</div>
-            </div>
-
-            <!-- IRON-MASTER + THUNDERKYN -->
-            <div class="unit-card attached" data-leader="ironmaster">
-                <div class="attached-banner"><div class="attached-icon"></div><div class="attached-text">Attached Unit</div></div>
-                <div class="leader-bonus"><div class="bonus-label">Leader Bonus</div><div class="bonus-text">Re-roll Wound rolls of 1 (ranged)</div></div>
-                <div class="card-section leader">
-                    <div class="sec-label">Leader</div>
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem"><div><div class="unit-name">Brôkhyr Iron-master</div><div class="unit-type">Character • Infantry • Brôkhyr</div></div><div class="unit-points">85 pts</div></div>
-                    <div class="model-count">Models: <span>5</span> (Iron-master, Ironkin Assistant, 3 E-COGs)</div>
-
-                    <div style="font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin:.75rem 0 .4rem;border-bottom:1px dashed var(--border);padding-bottom:.3rem">Iron-master</div>
-                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">4+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">4+2</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div></div>
-
-                    <div style="font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin:.75rem 0 .4rem;border-bottom:1px dashed var(--border);padding-bottom:.3rem">Ironkin Assistant</div>
-                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">4+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">1</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div></div>
-
-                    <div style="font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin:.75rem 0 .4rem;border-bottom:1px dashed var(--border);padding-bottom:.3rem">E-COG (×3)</div>
-                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">5</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">4+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">1</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div></div>
-
-                    <div class="weapons">
-                        <div class="weapon-category ranged">
-                            <div class="weapon-category-header">Ranged Weapons</div>
-                            <div class="weapon-category-content">
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Graviton rifle (Iron-master)</span></div>
-                                    <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">18"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">5</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-1</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">3</span></div></div>
-                                    <div class="wabs"><button class="wab tappable" data-ab="anti-vehicle">Anti-Vehicle 3+</button><button class="wab tappable" data-ab="anti-monster">Anti-Monster 3+</button><button class="wab inherited tappable" data-ab="reroll-wound-1">Re-roll Wound 1</button></div>
-                                </div>
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Las-beam cutter (Ironkin)</span></div>
-                                    <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">6"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">6</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-3</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
-                                    <div class="wabs"><button class="wab inherited tappable" data-ab="reroll-wound-1">Re-roll Wound 1</button></div>
-                                </div>
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Autoch-pattern bolt pistol (E-COG)</span></div>
-                                    <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">12"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">3+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
-                                    <div class="wabs"><button class="wab inherited tappable" data-ab="reroll-wound-1">Re-roll Wound 1</button></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="weapon-category melee">
-                            <div class="weapon-category-header">Melee Weapons</div>
-                            <div class="weapon-category-content">
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Graviton hammer (Iron-master)</span></div>
-                                    <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">9</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-1</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">3</span></div></div>
-                                    <div class="wabs"><button class="wab tappable" data-ab="anti-vehicle">Anti-Vehicle 3+</button><button class="wab tappable" data-ab="anti-monster">Anti-Monster 3+</button></div>
-                                </div>
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Close combat weapon (Ironkin, E-COG)</span></div>
-                                    <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
-                                </div>
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Plasma torch (E-COG)</span></div>
-                                    <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">1</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">6</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-3</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">2</span></div></div>
-                                </div>
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Manipulator arms (E-COG)</span></div>
-                                    <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
-                        </div>
-                    </div>
-                    <div class="abilities"><span class="ab tappable" data-ab="multispectral-visor">Multispectral Visor</span><span class="ab tappable" data-ab="forgewrought-expertise">Forgewrought Expertise</span></div>
-                    <div class="enh tappable" data-ab="ironskein">Ironskein</div>
-                </div>
-                <div class="card-section">
-                    <div class="sec-label">Bodyguard</div>
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem"><div><div class="unit-name">Brôkhyr Thunderkyn</div><div class="unit-type">Infantry • Exo-frame</div></div><div class="unit-points">160 pts</div></div>
-                    <div class="model-count">Models: <span>6</span></div>
-                    <div class="stats-row"><div class="stat"><div class="stat-n">M</div><div class="stat-v">5"</div></div><div class="stat"><div class="stat-n">T</div><div class="stat-v">6</div></div><div class="stat"><div class="stat-n">Sv</div><div class="stat-v">3+</div></div><div class="stat hl"><div class="stat-n">W</div><div class="stat-v">2</div></div><div class="stat"><div class="stat-n">Ld</div><div class="stat-v">7+</div></div><div class="stat"><div class="stat-n">OC</div><div class="stat-v">1</div></div></div>
-                    <div class="weapons">
-                        <div class="weapon-category ranged">
-                            <div class="weapon-category-header">Ranged Weapons</div>
-                            <div class="weapon-category-content">
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Graviton blast cannon (×6)</span></div>
-                                    <div class="weapon-stats-grid ranged"><div class="ws"><span class="ws-label">Rng</span><span class="ws-val">24"</span></div><div class="ws"><span class="ws-label">A</span><span class="ws-val">3</span></div><div class="ws"><span class="ws-label">BS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">5</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">-2</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">3</span></div></div>
-                                    <div class="wabs"><button class="wab tappable" data-ab="anti-vehicle">Anti-Vehicle 3+</button><button class="wab tappable" data-ab="anti-monster">Anti-Monster 3+</button><button class="wab inherited tappable" data-ab="reroll-wound-1">Re-roll Wound 1</button></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="weapon-category melee">
-                            <div class="weapon-category-header">Melee Weapons</div>
-                            <div class="weapon-category-content">
-                                <div class="weapon">
-                                    <div class="weapon-header"><span class="weapon-name">Close combat weapon (×6)</span></div>
-                                    <div class="weapon-stats-grid"><div class="ws"><span class="ws-label">A</span><span class="ws-val">2</span></div><div class="ws"><span class="ws-label">WS</span><span class="ws-val">4+</span></div><div class="ws"><span class="ws-label">S</span><span class="ws-val">4</span></div><div class="ws"><span class="ws-label">AP</span><span class="ws-val">0</span></div><div class="ws"><span class="ws-label">D</span><span class="ws-val">1</span></div></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="abilities"><span class="ab tappable" data-ab="breaching-fire">Breaching Fire</span></div>
-                </div>
-                <div class="total-wounds"><div class="tw-label">Total Wounds:</div><div class="tw-val">22 (10 + 12)</div></div>
-                <div class="keywords">INFANTRY, EXO-FRAME, BRÔKHYR, THUNDERKYN, IRON-MASTER, CHARACTER</div>
-            </div>
-        </section>
+            <section class="section">
+                <div class="section-header"><div class="section-icon"></div><div class="section-title">Led Units</div><div class="section-count" id="led-units-count">-</div></div>
+                <div id="units-container"><div class="loading">Loading units...</div></div>
+            </section>
         </div>
         <div id="configuration-tab" class="tab-content">
             <section class="section">
-                <div class="section-header"><div class="section-icon"></div><div class="section-title">Characters</div><div class="section-count">4</div></div>
+                <div class="section-header"><div class="section-icon"></div><div class="section-title">Characters</div><div class="section-count" id="char-count">-</div></div>
                 <p style="color:var(--text2);font-size:.75rem;margin-bottom:1rem;">Tap a character to mark them as slain. This will remove their buffs and abilities from attached units.</p>
-                <div class="char-list">
-                    <div class="char-toggle" data-char="kahl">
-                        <div class="char-status"></div>
-                        <div class="char-info">
-                            <div class="char-name">Kahl</div>
-                            <div class="char-unit">Leading Einhyr Hearthguard</div>
-                        </div>
-                        <span class="char-label alive">Alive</span>
-                    </div>
-                    <div class="char-toggle" data-char="champion">
-                        <div class="char-status"></div>
-                        <div class="char-info">
-                            <div class="char-name">Einhyr Champion</div>
-                            <div class="char-unit">Leading Einhyr Hearthguard</div>
-                        </div>
-                        <span class="char-label alive">Alive</span>
-                    </div>
-                    <div class="char-toggle" data-char="uthar">
-                        <div class="char-status"></div>
-                        <div class="char-info">
-                            <div class="char-name">Uthar the Destined</div>
-                            <div class="char-unit">Leading Hearthkyn Warriors</div>
-                        </div>
-                        <span class="char-label alive">Alive</span>
-                    </div>
-                    <div class="char-toggle" data-char="ironmaster">
-                        <div class="char-status"></div>
-                        <div class="char-info">
-                            <div class="char-name">Brokhyr Iron-master</div>
-                            <div class="char-unit">Leading Brokhyr Thunderkyn</div>
-                        </div>
-                        <span class="char-label alive">Alive</span>
-                    </div>
-                </div>
+                <div class="char-list" id="char-list"></div>
             </section>
         </div>
     </main>
@@ -544,51 +183,445 @@
     </div>
 
     <script>
-const A={
-'prioritised-efficiency':{n:'Prioritised Efficiency',t:'Detachment Rule — Hearthband',d:'Each time a <strong>LEAGUES OF VOTANN</strong> model from your army makes an attack with a weapon that targets the <strong>closest eligible target</strong> or a target that is within <strong>Engagement Range</strong> of that model\'s unit:<br><br>• <strong>Re-roll a Wound roll of 1</strong><br><br>• If your unit is a <strong>KÂHL</strong>, <strong>EINHYR HEARTHGUARD</strong> or <strong>ÛTHAR THE DESTINED</strong> unit, <strong>improve the AP</strong> of that attack by 1.'},
-'devastating-wounds':{n:'Devastating Wounds',t:'Weapon Ability',d:'Critical Wounds cause <strong>mortal wounds</strong> equal to Damage, then attack sequence ends.'},
-'lethal-hits':{n:'Lethal Hits',t:'Weapon Ability',d:'Critical Hits <strong>automatically wound</strong>.'},
-'rapid-fire':{n:'Rapid Fire',t:'Weapon Ability',d:'At <strong>half range</strong>, add the number to Attacks.'},
-'blast':{n:'Blast',t:'Weapon Ability',d:'<strong>+1 Attack per 5 models</strong> in target. Cannot target units in Engagement Range of friendlies.'},
-'heavy':{n:'Heavy',t:'Weapon Ability',d:'If unit <strong>Remained Stationary</strong>, <strong>+1 to Hit</strong>.'},
-'anti-vehicle':{n:'Anti-Vehicle 3+',t:'Weapon Ability',d:'Against <strong>VEHICLE</strong>, unmodified Wound roll of 3+ = <strong>Critical Wound</strong>.'},
-'anti-monster':{n:'Anti-Monster 3+',t:'Weapon Ability',d:'Against <strong>MONSTER</strong>, unmodified Wound roll of 3+ = <strong>Critical Wound</strong>.'},
-'feel-no-pain':{n:'Feel No Pain 6+',t:'Core Ability',d:'Each time this model would lose a wound, roll a D6. On a 6+, that wound is not lost.'},
-'teleport-crest':{n:'Teleport Crest',t:'Wargear',d:'While the bearer is leading a unit, models in that unit have the <strong>Deep Strike</strong> ability.'},
-'rampart-crest':{n:'Rampart Crest',t:'Wargear',d:'While the bearer is leading a unit, models in that unit have a <strong>5+ invulnerable save</strong>.'},
-'weavefield-crest':{n:'Weavefield Crest',t:'Wargear',d:'Models in the bearer\'s unit have a <strong>5+ invulnerable save</strong>.'},
-'weavefield-crest-theyn':{n:'Weavefield Crest (Theyn)',t:'Wargear',d:'Models in the bearer\'s unit have a <strong>5+ invulnerable save</strong>. Note: The Theyn has this, but Ûthar\'s Rampart Crest already provides 5+ to the unit.'},
-'kindred-hero':{n:'Kindred Hero',t:'Leader — Kâhl',d:'While this model is leading a unit, weapons equipped by models in that unit have the <strong>[LETHAL HITS]</strong> ability.'},
-'seized-opportunity':{n:'Seized Opportunity',t:'Ability — Kâhl',d:'Once per phase, one model from your army with this ability can use it when its unit destroys an enemy unit. If it does, you gain <strong>1YP</strong>.'},
-'exemplar-of-the-einhyr':{n:'Exemplar of the Einhyr',t:'Leader — Champion',d:'While this model is leading a unit, add <strong>1 to Advance and Charge rolls</strong> made for that unit.'},
-'mass-driver-accelerators':{n:'Mass Driver Accelerators',t:'Ability — Champion',d:'Each time this model ends a Charge move, select one enemy unit within Engagement Range and roll D6: <strong>2-5 = D3 mortal wounds</strong>, <strong>6 = D3+3 mortal wounds</strong>.'},
-'ancestral-fortune':{n:'Ancestral Fortune',t:'Ability — Ûthar',d:'Once per turn, you can spend <strong>1YP</strong> to change one Hit roll, one Wound roll or one saving throw made for this model to an <strong>unmodified 6</strong>.'},
-'grim-efficiency':{n:'Grim Efficiency',t:'Ability — Ûthar',d:'Once per battle round, when a friendly LEAGUES OF VOTANN unit within 12" is targeted with a Stratagem, reduce the CP cost of that Stratagem by <strong>1CP</strong>.'},
-'decisive-destruction':{n:'Decisive Destruction',t:'Ability — Hearthguard',d:'Each time a model in this unit makes a ranged attack that targets the closest eligible target, <strong>re-roll a Hit roll of 1</strong>.'},
-'panspectral-scanning':{n:'Panspectral Scanning',t:'Ability — Hearthkyn',d:'Each time a model in this unit makes a ranged attack, <strong>re-roll a Hit roll of 1</strong>.'},
-'multispectral-visor':{n:'Multispectral Visor',t:'Ability — Iron-master',d:'Each time a model in this unit makes a ranged attack, <strong>re-roll a Wound roll of 1</strong>.'},
-'forgewrought-expertise':{n:'Forgewrought Expertise',t:'Ability — Iron-master',d:'At the end of your Movement phase, this unit can repair one friendly LEAGUES OF VOTANN VEHICLE, EXOFRAME, or IRONKIN STEELJACKS unit within 3". One model regains up to <strong>D3 lost wounds</strong>, or up to <strong>3 lost wounds</strong> if this unit contains an Ironkin Assistant.'},
-'breaching-fire':{n:'Breaching Fire',t:'Ability — Thunderkyn',d:'In your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks. Until the start of your next Shooting phase, that enemy unit cannot have the <strong>Benefit of Cover</strong>.'},
-'quake-multigenerator':{n:'Quake Multigenerator',t:'Enhancement (15 pts) — Kâhl only',d:'In your Shooting phase, after the bearer has shot, select one enemy unit (excluding TITANIC) hit by one or more of those attacks. Until the start of your next turn, that enemy unit is <strong>suppressed</strong>. While suppressed, each time a model in that unit makes an attack, <strong>subtract 1 from the Hit roll</strong>.'},
-'bastion-shield':{n:'Bastion Shield',t:'Enhancement (25 pts) — Leagues of Votann only',d:'Each time a ranged attack targets the bearer\'s unit, if the attacking model is within 12", <strong>worsen the AP</strong> of that attack by 1. If you spend <strong>1YP</strong>, until the end of the phase, if the attacking model is within 18", worsen the AP by 1 instead.'},
-'ironskein':{n:'Ironskein',t:'Enhancement (10 pts) — Leagues of Votann only',d:'Add <strong>+2</strong> to the bearer\'s Wounds characteristic.'},
-'deep-strike':{n:'Deep Strike',t:'Inherited from Leader',d:'Can be set up in Reserves. Deploy <strong>9"+ from enemies</strong> during Reinforcements step.'},
-'invuln-5':{n:'5+ Invulnerable Save',t:'Inherited from Leader',d:'Models in this unit have a <strong>5+ invulnerable save</strong> while led by this Character (from Rampart Crest).'},
-'reroll-wound-1':{n:'Re-roll Wound Roll of 1',t:'Inherited from Leader',d:'While led by Iron-master, ranged attacks can <strong>re-roll Wound rolls of 1</strong> (from Multispectral Visor).'}
-};
+// Global data stores
+let abilities = {};
+let enhancements = {};
+let army = {};
+let units = {};
+const characterState = {};
 
+// DOM elements
 const modal = document.getElementById('modal');
 const mtitle = document.getElementById('mtitle');
 const mtype = document.getElementById('mtype');
 const mdesc = document.getElementById('mdesc');
 const mclose = document.getElementById('mclose');
 
+// Fetch JSON helper
+async function fetchJSON(path) {
+    const response = await fetch(path);
+    if (!response.ok) throw new Error(`Failed to load ${path}`);
+    return response.json();
+}
+
+// Load all data
+async function loadData() {
+    try {
+        // Load core data files
+        [abilities, enhancements, army] = await Promise.all([
+            fetchJSON('data/abilities.json'),
+            fetchJSON('data/enhancements.json'),
+            fetchJSON('data/army.json')
+        ]);
+
+        // Collect unique unit IDs needed
+        const unitIds = new Set();
+        army.ledUnits.forEach(lu => {
+            unitIds.add(lu.leader);
+            unitIds.add(lu.bodyguard);
+        });
+
+        // Load all unit files
+        const unitPromises = Array.from(unitIds).map(async id => {
+            const unit = await fetchJSON(`data/units/${id}.json`);
+            units[id] = unit;
+        });
+        await Promise.all(unitPromises);
+
+        // Initialize character states
+        army.ledUnits.forEach(lu => {
+            characterState[lu.leader] = false;
+        });
+
+        // Render everything
+        renderApp();
+    } catch (error) {
+        console.error('Failed to load data:', error);
+        document.getElementById('units-container').innerHTML =
+            `<div class="loading" style="color:var(--red)">Error loading data: ${error.message}</div>`;
+    }
+}
+
+// Render the entire app
+function renderApp() {
+    // Update header
+    document.getElementById('unit-count').textContent = army.totalUnits;
+    document.getElementById('detachment-name').textContent =
+        `${army.detachment.name} — ${abilities[army.detachment.rule]?.name || army.detachment.rule}`;
+    document.getElementById('detachment-banner').setAttribute('data-ab', army.detachment.rule);
+    document.getElementById('led-units-count').textContent = army.ledUnits.length;
+    document.getElementById('char-count').textContent = army.ledUnits.length;
+
+    // Render units
+    renderUnits();
+
+    // Render character toggles
+    renderCharacterToggles();
+}
+
+// Render all unit cards
+function renderUnits() {
+    const container = document.getElementById('units-container');
+    container.innerHTML = army.ledUnits.map(ledUnit => renderLedUnitCard(ledUnit)).join('');
+}
+
+// Render a single led unit card
+function renderLedUnitCard(ledUnit) {
+    const leader = units[ledUnit.leader];
+    const bodyguard = units[ledUnit.bodyguard];
+    const enhancement = ledUnit.enhancement ? enhancements[ledUnit.enhancement] : null;
+
+    return `
+        <div class="unit-card attached" data-leader="${ledUnit.leader}">
+            <div class="attached-banner">
+                <div class="attached-icon"></div>
+                <div class="attached-text">${ledUnit.attachedBannerText}</div>
+            </div>
+            <div class="leader-bonus">
+                <div class="bonus-label">Leader Bonus</div>
+                <div class="bonus-text">${leader.leaderBonus.text}</div>
+            </div>
+            <div class="card-section leader">
+                <div class="sec-label">Leader</div>
+                ${renderUnitHeader(leader)}
+                ${renderUnitStats(leader)}
+                ${leader.invulnerableSave ? renderInvuln(leader.invulnerableSave, false) : ''}
+                ${renderWeapons(leader.weapons, leader.leaderBonus?.grantsAbilities || [])}
+                ${renderAbilities(leader, enhancement)}
+            </div>
+            <div class="card-section">
+                <div class="sec-label">Bodyguard</div>
+                ${renderUnitHeader(bodyguard)}
+                ${renderUnitStats(bodyguard)}
+                ${renderBodyguardInvuln(bodyguard, leader)}
+                ${renderWeapons(bodyguard.weapons, leader.leaderBonus?.grantsAbilities || [], leader.leaderBonus?.appliesTo)}
+                ${renderBodyguardAbilities(bodyguard, leader)}
+            </div>
+            <div class="total-wounds">
+                <div class="tw-label">Total Wounds:</div>
+                <div class="tw-val">${ledUnit.totalWounds} (${ledUnit.woundBreakdown})</div>
+            </div>
+            <div class="keywords">${ledUnit.combinedKeywords.join(', ')}</div>
+        </div>
+    `;
+}
+
+// Render unit header (name, type, points)
+function renderUnitHeader(unit) {
+    const modelText = unit.modelBreakdown
+        ? `${unit.models} (${unit.modelBreakdown})`
+        : unit.models;
+
+    return `
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem">
+            <div>
+                <div class="unit-name">${unit.name}</div>
+                <div class="unit-type">${unit.type.join(' • ')}</div>
+            </div>
+            <div class="unit-points">${unit.points} pts</div>
+        </div>
+        <div class="model-count">Models: <span>${modelText}</span></div>
+    `;
+}
+
+// Render unit stats
+function renderUnitStats(unit) {
+    // Check if unit has multiple model profiles
+    if (unit.modelProfiles) {
+        return unit.modelProfiles.map(profile => `
+            <div class="model-profile-label">${profile.name}${profile.count > 1 ? ` (×${profile.count})` : ''}</div>
+            ${renderStatsRow(profile.stats)}
+        `).join('');
+    }
+    return renderStatsRow(unit.stats);
+}
+
+// Render a single stats row
+function renderStatsRow(stats) {
+    return `
+        <div class="stats-row">
+            <div class="stat"><div class="stat-n">M</div><div class="stat-v">${stats.m}</div></div>
+            <div class="stat"><div class="stat-n">T</div><div class="stat-v">${stats.t}</div></div>
+            <div class="stat"><div class="stat-n">Sv</div><div class="stat-v">${stats.sv}</div></div>
+            <div class="stat hl"><div class="stat-n">W</div><div class="stat-v">${stats.w}</div></div>
+            <div class="stat"><div class="stat-n">Ld</div><div class="stat-v">${stats.ld}</div></div>
+            <div class="stat"><div class="stat-n">OC</div><div class="stat-v">${stats.oc}</div></div>
+        </div>
+    `;
+}
+
+// Render invulnerable save
+function renderInvuln(value, inherited, source = null) {
+    const classes = inherited ? 'invuln-row inherited tappable' : 'invuln-row tappable';
+    const dataAb = source ? `data-ab="${source}"` : '';
+    return `
+        <div class="${classes}" ${dataAb}>
+            <span class="invuln-label">Invulnerable Save:</span>
+            <span class="invuln-val">${value}</span>
+        </div>
+    `;
+}
+
+// Render bodyguard invuln (check for inherited from leader)
+function renderBodyguardInvuln(bodyguard, leader) {
+    // Check if leader grants invuln
+    const leaderGrantsInvuln = leader.leaderBonus?.grantsAbilities?.includes('invuln-5');
+
+    if (leaderGrantsInvuln && !bodyguard.invulnerableSave) {
+        return renderInvuln('5+', true, 'invuln-5');
+    }
+
+    if (bodyguard.invulnerableSave) {
+        return renderInvuln(bodyguard.invulnerableSave, false, bodyguard.invulnerableSource);
+    }
+
+    return '';
+}
+
+// Render weapons section
+function renderWeapons(weapons, inheritedAbilities = [], appliesTo = null) {
+    const rangedHtml = weapons.ranged?.length ? renderWeaponCategory('ranged', weapons.ranged, inheritedAbilities, appliesTo) : '';
+    const meleeHtml = weapons.melee?.length ? renderWeaponCategory('melee', weapons.melee, inheritedAbilities, appliesTo) : '';
+
+    return `<div class="weapons">${rangedHtml}${meleeHtml}</div>`;
+}
+
+// Render a weapon category (ranged or melee)
+function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo) {
+    const label = type === 'ranged' ? 'Ranged Weapons' : 'Melee Weapons';
+
+    // Group weapons by weaponGroup
+    const groups = {};
+    const ungrouped = [];
+
+    weaponList.forEach(weapon => {
+        if (weapon.weaponGroup) {
+            if (!groups[weapon.weaponGroup]) {
+                groups[weapon.weaponGroup] = { label: weapon.weaponGroupLabel, weapons: [] };
+            }
+            groups[weapon.weaponGroup].weapons.push(weapon);
+        } else {
+            ungrouped.push(weapon);
+        }
+    });
+
+    let contentHtml = '';
+
+    // Render ungrouped weapons
+    ungrouped.forEach(weapon => {
+        contentHtml += renderWeapon(weapon, type, inheritedAbilities, appliesTo);
+    });
+
+    // Render grouped weapons
+    Object.values(groups).forEach(group => {
+        contentHtml += `
+            <div class="weapon-group">
+                <div class="weapon-group-label">${group.label}</div>
+                ${group.weapons.map(w => renderWeapon(w, type, inheritedAbilities, appliesTo)).join('')}
+            </div>
+        `;
+    });
+
+    return `
+        <div class="weapon-category ${type}">
+            <div class="weapon-category-header">${label}</div>
+            <div class="weapon-category-content">${contentHtml}</div>
+        </div>
+    `;
+}
+
+// Render a single weapon
+function renderWeapon(weapon, type, inheritedAbilities, appliesTo) {
+    const countText = weapon.count > 1 ? ` (×${weapon.count})` : '';
+    const modelText = weapon.model ? ` (${weapon.model})` : '';
+    const nameDisplay = weapon.name + countText + modelText;
+
+    // Determine which inherited abilities apply
+    let applicableInherited = [];
+    if (appliesTo === null || appliesTo === type) {
+        // Check weapon's own inherited abilities first
+        applicableInherited = weapon.inheritedAbilities || [];
+        // Then add global inherited abilities if not already present
+        inheritedAbilities.forEach(ab => {
+            if (!applicableInherited.includes(ab)) {
+                applicableInherited.push(ab);
+            }
+        });
+    } else {
+        // Only use weapon's own inherited abilities
+        applicableInherited = weapon.inheritedAbilities || [];
+    }
+
+    const statsGrid = type === 'ranged'
+        ? `<div class="weapon-stats-grid ranged">
+            <div class="ws"><span class="ws-label">Rng</span><span class="ws-val">${weapon.range}</span></div>
+            <div class="ws"><span class="ws-label">A</span><span class="ws-val">${weapon.a}</span></div>
+            <div class="ws"><span class="ws-label">BS</span><span class="ws-val">${weapon.bs}</span></div>
+            <div class="ws"><span class="ws-label">S</span><span class="ws-val">${weapon.s}</span></div>
+            <div class="ws"><span class="ws-label">AP</span><span class="ws-val">${weapon.ap}</span></div>
+            <div class="ws"><span class="ws-label">D</span><span class="ws-val">${weapon.d}</span></div>
+           </div>`
+        : `<div class="weapon-stats-grid">
+            <div class="ws"><span class="ws-label">A</span><span class="ws-val">${weapon.a}</span></div>
+            <div class="ws"><span class="ws-label">WS</span><span class="ws-val">${weapon.ws}</span></div>
+            <div class="ws"><span class="ws-label">S</span><span class="ws-val">${weapon.s}</span></div>
+            <div class="ws"><span class="ws-label">AP</span><span class="ws-val">${weapon.ap}</span></div>
+            <div class="ws"><span class="ws-label">D</span><span class="ws-val">${weapon.d}</span></div>
+           </div>`;
+
+    // Render weapon abilities
+    const allAbilities = [
+        ...(weapon.abilities || []).map(ab => ({ id: ab, inherited: false })),
+        ...applicableInherited.map(ab => ({ id: ab, inherited: true }))
+    ];
+
+    const abilitiesHtml = allAbilities.length ? `
+        <div class="wabs">
+            ${allAbilities.map(ab => {
+                const abData = abilities[ab.id];
+                const displayName = abData?.name || ab.id;
+                const classes = ab.inherited ? 'wab inherited tappable' : 'wab tappable';
+                return `<button class="${classes}" data-ab="${ab.id}">${displayName}</button>`;
+            }).join('')}
+        </div>
+    ` : '';
+
+    return `
+        <div class="weapon">
+            <div class="weapon-header"><span class="weapon-name">${nameDisplay}</span></div>
+            ${statsGrid}
+            ${abilitiesHtml}
+        </div>
+    `;
+}
+
+// Render leader abilities
+function renderAbilities(unit, enhancement) {
+    let html = '<div class="abilities">';
+
+    // Wargear abilities
+    (unit.wargear || []).forEach(ab => {
+        const abData = abilities[ab];
+        html += `<span class="ab wg tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
+    });
+
+    // Regular abilities
+    (unit.abilities || []).forEach(ab => {
+        const abData = abilities[ab];
+        html += `<span class="ab tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
+    });
+
+    html += '</div>';
+
+    // Enhancement
+    if (enhancement) {
+        const enhKey = Object.keys(enhancements).find(k => enhancements[k] === enhancement);
+        html += `<div class="enh tappable" data-ab="${enhKey}">${enhancement.name}</div>`;
+    }
+
+    return html;
+}
+
+// Render bodyguard abilities (with inherited)
+function renderBodyguardAbilities(bodyguard, leader) {
+    let html = '<div class="abilities">';
+
+    // Core abilities
+    (bodyguard.coreAbilities || []).forEach(ab => {
+        const abData = abilities[ab];
+        html += `<span class="ab core tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
+    });
+
+    // Wargear abilities
+    (bodyguard.wargear || []).forEach(ab => {
+        const abData = abilities[ab];
+        html += `<span class="ab wg tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
+    });
+
+    // Regular abilities
+    (bodyguard.abilities || []).forEach(ab => {
+        const abData = abilities[ab];
+        html += `<span class="ab tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
+    });
+
+    // Inherited abilities from leader (like Deep Strike)
+    const inheritedDisplayAbilities = (leader.leaderBonus?.grantsAbilities || [])
+        .filter(ab => ab === 'deep-strike'); // Only show certain inherited abilities as tags
+
+    inheritedDisplayAbilities.forEach(ab => {
+        const abData = abilities[ab];
+        html += `<span class="ab inherited tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
+    });
+
+    html += '</div>';
+    return html;
+}
+
+// Render character toggles in configuration tab
+function renderCharacterToggles() {
+    const container = document.getElementById('char-list');
+    container.innerHTML = army.ledUnits.map(ledUnit => {
+        const leader = units[ledUnit.leader];
+        const bodyguard = units[ledUnit.bodyguard];
+        return `
+            <div class="char-toggle" data-char="${ledUnit.leader}">
+                <div class="char-status"></div>
+                <div class="char-info">
+                    <div class="char-name">${leader.name}</div>
+                    <div class="char-unit">Leading ${bodyguard.name}</div>
+                </div>
+                <span class="char-label alive">Alive</span>
+            </div>
+        `;
+    }).join('');
+
+    // Attach event listeners
+    document.querySelectorAll('.char-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const charId = this.getAttribute('data-char');
+            characterState[charId] = !characterState[charId];
+            updateCharToggle(this, characterState[charId]);
+            updateUnitCard(charId, characterState[charId]);
+        });
+    });
+}
+
+// Update unit card when leader dies
+function updateUnitCard(charId, isDead) {
+    const unitCard = document.querySelector(`.unit-card[data-leader="${charId}"]`);
+    if (unitCard) {
+        if (isDead) {
+            unitCard.classList.add('leader-dead');
+        } else {
+            unitCard.classList.remove('leader-dead');
+        }
+    }
+}
+
+// Update character toggle UI
+function updateCharToggle(toggle, isDead) {
+    const label = toggle.querySelector('.char-label');
+    if (isDead) {
+        toggle.classList.add('dead');
+        label.textContent = 'Slain';
+        label.classList.remove('alive');
+        label.classList.add('dead');
+    } else {
+        toggle.classList.remove('dead');
+        label.textContent = 'Alive';
+        label.classList.remove('dead');
+        label.classList.add('alive');
+    }
+}
+
+// Modal functions
 function showModal(id) {
-    const a = A[id];
+    // Check abilities first, then enhancements
+    const a = abilities[id] || enhancements[id];
     if (!a) return;
-    mtitle.textContent = a.n;
-    mtype.textContent = a.t;
-    mdesc.innerHTML = a.d;
+    mtitle.textContent = a.name;
+    mtype.textContent = a.type;
+    mdesc.innerHTML = a.description;
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
 }
@@ -598,6 +631,7 @@ function hideModal() {
     document.body.style.overflow = '';
 }
 
+// Event listeners
 document.addEventListener('click', function(e) {
     const target = e.target.closest('[data-ab]');
     if (target) {
@@ -619,60 +653,15 @@ document.addEventListener('keydown', function(e) {
 document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', function() {
         const tabId = this.getAttribute('data-tab');
-
-        // Update active tab
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         this.classList.add('active');
-
-        // Update active content
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.getElementById(tabId + '-tab').classList.add('active');
     });
 });
 
-// Character status tracking
-const characterState = {
-    kahl: false,
-    champion: false,
-    uthar: false,
-    ironmaster: false
-};
-
-function updateUnitCard(charId, isDead) {
-    const unitCard = document.querySelector(`.unit-card[data-leader="${charId}"]`);
-    if (unitCard) {
-        if (isDead) {
-            unitCard.classList.add('leader-dead');
-        } else {
-            unitCard.classList.remove('leader-dead');
-        }
-    }
-}
-
-function updateCharToggle(toggle, isDead) {
-    const label = toggle.querySelector('.char-label');
-    if (isDead) {
-        toggle.classList.add('dead');
-        label.textContent = 'Slain';
-        label.classList.remove('alive');
-        label.classList.add('dead');
-    } else {
-        toggle.classList.remove('dead');
-        label.textContent = 'Alive';
-        label.classList.remove('dead');
-        label.classList.add('alive');
-    }
-}
-
-document.querySelectorAll('.char-toggle').forEach(toggle => {
-    toggle.addEventListener('click', function() {
-        const charId = this.getAttribute('data-char');
-        characterState[charId] = !characterState[charId];
-
-        updateCharToggle(this, characterState[charId]);
-        updateUnitCard(charId, characterState[charId]);
-    });
-});
+// Initialize app
+loadData();
     </script>
 </body>
 </html>
