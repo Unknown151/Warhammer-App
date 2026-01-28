@@ -107,6 +107,29 @@
         .tab.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gold)}
         .tab-content{display:none}
         .tab-content.active{display:block}
+        .char-list{display:flex;flex-direction:column;gap:.75rem}
+        .char-toggle{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;background:var(--bg3);border:1px solid var(--border);border-radius:6px;cursor:pointer;touch-action:manipulation;transition:all .2s ease}
+        .char-toggle:hover{border-color:var(--gold-dark)}
+        .char-toggle.dead{opacity:.6;border-color:var(--red);background:rgba(201,68,68,.05)}
+        .char-toggle.dead .char-status{background:var(--red);border-color:var(--red)}
+        .char-toggle.dead .char-status::after{opacity:1}
+        .char-status{width:24px;height:24px;border:2px solid var(--gold);border-radius:50%;position:relative;flex-shrink:0;transition:all .2s ease}
+        .char-status::after{content:'';position:absolute;top:50%;left:50%;width:60%;height:3px;background:#fff;transform:translate(-50%,-50%) rotate(-45deg);opacity:0;transition:opacity .2s ease}
+        .char-info{flex:1}
+        .char-name{font-family:'Orbitron',sans-serif;font-size:.8rem;color:var(--text);letter-spacing:.03em}
+        .char-unit{font-size:.65rem;color:var(--text3);margin-top:.15rem}
+        .char-label{font-size:.6rem;padding:.2rem .5rem;border-radius:2px;text-transform:uppercase;letter-spacing:.05em}
+        .char-label.alive{background:rgba(74,201,120,.2);color:var(--green)}
+        .char-label.dead{background:rgba(201,68,68,.2);color:var(--red)}
+        .unit-card.leader-dead .leader-bonus{display:none}
+        .unit-card.leader-dead .card-section.leader{opacity:.4;position:relative}
+        .unit-card.leader-dead .card-section.leader::after{content:'SLAIN';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Orbitron',sans-serif;font-size:1.5rem;color:var(--red);opacity:.5;letter-spacing:.2em;pointer-events:none}
+        .unit-card.leader-dead .inherited{display:none}
+        .unit-card.leader-dead .invuln-row.inherited{display:none}
+        .unit-card.leader-dead .attached-banner{background:linear-gradient(90deg,rgba(201,68,68,.3),transparent);border-color:var(--red)}
+        .unit-card.leader-dead .attached-icon{border-color:var(--red)}
+        .unit-card.leader-dead .attached-icon::after{background:var(--red)}
+        .unit-card.leader-dead .attached-text{color:var(--red)}
         @media(min-width:768px){.container{max-width:800px;margin:0 auto;padding:1.5rem}#modal{align-items:center}.modal-content{border-radius:12px;max-height:60vh}}
     </style>
 </head>
@@ -127,7 +150,7 @@
         <section class="section">
             <div class="section-header"><div class="section-icon"></div><div class="section-title">Led Units</div><div class="section-count">4</div></div>
             <!-- KÂHL + HEARTHGUARD -->
-            <div class="unit-card attached">
+            <div class="unit-card attached" data-leader="kahl">
                 <div class="attached-banner"><div class="attached-icon"></div><div class="attached-text">Attached • Deep Strike</div></div>
                 <div class="leader-bonus"><div class="bonus-label">Leader Bonus</div><div class="bonus-text">LETHAL HITS (all weapons) • Deep Strike</div></div>
                 <div class="card-section leader">
@@ -186,7 +209,7 @@
             </div>
 
             <!-- EINHYR CHAMPION + HEARTHGUARD -->
-            <div class="unit-card attached">
+            <div class="unit-card attached" data-leader="champion">
                 <div class="attached-banner"><div class="attached-icon"></div><div class="attached-text">Attached • Deep Strike</div></div>
                 <div class="leader-bonus"><div class="bonus-label">Leader Bonus</div><div class="bonus-text">+1 Advance & Charge • Deep Strike</div></div>
                 <div class="card-section leader">
@@ -241,7 +264,7 @@
             </div>
 
             <!-- ÛTHAR + HEARTHKYN WARRIORS -->
-            <div class="unit-card attached">
+            <div class="unit-card attached" data-leader="uthar">
                 <div class="attached-banner"><div class="attached-icon"></div><div class="attached-text">Attached Unit</div></div>
                 <div class="leader-bonus"><div class="bonus-label">Leader Bonus</div><div class="bonus-text">5+ Invulnerable Save • 1CP discount 1/round</div></div>
                 <div class="card-section leader">
@@ -301,7 +324,7 @@
             </div>
 
             <!-- IRON-MASTER + THUNDERKYN -->
-            <div class="unit-card attached">
+            <div class="unit-card attached" data-leader="ironmaster">
                 <div class="attached-banner"><div class="attached-icon"></div><div class="attached-text">Attached Unit</div></div>
                 <div class="leader-bonus"><div class="bonus-label">Leader Bonus</div><div class="bonus-text">Re-roll Wound rolls of 1 (ranged)</div></div>
                 <div class="card-section leader">
@@ -378,8 +401,42 @@
         </div>
         <div id="configuration-tab" class="tab-content">
             <section class="section">
-                <div class="section-header"><div class="section-icon"></div><div class="section-title">Configuration</div></div>
-                <p style="color:var(--text2);font-size:.85rem;">Configuration options will appear here.</p>
+                <div class="section-header"><div class="section-icon"></div><div class="section-title">Characters</div><div class="section-count">4</div></div>
+                <p style="color:var(--text2);font-size:.75rem;margin-bottom:1rem;">Tap a character to mark them as slain. This will remove their buffs and abilities from attached units.</p>
+                <div class="char-list">
+                    <div class="char-toggle" data-char="kahl">
+                        <div class="char-status"></div>
+                        <div class="char-info">
+                            <div class="char-name">Kahl</div>
+                            <div class="char-unit">Leading Einhyr Hearthguard</div>
+                        </div>
+                        <span class="char-label alive">Alive</span>
+                    </div>
+                    <div class="char-toggle" data-char="champion">
+                        <div class="char-status"></div>
+                        <div class="char-info">
+                            <div class="char-name">Einhyr Champion</div>
+                            <div class="char-unit">Leading Einhyr Hearthguard</div>
+                        </div>
+                        <span class="char-label alive">Alive</span>
+                    </div>
+                    <div class="char-toggle" data-char="uthar">
+                        <div class="char-status"></div>
+                        <div class="char-info">
+                            <div class="char-name">Uthar the Destined</div>
+                            <div class="char-unit">Leading Hearthkyn Warriors</div>
+                        </div>
+                        <span class="char-label alive">Alive</span>
+                    </div>
+                    <div class="char-toggle" data-char="ironmaster">
+                        <div class="char-status"></div>
+                        <div class="char-info">
+                            <div class="char-name">Brokhyr Iron-master</div>
+                            <div class="char-unit">Leading Brokhyr Thunderkyn</div>
+                        </div>
+                        <span class="char-label alive">Alive</span>
+                    </div>
+                </div>
             </section>
         </div>
     </main>
@@ -476,6 +533,50 @@ document.querySelectorAll('.tab').forEach(tab => {
         // Update active content
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.getElementById(tabId + '-tab').classList.add('active');
+    });
+});
+
+// Character status tracking
+const characterState = {
+    kahl: false,
+    champion: false,
+    uthar: false,
+    ironmaster: false
+};
+
+function updateUnitCard(charId, isDead) {
+    const unitCard = document.querySelector(`.unit-card[data-leader="${charId}"]`);
+    if (unitCard) {
+        if (isDead) {
+            unitCard.classList.add('leader-dead');
+        } else {
+            unitCard.classList.remove('leader-dead');
+        }
+    }
+}
+
+function updateCharToggle(toggle, isDead) {
+    const label = toggle.querySelector('.char-label');
+    if (isDead) {
+        toggle.classList.add('dead');
+        label.textContent = 'Slain';
+        label.classList.remove('alive');
+        label.classList.add('dead');
+    } else {
+        toggle.classList.remove('dead');
+        label.textContent = 'Alive';
+        label.classList.remove('dead');
+        label.classList.add('alive');
+    }
+}
+
+document.querySelectorAll('.char-toggle').forEach(toggle => {
+    toggle.addEventListener('click', function() {
+        const charId = this.getAttribute('data-char');
+        characterState[charId] = !characterState[charId];
+
+        updateCharToggle(this, characterState[charId]);
+        updateUnitCard(charId, characterState[charId]);
     });
 });
     </script>
