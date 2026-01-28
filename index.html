@@ -457,6 +457,14 @@ function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo) {
     `;
 }
 
+// Helper to parse ability (supports string or {id, display} object)
+function parseAbility(ab) {
+    if (typeof ab === 'string') {
+        return { id: ab, display: null };
+    }
+    return { id: ab.id, display: ab.display || null };
+}
+
 // Render a single weapon
 function renderWeapon(weapon, type, inheritedAbilities, appliesTo) {
     const countText = weapon.count > 1 ? ` (×${weapon.count})` : '';
@@ -470,7 +478,8 @@ function renderWeapon(weapon, type, inheritedAbilities, appliesTo) {
         applicableInherited = weapon.inheritedAbilities || [];
         // Then add global inherited abilities if not already present
         inheritedAbilities.forEach(ab => {
-            if (!applicableInherited.includes(ab)) {
+            const parsed = parseAbility(ab);
+            if (!applicableInherited.some(a => parseAbility(a).id === parsed.id)) {
                 applicableInherited.push(ab);
             }
         });
@@ -498,15 +507,15 @@ function renderWeapon(weapon, type, inheritedAbilities, appliesTo) {
 
     // Render weapon abilities
     const allAbilities = [
-        ...(weapon.abilities || []).map(ab => ({ id: ab, inherited: false })),
-        ...applicableInherited.map(ab => ({ id: ab, inherited: true }))
+        ...(weapon.abilities || []).map(ab => ({ ...parseAbility(ab), inherited: false })),
+        ...applicableInherited.map(ab => ({ ...parseAbility(ab), inherited: true }))
     ];
 
     const abilitiesHtml = allAbilities.length ? `
         <div class="wabs">
             ${allAbilities.map(ab => {
                 const abData = abilities[ab.id];
-                const displayName = abData?.name || ab.id;
+                const displayName = ab.display || abData?.name || ab.id;
                 const classes = ab.inherited ? 'wab inherited tappable' : 'wab tappable';
                 return `<button class="${classes}" data-ab="${ab.id}">${displayName}</button>`;
             }).join('')}
