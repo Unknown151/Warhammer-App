@@ -157,6 +157,18 @@
         .unit-card.collapsed .card-collapse-content{display:none}
         .unit-card.collapsed{border-color:var(--border)}
         .unit-card.collapsed.attached{box-shadow:none}
+        .stratagem-toggles{display:flex;gap:.5rem;align-items:center}
+        .strat-toggle{width:36px;height:36px;border:2px solid var(--border);border-radius:4px;background:var(--bg2);display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;transition:all .2s ease;position:relative}
+        .strat-toggle:hover{border-color:var(--gold-dark);background:var(--bg3)}
+        .strat-toggle.active{border-color:var(--gold);background:rgba(212,168,75,.2);box-shadow:0 0 8px rgba(212,168,75,.3)}
+        .strat-toggle .strat-icon{font-size:1.1rem;filter:grayscale(1) opacity(0.5);transition:all .2s ease}
+        .strat-toggle.active .strat-icon{filter:none}
+        .strat-toggle::after{content:attr(data-tooltip);position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);background:var(--bg);border:1px solid var(--border);padding:.2rem .4rem;border-radius:3px;font-size:.55rem;color:var(--text2);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:10}
+        .strat-toggle:hover::after{opacity:1}
+        .stat-buffed{color:var(--green) !important}
+        .stat-buffed::after{content:' (+1)';font-size:.6rem;color:var(--green)}
+        .wab.strat-buff{background:rgba(212,168,75,.35);border:1px solid var(--gold-dark)}
+        .wab.strat-buff::before{content:'⚔ '}
         @media(min-width:768px){.container{max-width:800px;margin:0 auto;padding:1.5rem}#modal{align-items:center}.modal-content{border-radius:12px;max-height:60vh}}
     </style>
 </head>
@@ -164,6 +176,11 @@
     <header class="header">
         <div class="header-top">
             <div><div class="logo-title">LEAGUES OF VOTANN</div><div class="logo-sub">LED UNITS REFERENCE</div></div>
+            <div class="stratagem-toggles">
+                <div class="strat-toggle" id="strat-fury" data-tooltip="Fury of the Hearth" onclick="toggleStratagem('fury')">
+                    <span class="strat-icon">🔥</span>
+                </div>
+            </div>
             <div class="army-stats"><div class="stat-block"><div class="stat-value" id="unit-count">-</div><div class="stat-label">Units</div></div></div>
         </div>
         <div class="det-banner tappable" id="detachment-banner"><div class="det-name" id="detachment-name">Loading...</div><div class="det-brief">Tap for details</div></div>
@@ -203,6 +220,7 @@ let enhancements = {};
 let army = {};
 let units = {};
 const characterState = {};
+const stratagemState = { fury: false };
 
 // DOM elements
 const modal = document.getElementById('modal');
@@ -286,6 +304,9 @@ function renderLedUnitCard(ledUnit) {
     const enhancement = ledUnit.enhancement ? enhancements[ledUnit.enhancement] : null;
     const totalPoints = leader.points + bodyguard.points + (enhancement?.points || 0);
 
+    // Check if Fury of the Hearth applies to this unit
+    const furyActive = stratagemState.fury && isFuryTarget(ledUnit.leader, ledUnit.bodyguard);
+
     return `
         <div class="unit-card attached" data-leader="${ledUnit.leader}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
@@ -312,7 +333,7 @@ function renderLedUnitCard(ledUnit) {
                     ${renderUnitHeader(leader)}
                     ${renderUnitStats(leader)}
                     ${leader.invulnerableSave ? renderInvuln(leader.invulnerableSave, false) : ''}
-                    ${renderWeapons(leader.weapons, leader.leaderBonus?.grantsAbilities || [])}
+                    ${renderWeapons(leader.weapons, leader.leaderBonus?.grantsAbilities || [], null, furyActive)}
                     ${renderAbilities(leader, enhancement)}
                 </div>
                 <div class="card-section">
@@ -320,7 +341,7 @@ function renderLedUnitCard(ledUnit) {
                     ${renderUnitHeader(bodyguard)}
                     ${renderUnitStats(bodyguard)}
                     ${renderBodyguardInvuln(bodyguard, leader)}
-                    ${renderWeapons(bodyguard.weapons, leader.leaderBonus?.grantsAbilities || [], leader.leaderBonus?.appliesTo)}
+                    ${renderWeapons(bodyguard.weapons, leader.leaderBonus?.grantsAbilities || [], leader.leaderBonus?.appliesTo, furyActive)}
                     ${renderBodyguardAbilities(bodyguard, leader)}
                 </div>
                 <div class="total-wounds">
@@ -406,15 +427,15 @@ function renderBodyguardInvuln(bodyguard, leader) {
 }
 
 // Render weapons section
-function renderWeapons(weapons, inheritedAbilities = [], appliesTo = null) {
-    const rangedHtml = weapons.ranged?.length ? renderWeaponCategory('ranged', weapons.ranged, inheritedAbilities, appliesTo) : '';
-    const meleeHtml = weapons.melee?.length ? renderWeaponCategory('melee', weapons.melee, inheritedAbilities, appliesTo) : '';
+function renderWeapons(weapons, inheritedAbilities = [], appliesTo = null, furyActive = false) {
+    const rangedHtml = weapons.ranged?.length ? renderWeaponCategory('ranged', weapons.ranged, inheritedAbilities, appliesTo, furyActive) : '';
+    const meleeHtml = weapons.melee?.length ? renderWeaponCategory('melee', weapons.melee, inheritedAbilities, appliesTo, false) : ''; // Fury only affects ranged
 
     return `<div class="weapons">${rangedHtml}${meleeHtml}</div>`;
 }
 
 // Render a weapon category (ranged or melee)
-function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo) {
+function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo, furyActive = false) {
     const label = type === 'ranged' ? 'Ranged Weapons' : 'Melee Weapons';
 
     // Group weapons by weaponGroup
@@ -436,7 +457,7 @@ function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo) {
 
     // Render ungrouped weapons
     ungrouped.forEach(weapon => {
-        contentHtml += renderWeapon(weapon, type, inheritedAbilities, appliesTo);
+        contentHtml += renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive);
     });
 
     // Render grouped weapons
@@ -444,7 +465,7 @@ function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo) {
         contentHtml += `
             <div class="weapon-group">
                 <div class="weapon-group-label">${group.label}</div>
-                ${group.weapons.map(w => renderWeapon(w, type, inheritedAbilities, appliesTo)).join('')}
+                ${group.weapons.map(w => renderWeapon(w, type, inheritedAbilities, appliesTo, furyActive)).join('')}
             </div>
         `;
     });
@@ -466,7 +487,7 @@ function parseAbility(ab) {
 }
 
 // Render a single weapon
-function renderWeapon(weapon, type, inheritedAbilities, appliesTo) {
+function renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive = false) {
     const countText = weapon.count > 1 ? ` (×${weapon.count})` : '';
     const modelText = weapon.model ? ` (${weapon.model})` : '';
     const nameDisplay = weapon.name + countText + modelText;
@@ -475,7 +496,7 @@ function renderWeapon(weapon, type, inheritedAbilities, appliesTo) {
     let applicableInherited = [];
     if (appliesTo === null || appliesTo === type) {
         // Check weapon's own inherited abilities first
-        applicableInherited = weapon.inheritedAbilities || [];
+        applicableInherited = [...(weapon.inheritedAbilities || [])];
         // Then add global inherited abilities if not already present
         inheritedAbilities.forEach(ab => {
             const parsed = parseAbility(ab);
@@ -485,15 +506,20 @@ function renderWeapon(weapon, type, inheritedAbilities, appliesTo) {
         });
     } else {
         // Only use weapon's own inherited abilities
-        applicableInherited = weapon.inheritedAbilities || [];
+        applicableInherited = [...(weapon.inheritedAbilities || [])];
     }
+
+    // Apply Fury of the Hearth buff (only for ranged weapons)
+    const strengthDisplay = furyActive && type === 'ranged'
+        ? `<span class="stat-buffed">${weapon.s}</span>`
+        : weapon.s;
 
     const statsGrid = type === 'ranged'
         ? `<div class="weapon-stats-grid ranged">
             <div class="ws"><span class="ws-label">Rng</span><span class="ws-val">${weapon.range}</span></div>
             <div class="ws"><span class="ws-label">A</span><span class="ws-val">${weapon.a}</span></div>
             <div class="ws"><span class="ws-label">BS</span><span class="ws-val">${weapon.bs}</span></div>
-            <div class="ws"><span class="ws-label">S</span><span class="ws-val">${weapon.s}</span></div>
+            <div class="ws"><span class="ws-label">S</span><span class="ws-val">${strengthDisplay}</span></div>
             <div class="ws"><span class="ws-label">AP</span><span class="ws-val">${weapon.ap}</span></div>
             <div class="ws"><span class="ws-label">D</span><span class="ws-val">${weapon.d}</span></div>
            </div>`
@@ -507,16 +533,22 @@ function renderWeapon(weapon, type, inheritedAbilities, appliesTo) {
 
     // Render weapon abilities
     const allAbilities = [
-        ...(weapon.abilities || []).map(ab => ({ ...parseAbility(ab), inherited: false })),
-        ...applicableInherited.map(ab => ({ ...parseAbility(ab), inherited: true }))
+        ...(weapon.abilities || []).map(ab => ({ ...parseAbility(ab), inherited: false, stratBuff: false })),
+        ...applicableInherited.map(ab => ({ ...parseAbility(ab), inherited: true, stratBuff: false }))
     ];
+
+    // Add Sustained Hits 1 from Fury of the Hearth (only for ranged weapons)
+    if (furyActive && type === 'ranged') {
+        allAbilities.push({ id: 'sustained-hits', display: 'Sustained Hits 1', inherited: false, stratBuff: true });
+    }
 
     const abilitiesHtml = allAbilities.length ? `
         <div class="wabs">
             ${allAbilities.map(ab => {
                 const abData = abilities[ab.id];
                 const displayName = ab.display || abData?.name || ab.id;
-                const classes = ab.inherited ? 'wab inherited tappable' : 'wab tappable';
+                let classes = ab.inherited ? 'wab inherited tappable' : 'wab tappable';
+                if (ab.stratBuff) classes = 'wab strat-buff tappable';
                 return `<button class="${classes}" data-ab="${ab.id}">${displayName}</button>`;
             }).join('')}
         </div>
@@ -654,6 +686,25 @@ function updateCharToggle(toggle, isDead) {
 function toggleCardCollapse(header) {
     const card = header.closest('.unit-card');
     card.classList.toggle('collapsed');
+}
+
+// Toggle stratagem
+function toggleStratagem(stratId) {
+    stratagemState[stratId] = !stratagemState[stratId];
+    const toggle = document.getElementById(`strat-${stratId}`);
+    if (stratagemState[stratId]) {
+        toggle.classList.add('active');
+    } else {
+        toggle.classList.remove('active');
+    }
+    // Re-render units to apply stratagem effects
+    renderUnits();
+}
+
+// Check if Fury of the Hearth applies to a unit
+function isFuryTarget(leaderId, bodyguardId) {
+    // Fury of the Hearth applies to Hearthguard units and their leaders
+    return bodyguardId === 'einhyr-hearthguard';
 }
 
 // Modal functions
