@@ -100,6 +100,13 @@
         .modal-desc{font-size:.9rem;color:var(--text);line-height:1.7}
         .modal-desc strong{color:var(--gold-bright)}
         footer{text-align:center;padding:1.5rem 1rem;color:var(--text3);font-size:.65rem;border-top:1px solid var(--border)}
+        .tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:99}
+        .tab{flex:1;padding:.875rem 1rem;font-family:'Orbitron',sans-serif;font-size:.7rem;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;text-align:center;cursor:pointer;border:none;background:transparent;transition:all .2s ease;touch-action:manipulation;position:relative}
+        .tab:hover{color:var(--text2);background:rgba(212,168,75,.05)}
+        .tab.active{color:var(--gold);background:rgba(212,168,75,.1)}
+        .tab.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gold)}
+        .tab-content{display:none}
+        .tab-content.active{display:block}
         @media(min-width:768px){.container{max-width:800px;margin:0 auto;padding:1.5rem}#modal{align-items:center}.modal-content{border-radius:12px;max-height:60vh}}
     </style>
 </head>
@@ -111,7 +118,12 @@
         </div>
         <div class="det-banner tappable" data-ab="prioritised-efficiency"><div class="det-name">HEARTHBAND — PRIORITISED EFFICIENCY</div><div class="det-brief">Tap for details</div></div>
     </header>
+    <nav class="tabs">
+        <button class="tab active" data-tab="units">Units</button>
+        <button class="tab" data-tab="configuration">Configuration</button>
+    </nav>
     <main class="container">
+        <div id="units-tab" class="tab-content active">
         <section class="section">
             <div class="section-header"><div class="section-icon"></div><div class="section-title">Led Units</div><div class="section-count">4</div></div>
             <!-- KÂHL + HEARTHGUARD -->
@@ -363,6 +375,13 @@
                 <div class="keywords">INFANTRY, EXO-FRAME, BRÔKHYR, THUNDERKYN, IRON-MASTER, CHARACTER</div>
             </div>
         </section>
+        </div>
+        <div id="configuration-tab" class="tab-content">
+            <section class="section">
+                <div class="section-header"><div class="section-icon"></div><div class="section-title">Configuration</div></div>
+                <p style="color:var(--text2);font-size:.85rem;">Configuration options will appear here.</p>
+            </section>
+        </div>
     </main>
     <footer>LEAGUES OF VOTANN — LED UNITS REFERENCE</footer>
 
@@ -443,6 +462,21 @@ modal.addEventListener('click', function(e) {
 
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') hideModal();
+});
+
+// Tab switching
+document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+        const tabId = this.getAttribute('data-tab');
+
+        // Update active tab
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+
+        // Update active content
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById(tabId + '-tab').classList.add('active');
+    });
 });
     </script>
 </body>
