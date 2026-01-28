@@ -143,6 +143,20 @@
         .unit-card.leader-dead .attached-text{color:var(--red)}
         .loading{text-align:center;padding:2rem;color:var(--text2)}
         .model-profile-label{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin:.75rem 0 .4rem;border-bottom:1px dashed var(--border);padding-bottom:.3rem}
+        .card-collapse-header{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:linear-gradient(90deg,rgba(212,168,75,.1),transparent);cursor:pointer;touch-action:manipulation;user-select:none}
+        .card-collapse-header:hover{background:linear-gradient(90deg,rgba(212,168,75,.15),transparent)}
+        .card-collapse-info{display:flex;flex-direction:column;gap:.15rem}
+        .card-collapse-title{font-family:'Orbitron',sans-serif;font-size:.85rem;color:var(--gold);letter-spacing:.03em}
+        .card-collapse-subtitle{font-size:.65rem;color:var(--text2)}
+        .card-collapse-right{display:flex;align-items:center;gap:.75rem}
+        .card-collapse-points{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--gold-bright)}
+        .card-collapse-toggle{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--text3);transition:transform .2s ease}
+        .card-collapse-toggle::after{content:'';border:solid var(--text2);border-width:0 2px 2px 0;padding:4px;transform:rotate(45deg);transition:transform .2s ease}
+        .unit-card.collapsed .card-collapse-toggle::after{transform:rotate(-135deg)}
+        .card-collapse-content{transition:all .2s ease}
+        .unit-card.collapsed .card-collapse-content{display:none}
+        .unit-card.collapsed{border-color:var(--border)}
+        .unit-card.collapsed.attached{box-shadow:none}
         @media(min-width:768px){.container{max-width:800px;margin:0 auto;padding:1.5rem}#modal{align-items:center}.modal-content{border-radius:12px;max-height:60vh}}
     </style>
 </head>
@@ -270,38 +284,51 @@ function renderLedUnitCard(ledUnit) {
     const leader = units[ledUnit.leader];
     const bodyguard = units[ledUnit.bodyguard];
     const enhancement = ledUnit.enhancement ? enhancements[ledUnit.enhancement] : null;
+    const totalPoints = leader.points + bodyguard.points + (enhancement?.points || 0);
 
     return `
         <div class="unit-card attached" data-leader="${ledUnit.leader}">
-            <div class="attached-banner">
-                <div class="attached-icon"></div>
-                <div class="attached-text">${ledUnit.attachedBannerText}</div>
+            <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
+                <div class="card-collapse-info">
+                    <div class="card-collapse-title">${leader.name} + ${bodyguard.name}</div>
+                    <div class="card-collapse-subtitle">${ledUnit.totalWounds} wounds • ${ledUnit.attachedBannerText}</div>
+                </div>
+                <div class="card-collapse-right">
+                    <div class="card-collapse-points">${totalPoints} pts</div>
+                    <div class="card-collapse-toggle"></div>
+                </div>
             </div>
-            <div class="leader-bonus">
-                <div class="bonus-label">Leader Bonus</div>
-                <div class="bonus-text">${leader.leaderBonus.text}</div>
+            <div class="card-collapse-content">
+                <div class="attached-banner">
+                    <div class="attached-icon"></div>
+                    <div class="attached-text">${ledUnit.attachedBannerText}</div>
+                </div>
+                <div class="leader-bonus">
+                    <div class="bonus-label">Leader Bonus</div>
+                    <div class="bonus-text">${leader.leaderBonus.text}</div>
+                </div>
+                <div class="card-section leader">
+                    <div class="sec-label">Leader</div>
+                    ${renderUnitHeader(leader)}
+                    ${renderUnitStats(leader)}
+                    ${leader.invulnerableSave ? renderInvuln(leader.invulnerableSave, false) : ''}
+                    ${renderWeapons(leader.weapons, leader.leaderBonus?.grantsAbilities || [])}
+                    ${renderAbilities(leader, enhancement)}
+                </div>
+                <div class="card-section">
+                    <div class="sec-label">Bodyguard</div>
+                    ${renderUnitHeader(bodyguard)}
+                    ${renderUnitStats(bodyguard)}
+                    ${renderBodyguardInvuln(bodyguard, leader)}
+                    ${renderWeapons(bodyguard.weapons, leader.leaderBonus?.grantsAbilities || [], leader.leaderBonus?.appliesTo)}
+                    ${renderBodyguardAbilities(bodyguard, leader)}
+                </div>
+                <div class="total-wounds">
+                    <div class="tw-label">Total Wounds:</div>
+                    <div class="tw-val">${ledUnit.totalWounds} (${ledUnit.woundBreakdown})</div>
+                </div>
+                <div class="keywords">${ledUnit.combinedKeywords.join(', ')}</div>
             </div>
-            <div class="card-section leader">
-                <div class="sec-label">Leader</div>
-                ${renderUnitHeader(leader)}
-                ${renderUnitStats(leader)}
-                ${leader.invulnerableSave ? renderInvuln(leader.invulnerableSave, false) : ''}
-                ${renderWeapons(leader.weapons, leader.leaderBonus?.grantsAbilities || [])}
-                ${renderAbilities(leader, enhancement)}
-            </div>
-            <div class="card-section">
-                <div class="sec-label">Bodyguard</div>
-                ${renderUnitHeader(bodyguard)}
-                ${renderUnitStats(bodyguard)}
-                ${renderBodyguardInvuln(bodyguard, leader)}
-                ${renderWeapons(bodyguard.weapons, leader.leaderBonus?.grantsAbilities || [], leader.leaderBonus?.appliesTo)}
-                ${renderBodyguardAbilities(bodyguard, leader)}
-            </div>
-            <div class="total-wounds">
-                <div class="tw-label">Total Wounds:</div>
-                <div class="tw-val">${ledUnit.totalWounds} (${ledUnit.woundBreakdown})</div>
-            </div>
-            <div class="keywords">${ledUnit.combinedKeywords.join(', ')}</div>
         </div>
     `;
 }
@@ -612,6 +639,12 @@ function updateCharToggle(toggle, isDead) {
         label.classList.remove('dead');
         label.classList.add('alive');
     }
+}
+
+// Toggle card collapse
+function toggleCardCollapse(header) {
+    const card = header.closest('.unit-card');
+    card.classList.toggle('collapsed');
 }
 
 // Modal functions
