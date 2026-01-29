@@ -45,8 +45,8 @@
   "abilities": ["kindred-hero", "seized-opportunity"],
   "wargear": ["teleport-crest"],
   "leaderBonus": {
-    "text": "LETHAL HITS (all weapons) • Deep Strike",
-    "grantsAbilities": ["lethal-hits", "deep-strike"]
+    "text": "LETHAL HITS (all weapons)",
+    "grantsAbilities": ["lethal-hits"]
   },
   "canLead": ["einhyr-hearthguard", "hearthkyn-warriors"]
 }

@@ -604,15 +604,6 @@ function renderBodyguardAbilities(bodyguard, leader) {
         html += `<span class="ab tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
     });
 
-    // Inherited abilities from leader (like Deep Strike)
-    const inheritedDisplayAbilities = (leader.leaderBonus?.grantsAbilities || [])
-        .filter(ab => ab === 'deep-strike'); // Only show certain inherited abilities as tags
-
-    inheritedDisplayAbilities.forEach(ab => {
-        const abData = abilities[ab];
-        html += `<span class="ab inherited tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
-    });
-
     html += '</div>';
     return html;
 }

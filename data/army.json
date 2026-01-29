@@ -13,7 +13,7 @@
       "leader": "kahl",
       "bodyguard": "einhyr-hearthguard",
       "enhancement": "quake-multigenerator",
-      "attachedBannerText": "Attached • Deep Strike",
+      "attachedBannerText": "Attached",
       "totalWounds": 14,
       "woundBreakdown": "4 + 10",
       "combinedKeywords": ["INFANTRY", "EXO-ARMOUR", "EINHYR HEARTHGUARD", "KÂHL", "CHARACTER"]
@@ -23,7 +23,7 @@
       "leader": "einhyr-champion",
       "bodyguard": "einhyr-hearthguard",
       "enhancement": "bastion-shield",
-      "attachedBannerText": "Attached • Deep Strike",
+      "attachedBannerText": "Attached",
       "totalWounds": 15,
       "woundBreakdown": "5 + 10",
       "combinedKeywords": ["INFANTRY", "EXO-ARMOUR", "EINHYR HEARTHGUARD", "EINHYR CHAMPION", "CHARACTER"]
