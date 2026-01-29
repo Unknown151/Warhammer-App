@@ -11,17 +11,18 @@
         :root{--gold:#D4A84B;--gold-bright:#F5D77A;--gold-dark:#8B6914;--bg:#0A0A0C;--bg2:#111116;--bg3:#18181E;--border:#2A2A35;--border-gold:#3D2E0A;--text:#E8E8EC;--text2:#9090A0;--text3:#606070;--red:#C94444;--blue:#4A8ED4;--green:#4AC978;--purple:#8B5CF6}
         *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:rgba(212,168,75,0.3)}
         body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.4;padding-bottom:60px}
-        .header{background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem;position:sticky;top:0;z-index:100}
-        .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
+        .header{background:var(--bg2);border-bottom:1px solid var(--border);padding:.75rem 1rem;position:sticky;top:0;z-index:100}
+        .header-top{display:flex;align-items:center;gap:.6rem}
         .logo-title{font-family:'Orbitron',sans-serif;font-weight:700;font-size:1rem;color:var(--gold);letter-spacing:.05em}
         .logo-sub{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--text3)}
         .army-stats{display:flex;gap:1rem}
         .stat-block{text-align:center}
         .stat-value{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;color:var(--gold-bright)}
         .stat-label{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em}
-        .det-banner{background:linear-gradient(90deg,rgba(212,168,75,.15),transparent);padding:.5rem .75rem;border-radius:4px;border-left:3px solid var(--gold);cursor:pointer;touch-action:manipulation}
-        .det-name{font-family:'Orbitron',sans-serif;font-size:.7rem;color:var(--gold);letter-spacing:.1em}
-        .det-brief{font-size:.65rem;color:var(--text2);margin-top:.2rem}
+        .det-btn{background:rgba(212,168,75,.15);padding:.4rem .7rem;border-radius:4px;border:1px solid var(--gold-dark);cursor:pointer;touch-action:manipulation;display:flex;align-items:center;gap:.4rem}
+        .det-btn:hover{background:rgba(212,168,75,.25)}
+        .det-btn-icon{font-size:.75rem}
+        .det-btn-name{font-family:'Orbitron',sans-serif;font-size:.55rem;color:var(--gold);letter-spacing:.05em;white-space:nowrap}
         .container{padding:1rem}
         .section{margin-bottom:1.5rem}
         .section-header{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
@@ -159,7 +160,7 @@
         .unit-card.collapsed .card-collapse-content{display:none}
         .unit-card.collapsed{border-color:var(--border)}
         .unit-card.collapsed.attached{box-shadow:none}
-        .stratagem-toggles{display:flex;gap:.5rem;align-items:center}
+        .stratagem-toggles{display:flex;gap:.5rem;align-items:center;margin-left:auto}
         .strat-toggle{width:36px;height:36px;border:2px solid var(--border);border-radius:4px;background:var(--bg2);display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;transition:all .2s ease;position:relative}
         .strat-toggle:hover{border-color:var(--gold-dark);background:var(--bg3)}
         .strat-toggle.active{border-color:var(--gold);background:rgba(212,168,75,.2);box-shadow:0 0 8px rgba(212,168,75,.3)}
@@ -178,14 +179,13 @@
     <header class="header">
         <div class="header-top">
             <div><div class="logo-title">LEAGUES OF VOTANN</div><div class="logo-sub">LED UNITS REFERENCE</div></div>
+            <div class="det-btn tappable" id="detachment-banner"><span class="det-btn-icon">⚔</span><span class="det-btn-name" id="detachment-name">Loading...</span></div>
             <div class="stratagem-toggles">
                 <div class="strat-toggle" id="strat-fury" data-tooltip="Fury of the Hearth" onclick="toggleStratagem('fury')">
                     <span class="strat-icon">🔥</span>
                 </div>
             </div>
-            <div class="army-stats"><div class="stat-block"><div class="stat-value" id="unit-count">-</div><div class="stat-label">Units</div></div></div>
         </div>
-        <div class="det-banner tappable" id="detachment-banner"><div class="det-name" id="detachment-name">Loading...</div><div class="det-brief">Tap for details</div></div>
     </header>
     <nav class="tabs">
         <button class="tab active" data-tab="units">Units</button>
@@ -279,9 +279,8 @@ async function loadData() {
 // Render the entire app
 function renderApp() {
     // Update header
-    document.getElementById('unit-count').textContent = army.totalUnits;
     document.getElementById('detachment-name').textContent =
-        `${army.detachment.name} — ${abilities[army.detachment.rule]?.name || army.detachment.rule}`;
+        `${army.detachment.name}`;
     document.getElementById('detachment-banner').setAttribute('data-ab', army.detachment.rule);
     document.getElementById('led-units-count').textContent = army.ledUnits.length;
     document.getElementById('char-count').textContent = army.ledUnits.length;
