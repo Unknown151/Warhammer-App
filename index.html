@@ -172,6 +172,10 @@
         .stat-buffed::after{content:' (+1)';font-size:.6rem;color:var(--green)}
         .wab.strat-buff{background:rgba(212,168,75,.35);border:1px solid var(--gold-dark)}
         .wab.strat-buff::before{content:'⚔ '}
+        .wab.closest-buff{background:rgba(74,142,212,.35);border:1px solid rgba(74,142,212,.5)}
+        .wab.closest-buff::before{content:'🎯 '}
+        .ap-buffed{color:var(--green) !important}
+        .ap-buffed::after{content:' (+1)';font-size:.6rem;color:var(--green)}
         @media(min-width:768px){.container{max-width:800px;margin:0 auto;padding:1.5rem}#modal{align-items:center}.modal-content{border-radius:12px;max-height:60vh}}
     </style>
 </head>
@@ -181,6 +185,9 @@
             <div><div class="logo-title">LEAGUES OF VOTANN</div><div class="logo-sub">LED UNITS REFERENCE</div></div>
             <div class="det-btn tappable" id="detachment-banner"><span class="det-btn-icon">⚔</span><span class="det-btn-name" id="detachment-name">Loading...</span></div>
             <div class="stratagem-toggles">
+                <div class="strat-toggle" id="strat-closest" data-tooltip="Targeting Closest" onclick="toggleStratagem('closest')">
+                    <span class="strat-icon">🎯</span>
+                </div>
                 <div class="strat-toggle" id="strat-fury" data-tooltip="Fury of the Hearth" onclick="toggleStratagem('fury')">
                     <span class="strat-icon">🔥</span>
                 </div>
@@ -222,7 +229,7 @@ let enhancements = {};
 let army = {};
 let units = {};
 const characterState = {};
-const stratagemState = { fury: false };
+const stratagemState = { fury: false, closest: false };
 
 // DOM elements
 const modal = document.getElementById('modal');
@@ -307,6 +314,10 @@ function renderLedUnitCard(ledUnit) {
     // Check if Fury of the Hearth applies to this unit
     const furyActive = stratagemState.fury && isFuryTarget(ledUnit.leader, ledUnit.bodyguard);
 
+    // Check closest-target bonuses
+    const closestActive = stratagemState.closest;
+    const closestBonuses = closestActive ? getClosestBonuses(ledUnit) : { apImprove: false, rerollHit: false };
+
     return `
         <div class="unit-card attached" data-leader="${ledUnit.leader}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
@@ -332,7 +343,7 @@ function renderLedUnitCard(ledUnit) {
                     ${renderUnitHeader(leader)}
                     ${renderUnitStats(leader)}
                     ${leader.invulnerableSave ? renderInvuln(leader.invulnerableSave, false) : ''}
-                    ${renderWeapons(leader.weapons, leader.leaderBonus?.grantsAbilities || [], null, furyActive)}
+                    ${renderWeapons(leader.weapons, leader.leaderBonus?.grantsAbilities || [], null, furyActive, closestActive, closestBonuses)}
                     ${renderAbilities(leader, enhancement)}
                 </div>
                 <div class="card-section">
@@ -340,7 +351,7 @@ function renderLedUnitCard(ledUnit) {
                     ${renderUnitHeader(bodyguard)}
                     ${renderUnitStats(bodyguard)}
                     ${renderBodyguardInvuln(bodyguard, leader)}
-                    ${renderWeapons(bodyguard.weapons, leader.leaderBonus?.grantsAbilities || [], leader.leaderBonus?.appliesTo, furyActive)}
+                    ${renderWeapons(bodyguard.weapons, leader.leaderBonus?.grantsAbilities || [], leader.leaderBonus?.appliesTo, furyActive, closestActive, closestBonuses)}
                     ${renderBodyguardAbilities(bodyguard, leader)}
                 </div>
                 <div class="keywords">${ledUnit.combinedKeywords.join(', ')}</div>
@@ -419,15 +430,15 @@ function renderBodyguardInvuln(bodyguard, leader) {
 }
 
 // Render weapons section
-function renderWeapons(weapons, inheritedAbilities = [], appliesTo = null, furyActive = false) {
-    const rangedHtml = weapons.ranged?.length ? renderWeaponCategory('ranged', weapons.ranged, inheritedAbilities, appliesTo, furyActive) : '';
-    const meleeHtml = weapons.melee?.length ? renderWeaponCategory('melee', weapons.melee, inheritedAbilities, appliesTo, false) : ''; // Fury only affects ranged
+function renderWeapons(weapons, inheritedAbilities = [], appliesTo = null, furyActive = false, closestActive = false, closestBonuses = {}) {
+    const rangedHtml = weapons.ranged?.length ? renderWeaponCategory('ranged', weapons.ranged, inheritedAbilities, appliesTo, furyActive, closestActive, closestBonuses) : '';
+    const meleeHtml = weapons.melee?.length ? renderWeaponCategory('melee', weapons.melee, inheritedAbilities, appliesTo, false, closestActive, closestBonuses) : ''; // Fury only affects ranged
 
     return `<div class="weapons">${rangedHtml}${meleeHtml}</div>`;
 }
 
 // Render a weapon category (ranged or melee)
-function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo, furyActive = false) {
+function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo, furyActive = false, closestActive = false, closestBonuses = {}) {
     const label = type === 'ranged' ? 'Ranged Weapons' : 'Melee Weapons';
 
     // Group weapons by weaponGroup
@@ -449,7 +460,7 @@ function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo, f
 
     // Render ungrouped weapons
     ungrouped.forEach(weapon => {
-        contentHtml += renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive);
+        contentHtml += renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive, closestActive, closestBonuses);
     });
 
     // Render grouped weapons
@@ -457,7 +468,7 @@ function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo, f
         contentHtml += `
             <div class="weapon-group">
                 <div class="weapon-group-label">${group.label}</div>
-                ${group.weapons.map(w => renderWeapon(w, type, inheritedAbilities, appliesTo, furyActive)).join('')}
+                ${group.weapons.map(w => renderWeapon(w, type, inheritedAbilities, appliesTo, furyActive, closestActive, closestBonuses)).join('')}
             </div>
         `;
     });
@@ -479,7 +490,7 @@ function parseAbility(ab) {
 }
 
 // Render a single weapon
-function renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive = false) {
+function renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive = false, closestActive = false, closestBonuses = {}) {
     const countText = weapon.count > 1 ? ` (×${weapon.count})` : '';
     const modelText = weapon.model ? ` (${weapon.model})` : '';
     const nameDisplay = weapon.name + countText + modelText;
@@ -506,32 +517,47 @@ function renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive = 
         ? `<span class="stat-buffed">${weapon.s}</span>`
         : weapon.s;
 
+    // Apply AP improvement from Prioritised Efficiency (closest target)
+    const apDisplay = closestActive && closestBonuses.apImprove
+        ? `<span class="ap-buffed">${improveAP(weapon.ap)}</span>`
+        : weapon.ap;
+
     const statsGrid = type === 'ranged'
         ? `<div class="weapon-stats-grid ranged">
             <div class="ws"><span class="ws-label">Rng</span><span class="ws-val">${weapon.range}</span></div>
             <div class="ws"><span class="ws-label">A</span><span class="ws-val">${weapon.a}</span></div>
             <div class="ws"><span class="ws-label">BS</span><span class="ws-val">${weapon.bs}</span></div>
             <div class="ws"><span class="ws-label">S</span><span class="ws-val">${strengthDisplay}</span></div>
-            <div class="ws"><span class="ws-label">AP</span><span class="ws-val">${weapon.ap}</span></div>
+            <div class="ws"><span class="ws-label">AP</span><span class="ws-val">${apDisplay}</span></div>
             <div class="ws"><span class="ws-label">D</span><span class="ws-val">${weapon.d}</span></div>
            </div>`
         : `<div class="weapon-stats-grid">
             <div class="ws"><span class="ws-label">A</span><span class="ws-val">${weapon.a}</span></div>
             <div class="ws"><span class="ws-label">WS</span><span class="ws-val">${weapon.ws}</span></div>
             <div class="ws"><span class="ws-label">S</span><span class="ws-val">${weapon.s}</span></div>
-            <div class="ws"><span class="ws-label">AP</span><span class="ws-val">${weapon.ap}</span></div>
+            <div class="ws"><span class="ws-label">AP</span><span class="ws-val">${apDisplay}</span></div>
             <div class="ws"><span class="ws-label">D</span><span class="ws-val">${weapon.d}</span></div>
            </div>`;
 
     // Render weapon abilities
     const allAbilities = [
-        ...(weapon.abilities || []).map(ab => ({ ...parseAbility(ab), inherited: false, stratBuff: false })),
-        ...applicableInherited.map(ab => ({ ...parseAbility(ab), inherited: true, stratBuff: false }))
+        ...(weapon.abilities || []).map(ab => ({ ...parseAbility(ab), inherited: false, stratBuff: false, closestBuff: false })),
+        ...applicableInherited.map(ab => ({ ...parseAbility(ab), inherited: true, stratBuff: false, closestBuff: false }))
     ];
 
     // Add Sustained Hits 1 from Fury of the Hearth (only for ranged weapons)
     if (furyActive && type === 'ranged') {
-        allAbilities.push({ id: 'sustained-hits', display: 'Sustained Hits 1', inherited: false, stratBuff: true });
+        allAbilities.push({ id: 'sustained-hits', display: 'Sustained Hits 1', inherited: false, stratBuff: true, closestBuff: false });
+    }
+
+    // Add closest-target reminders
+    if (closestActive) {
+        // Re-roll Wound 1 (all units, all weapons) from Prioritised Efficiency
+        allAbilities.push({ id: 'prioritised-efficiency', display: 'Re-roll Wound 1', inherited: false, stratBuff: false, closestBuff: true });
+        // Re-roll Hit 1 (Hearthguard led units, ranged only) from Decisive Destruction
+        if (closestBonuses.rerollHit && type === 'ranged') {
+            allAbilities.push({ id: 'decisive-destruction', display: 'Re-roll Hit 1', inherited: false, stratBuff: false, closestBuff: true });
+        }
     }
 
     const abilitiesHtml = allAbilities.length ? `
@@ -541,6 +567,7 @@ function renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive = 
                 const displayName = ab.display || abData?.name || ab.id;
                 let classes = ab.inherited ? 'wab inherited tappable' : 'wab tappable';
                 if (ab.stratBuff) classes = 'wab strat-buff tappable';
+                if (ab.closestBuff) classes = 'wab closest-buff tappable';
                 return `<button class="${classes}" data-ab="${ab.id}">${displayName}</button>`;
             }).join('')}
         </div>
@@ -688,6 +715,24 @@ function toggleStratagem(stratId) {
 function isFuryTarget(leaderId, bodyguardId) {
     // Fury of the Hearth applies to Hearthguard units and their leaders
     return bodyguardId === 'einhyr-hearthguard';
+}
+
+// Get closest-target bonuses for a led unit
+function getClosestBonuses(ledUnit) {
+    const keywords = ledUnit.combinedKeywords || [];
+    // Prioritised Efficiency: AP improve for KÂHL, EINHYR HEARTHGUARD, or ÛTHAR THE DESTINED units
+    const apImprove = keywords.some(k =>
+        ['KÂHL', 'EINHYR HEARTHGUARD', 'ÛTHAR THE DESTINED'].includes(k)
+    );
+    // Decisive Destruction: re-roll hit 1 on ranged (Hearthguard unit ability, applies to whole led unit)
+    const rerollHit = (ledUnit.bodyguard === 'einhyr-hearthguard');
+    return { apImprove, rerollHit };
+}
+
+// Improve AP by 1 (e.g. "0" → "-1", "-1" → "-2")
+function improveAP(apStr) {
+    const num = parseInt(apStr);
+    return `${num - 1}`;
 }
 
 // Modal functions
