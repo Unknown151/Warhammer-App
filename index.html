@@ -318,6 +318,12 @@ function renderLedUnitCard(ledUnit) {
     const closestActive = stratagemState.closest;
     const closestBonuses = closestActive ? getClosestBonuses(ledUnit) : { apImprove: false, rerollHit: false };
 
+    // Filter grantsAbilities to only weapon-applicable ones (exclude invuln, etc.)
+    const nonWeaponAbilities = ['invuln-5'];
+    const weaponGrantedAbilities = (leader.leaderBonus?.grantsAbilities || [])
+        .filter(ab => !nonWeaponAbilities.includes(typeof ab === 'string' ? ab : ab.id));
+    const leaderAppliesTo = leader.leaderBonus?.appliesTo || null;
+
     return `
         <div class="unit-card attached" data-leader="${ledUnit.leader}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
@@ -343,7 +349,7 @@ function renderLedUnitCard(ledUnit) {
                     ${renderUnitHeader(leader)}
                     ${renderUnitStats(leader)}
                     ${leader.invulnerableSave ? renderInvuln(leader.invulnerableSave, false) : ''}
-                    ${renderWeapons(leader.weapons, leader.leaderBonus?.grantsAbilities || [], null, furyActive, closestActive, closestBonuses)}
+                    ${renderWeapons(leader.weapons, weaponGrantedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses)}
                     ${renderAbilities(leader, enhancement)}
                 </div>
                 <div class="card-section">
@@ -351,7 +357,7 @@ function renderLedUnitCard(ledUnit) {
                     ${renderUnitHeader(bodyguard)}
                     ${renderUnitStats(bodyguard)}
                     ${renderBodyguardInvuln(bodyguard, leader)}
-                    ${renderWeapons(bodyguard.weapons, leader.leaderBonus?.grantsAbilities || [], leader.leaderBonus?.appliesTo, furyActive, closestActive, closestBonuses)}
+                    ${renderWeapons(bodyguard.weapons, weaponGrantedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses)}
                     ${renderBodyguardAbilities(bodyguard, leader)}
                 </div>
                 <div class="keywords">${ledUnit.combinedKeywords.join(', ')}</div>
