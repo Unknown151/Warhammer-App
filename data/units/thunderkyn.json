@@ -28,6 +28,18 @@
         "d": "3",
         "abilities": ["anti-vehicle", "anti-monster"],
         "inheritedAbilities": []
+      },
+      {
+        "name": "SP conversion beamer",
+        "count": 6,
+        "range": "24\"",
+        "a": "2",
+        "bs": "4+",
+        "s": "7",
+        "ap": "-2",
+        "d": "3",
+        "abilities": ["conversion", "lethal-hits"],
+        "inheritedAbilities": []
       }
     ],
     "melee": [

@@ -189,6 +189,11 @@
     "type": "Ability — Thunderkyn",
     "description": "In your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks. Until the start of your next Shooting phase, that enemy unit cannot have the <strong>Benefit of Cover</strong>."
   },
+  "conversion": {
+    "name": "Conversion",
+    "type": "Weapon Ability",
+    "description": "Each time an attack made with this weapon targets an enemy unit that is <strong>not within 12\"</strong>, an unmodified <strong>Hit roll of 4+</strong> scores a <strong>Critical Hit</strong>."
+  },
   "invuln-5": {
     "name": "5+ Invulnerable Save",
     "type": "Inherited from Leader",
