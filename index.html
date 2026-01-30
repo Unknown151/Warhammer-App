@@ -320,6 +320,14 @@ function renderLedUnitCard(ledUnit) {
     const suppressEnhancement = stratagemState.sub1k && sub1kRemovedEnhancements.includes(enhancementId);
     const enhancement = (enhancementId && !suppressEnhancement) ? enhancements[enhancementId] : null;
 
+    // If Ironskein is suppressed, strip +wounds bonus from leader stats
+    let leaderStats = leader;
+    if (suppressEnhancement && enhancementId === 'ironskein' && leader.modelProfiles) {
+        leaderStats = { ...leader, modelProfiles: leader.modelProfiles.map(p => ({
+            ...p, stats: { ...p.stats, w: typeof p.stats.w === 'string' && p.stats.w.includes('+') ? parseInt(p.stats.w) : p.stats.w }
+        }))};
+    }
+
     // Check if Fury of the Hearth applies to this unit
     const furyActive = stratagemState.fury && isFuryTarget(ledUnit.leader, ledUnit.bodyguard);
 
@@ -356,7 +364,7 @@ function renderLedUnitCard(ledUnit) {
                 <div class="card-section leader">
                     <div class="sec-label">Leader</div>
                     ${renderUnitHeader(leader)}
-                    ${renderUnitStats(leader)}
+                    ${renderUnitStats(leaderStats)}
                     ${leader.invulnerableSave ? renderInvuln(leader.invulnerableSave, false) : ''}
                     ${renderWeapons(leader.weapons, weaponGrantedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses)}
                     ${renderAbilities(leader, enhancement)}
