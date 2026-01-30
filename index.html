@@ -304,10 +304,23 @@ function renderApp() {
     renderCharacterToggles();
 }
 
+// Units hidden in 1K mode
+const sub1kHiddenUnits = ['uthar-warriors'];
+
+// Get the active led units list (filtered by 1K mode)
+function getActiveLedUnits() {
+    if (stratagemState.sub1k) {
+        return army.ledUnits.filter(lu => !sub1kHiddenUnits.includes(lu.id));
+    }
+    return army.ledUnits;
+}
+
 // Render all unit cards
 function renderUnits() {
+    const activeLedUnits = getActiveLedUnits();
     const container = document.getElementById('units-container');
-    container.innerHTML = army.ledUnits.map(ledUnit => renderLedUnitCard(ledUnit)).join('');
+    container.innerHTML = activeLedUnits.map(ledUnit => renderLedUnitCard(ledUnit)).join('');
+    document.getElementById('led-units-count').textContent = activeLedUnits.length;
 }
 
 // Render a single led unit card
@@ -660,8 +673,10 @@ function renderBodyguardAbilities(bodyguard, leader) {
 
 // Render character toggles in configuration tab
 function renderCharacterToggles() {
+    const activeLedUnits = getActiveLedUnits();
     const container = document.getElementById('char-list');
-    container.innerHTML = army.ledUnits.map(ledUnit => {
+    document.getElementById('char-count').textContent = activeLedUnits.length;
+    container.innerHTML = activeLedUnits.map(ledUnit => {
         const leader = units[ledUnit.leader];
         const bodyguard = units[ledUnit.bodyguard];
         return `
@@ -732,6 +747,10 @@ function toggleStratagem(stratId) {
     }
     // Re-render units to apply stratagem effects
     renderUnits();
+    // Re-render character toggles if 1K mode changed (hides/shows units)
+    if (stratId === 'sub1k') {
+        renderCharacterToggles();
+    }
 }
 
 // Check if Fury of the Hearth applies to a unit
