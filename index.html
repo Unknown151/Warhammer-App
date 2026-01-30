@@ -162,6 +162,8 @@
         .unit-card.collapsed.attached{box-shadow:none}
         .stratagem-toggles{display:flex;gap:.5rem;align-items:center;margin-left:auto}
         .strat-toggle{width:36px;height:36px;border:2px solid var(--border);border-radius:4px;background:var(--bg2);display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;transition:all .2s ease;position:relative}
+        .strat-toggle .strat-text{font-family:'Orbitron',sans-serif;font-size:.55rem;font-weight:700;color:var(--text3);transition:all .2s ease}
+        .strat-toggle.active .strat-text{color:var(--gold-bright)}
         .strat-toggle:hover{border-color:var(--gold-dark);background:var(--bg3)}
         .strat-toggle.active{border-color:var(--gold);background:rgba(212,168,75,.2);box-shadow:0 0 8px rgba(212,168,75,.3)}
         .strat-toggle .strat-icon{font-size:1.1rem;filter:grayscale(1) opacity(0.5);transition:all .2s ease}
@@ -185,6 +187,9 @@
             <div><div class="logo-title">LEAGUES OF VOTANN</div><div class="logo-sub">LED UNITS REFERENCE</div></div>
             <div class="det-btn tappable" id="detachment-banner"><span class="det-btn-icon">⚔</span><span class="det-btn-name" id="detachment-name">Loading...</span></div>
             <div class="stratagem-toggles">
+                <div class="strat-toggle" id="strat-sub1k" data-tooltip="1000 pts list" onclick="toggleStratagem('sub1k')">
+                    <span class="strat-text">1K</span>
+                </div>
                 <div class="strat-toggle" id="strat-closest" data-tooltip="Targeting Closest" onclick="toggleStratagem('closest')">
                     <span class="strat-icon">🎯</span>
                 </div>
@@ -229,7 +234,7 @@ let enhancements = {};
 let army = {};
 let units = {};
 const characterState = {};
-const stratagemState = { fury: false, closest: false };
+const stratagemState = { fury: false, closest: false, sub1k: false };
 
 // DOM elements
 const modal = document.getElementById('modal');
@@ -309,7 +314,11 @@ function renderUnits() {
 function renderLedUnitCard(ledUnit) {
     const leader = units[ledUnit.leader];
     const bodyguard = units[ledUnit.bodyguard];
-    const enhancement = ledUnit.enhancement ? enhancements[ledUnit.enhancement] : null;
+    // In 1K mode, suppress specific enhancements
+    const sub1kRemovedEnhancements = ['ironskein', 'bastion-shield'];
+    const enhancementId = ledUnit.enhancement;
+    const suppressEnhancement = stratagemState.sub1k && sub1kRemovedEnhancements.includes(enhancementId);
+    const enhancement = (enhancementId && !suppressEnhancement) ? enhancements[enhancementId] : null;
 
     // Check if Fury of the Hearth applies to this unit
     const furyActive = stratagemState.fury && isFuryTarget(ledUnit.leader, ledUnit.bodyguard);
