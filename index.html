@@ -171,13 +171,11 @@
         .strat-toggle::after{content:attr(data-tooltip);position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);background:var(--bg);border:1px solid var(--border);padding:.2rem .4rem;border-radius:3px;font-size:.55rem;color:var(--text2);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:10}
         .strat-toggle:hover::after{opacity:1}
         .stat-buffed{color:var(--green) !important}
-        .stat-buffed::after{content:' (+1)';font-size:.6rem;color:var(--green)}
         .wab.strat-buff{background:rgba(212,168,75,.35);border:1px solid var(--gold-dark)}
         .wab.strat-buff::before{content:'⚔ '}
         .wab.closest-buff{background:rgba(74,142,212,.35);border:1px solid rgba(74,142,212,.5)}
         .wab.closest-buff::before{content:'🎯 '}
         .ap-buffed{color:var(--green) !important}
-        .ap-buffed::after{content:' (+1)';font-size:.6rem;color:var(--green)}
         @media(min-width:768px){.container{max-width:800px;margin:0 auto;padding:1.5rem}#modal{align-items:center}.modal-content{border-radius:12px;max-height:60vh}}
     </style>
 </head>
@@ -570,7 +568,7 @@ function renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive = 
 
     // Apply Fury of the Hearth buff (only for ranged weapons)
     const strengthDisplay = furyActive && type === 'ranged'
-        ? `<span class="stat-buffed">${weapon.s}</span>`
+        ? `<span class="stat-buffed">${parseInt(weapon.s) + 1}</span>`
         : weapon.s;
 
     // Apply AP improvement from Prioritised Efficiency (closest target)
