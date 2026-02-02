@@ -190,10 +190,14 @@
         .wab.closest-buff{background:rgba(74,142,212,.35);border:1px solid rgba(74,142,212,.5)}
         .wab.closest-buff::before{content:'🎯 '}
         .ap-buffed{color:var(--green) !important}
-        .toast{position:fixed;top:1rem;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--gold-dark);border-radius:6px;padding:.6rem 2.2rem .6rem .8rem;z-index:300;box-shadow:0 4px 16px rgba(0,0,0,.6);display:flex;align-items:center;gap:.5rem;animation:toastIn .3s ease}
-        .toast-text{font-size:.75rem;color:var(--text);line-height:1.4}
-        .toast-close{position:absolute;top:.35rem;right:.4rem;background:none;border:none;color:var(--text3);font-size:1rem;cursor:pointer;touch-action:manipulation;padding:.2rem}
-        .toast-close:hover{color:var(--text)}
+        .toast{position:fixed;top:1rem;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--gold-dark);border-radius:6px;padding:.8rem 1rem;z-index:300;box-shadow:0 4px 16px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:.6rem;animation:toastIn .3s ease;min-width:260px}
+        .toast-text{font-size:.75rem;color:var(--text);line-height:1.4;text-align:center}
+        .toast-actions{display:flex;gap:.5rem;justify-content:center}
+        .toast-btn{font-family:'Orbitron',sans-serif;font-size:.6rem;padding:.4rem .8rem;border-radius:4px;border:1px solid var(--border);cursor:pointer;touch-action:manipulation;letter-spacing:.05em;text-transform:uppercase}
+        .toast-btn.yes{background:rgba(74,201,120,.2);border-color:var(--green);color:var(--green)}
+        .toast-btn.yes:hover{background:rgba(74,201,120,.35)}
+        .toast-btn.no{background:rgba(201,68,68,.2);border-color:var(--red);color:var(--red)}
+        .toast-btn.no:hover{background:rgba(201,68,68,.35)}
         @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
         @media(min-width:768px){.container{max-width:800px;margin:0 auto;padding:1.5rem}#modal{align-items:center}.modal-content{border-radius:12px;max-height:60vh}}
     </style>
@@ -264,6 +268,7 @@ let army = {};
 let units = {};
 const characterState = {};
 const stratagemState = { fury: false, closest: false, sub1k: false };
+let furyYP = false; // Whether Yield Point was paid for Sustained Hits 1
 const collapsedCards = {};
 
 // DOM elements
@@ -630,8 +635,8 @@ function renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive = 
         ...applicableInherited.map(ab => ({ ...parseAbility(ab), inherited: true, stratBuff: false, closestBuff: false }))
     ];
 
-    // Add Sustained Hits 1 from Fury of the Hearth (only for ranged weapons)
-    if (furyActive && type === 'ranged') {
+    // Add Sustained Hits 1 from Fury of the Hearth (only if YP was paid, ranged only)
+    if (furyActive && type === 'ranged' && furyYP) {
         allAbilities.push({ id: 'sustained-hits', display: 'Sustained Hits 1', inherited: false, stratBuff: true, closestBuff: false });
     }
 
@@ -809,20 +814,29 @@ function updateBuffButton() {
     }
 }
 
-let toastTimer = null;
-
-function showToast(message, duration = 5000) {
-    // Remove existing toast
+function dismissToast() {
     const existing = document.querySelector('.toast');
     if (existing) existing.remove();
-    if (toastTimer) clearTimeout(toastTimer);
+}
 
+function showFuryPrompt() {
+    dismissToast();
     const toast = document.createElement('div');
     toast.className = 'toast';
-    toast.innerHTML = `<span class="toast-text">${message}</span><button class="toast-close" onclick="this.parentElement.remove();clearTimeout(toastTimer);">&times;</button>`;
+    toast.innerHTML = `
+        <span class="toast-text">Do you pay 1 Yield Point, to get Sustained Hits 1?</span>
+        <div class="toast-actions">
+            <button class="toast-btn yes" onclick="resolveFuryYP(true)">Yes</button>
+            <button class="toast-btn no" onclick="resolveFuryYP(false)">No</button>
+        </div>
+    `;
     document.body.appendChild(toast);
+}
 
-    toastTimer = setTimeout(() => { toast.remove(); }, duration);
+function resolveFuryYP(paid) {
+    dismissToast();
+    furyYP = paid;
+    renderUnits();
 }
 
 function toggleStratagemItem(stratId, e) {
@@ -836,9 +850,14 @@ function toggleStratagemItem(stratId, e) {
     // Update badge
     updateBuffButton();
 
-    // Show reminder when Fury is toggled ON
-    if (stratId === 'fury' && stratagemState.fury) {
-        showToast('Remember to pay 1 Yield Point, to allow Sustained Hits 1');
+    // Fury: show YP prompt on enable, reset on disable
+    if (stratId === 'fury') {
+        if (stratagemState.fury) {
+            showFuryPrompt();
+        } else {
+            furyYP = false;
+            dismissToast();
+        }
     }
 
     // Re-render units to apply effects
