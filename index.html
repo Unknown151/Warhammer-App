@@ -235,6 +235,7 @@ let army = {};
 let units = {};
 const characterState = {};
 const stratagemState = { fury: false, closest: false, sub1k: false };
+const collapsedCards = {};
 
 // DOM elements
 const modal = document.getElementById('modal');
@@ -317,10 +318,29 @@ function getActiveLedUnits() {
 
 // Render all unit cards
 function renderUnits() {
+    const scrollY = window.scrollY;
     const activeLedUnits = getActiveLedUnits();
     const container = document.getElementById('units-container');
     container.innerHTML = activeLedUnits.map(ledUnit => renderLedUnitCard(ledUnit)).join('');
     document.getElementById('led-units-count').textContent = activeLedUnits.length;
+
+    // Restore collapsed states
+    Object.keys(collapsedCards).forEach(leaderId => {
+        if (collapsedCards[leaderId]) {
+            const card = container.querySelector(`.unit-card[data-leader="${leaderId}"]`);
+            if (card) card.classList.add('collapsed');
+        }
+    });
+
+    // Restore character dead states
+    Object.keys(characterState).forEach(charId => {
+        if (characterState[charId]) {
+            updateUnitCard(charId, true);
+        }
+    });
+
+    // Restore scroll position
+    window.scrollTo(0, scrollY);
 }
 
 // Render a single led unit card
@@ -734,6 +754,8 @@ function updateCharToggle(toggle, isDead) {
 function toggleCardCollapse(header) {
     const card = header.closest('.unit-card');
     card.classList.toggle('collapsed');
+    const leaderId = card.getAttribute('data-leader');
+    collapsedCards[leaderId] = card.classList.contains('collapsed');
 }
 
 // Toggle stratagem
