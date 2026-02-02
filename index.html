@@ -190,6 +190,11 @@
         .wab.closest-buff{background:rgba(74,142,212,.35);border:1px solid rgba(74,142,212,.5)}
         .wab.closest-buff::before{content:'🎯 '}
         .ap-buffed{color:var(--green) !important}
+        .toast{position:fixed;top:1rem;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--gold-dark);border-radius:6px;padding:.6rem 2.2rem .6rem .8rem;z-index:300;box-shadow:0 4px 16px rgba(0,0,0,.6);display:flex;align-items:center;gap:.5rem;animation:toastIn .3s ease}
+        .toast-text{font-size:.75rem;color:var(--text);line-height:1.4}
+        .toast-close{position:absolute;top:.35rem;right:.4rem;background:none;border:none;color:var(--text3);font-size:1rem;cursor:pointer;touch-action:manipulation;padding:.2rem}
+        .toast-close:hover{color:var(--text)}
+        @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
         @media(min-width:768px){.container{max-width:800px;margin:0 auto;padding:1.5rem}#modal{align-items:center}.modal-content{border-radius:12px;max-height:60vh}}
     </style>
 </head>
@@ -804,6 +809,22 @@ function updateBuffButton() {
     }
 }
 
+let toastTimer = null;
+
+function showToast(message, duration = 5000) {
+    // Remove existing toast
+    const existing = document.querySelector('.toast');
+    if (existing) existing.remove();
+    if (toastTimer) clearTimeout(toastTimer);
+
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<span class="toast-text">${message}</span><button class="toast-close" onclick="this.parentElement.remove();clearTimeout(toastTimer);">&times;</button>`;
+    document.body.appendChild(toast);
+
+    toastTimer = setTimeout(() => { toast.remove(); }, duration);
+}
+
 function toggleStratagemItem(stratId, e) {
     e.stopPropagation();
     stratagemState[stratId] = !stratagemState[stratId];
@@ -814,6 +835,11 @@ function toggleStratagemItem(stratId, e) {
 
     // Update badge
     updateBuffButton();
+
+    // Show reminder when Fury is toggled ON
+    if (stratId === 'fury' && stratagemState.fury) {
+        showToast('Remember to pay 1 Yield Point, to allow Sustained Hits 1');
+    }
 
     // Re-render units to apply effects
     renderUnits();
