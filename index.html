@@ -160,16 +160,30 @@
         .unit-card.collapsed .card-collapse-content{display:none}
         .unit-card.collapsed{border-color:var(--border)}
         .unit-card.collapsed.attached{box-shadow:none}
-        .stratagem-toggles{display:flex;gap:.5rem;align-items:center;margin-left:auto}
-        .strat-toggle{width:36px;height:36px;border:2px solid var(--border);border-radius:4px;background:var(--bg2);display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;transition:all .2s ease;position:relative}
-        .strat-toggle .strat-text{font-family:'Orbitron',sans-serif;font-size:.55rem;font-weight:700;color:var(--text3);transition:all .2s ease}
-        .strat-toggle.active .strat-text{color:var(--gold-bright)}
-        .strat-toggle:hover{border-color:var(--gold-dark);background:var(--bg3)}
-        .strat-toggle.active{border-color:var(--gold);background:rgba(212,168,75,.2);box-shadow:0 0 8px rgba(212,168,75,.3)}
-        .strat-toggle .strat-icon{font-size:1.1rem;filter:grayscale(1) opacity(0.5);transition:all .2s ease}
-        .strat-toggle.active .strat-icon{filter:none}
-        .strat-toggle::after{content:attr(data-tooltip);position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);background:var(--bg);border:1px solid var(--border);padding:.2rem .4rem;border-radius:3px;font-size:.55rem;color:var(--text2);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:10}
-        .strat-toggle:hover::after{opacity:1}
+        .buff-dropdown{position:relative;margin-left:auto}
+        .buff-dropdown-btn{width:36px;height:36px;border:2px solid var(--border);border-radius:4px;background:var(--bg2);display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;transition:all .2s ease;position:relative}
+        .buff-dropdown-btn:hover{border-color:var(--gold-dark);background:var(--bg3)}
+        .buff-dropdown-btn.has-active{border-color:var(--gold);background:rgba(212,168,75,.2)}
+        .buff-dropdown-btn .btn-icon{font-size:.85rem;color:var(--text3);transition:color .2s ease}
+        .buff-dropdown-btn.has-active .btn-icon{color:var(--gold)}
+        .buff-badge{position:absolute;top:-5px;right:-5px;min-width:15px;height:15px;background:var(--gold);border-radius:8px;font-family:'Share Tech Mono',monospace;font-size:.5rem;color:var(--bg);display:none;align-items:center;justify-content:center;font-weight:700;padding:0 3px}
+        .buff-dropdown-btn.has-active .buff-badge{display:flex}
+        .buff-dropdown-menu{display:none;position:absolute;top:calc(100% + .5rem);right:0;background:var(--bg2);border:1px solid var(--border-gold);border-radius:6px;min-width:230px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,.6);overflow:hidden}
+        .buff-dropdown-menu.open{display:block}
+        .buff-dropdown-item{display:flex;align-items:center;gap:.6rem;padding:.7rem .8rem;cursor:pointer;touch-action:manipulation;transition:background .15s ease;border-bottom:1px solid var(--border)}
+        .buff-dropdown-item:last-child{border-bottom:none}
+        .buff-dropdown-item:hover{background:rgba(212,168,75,.08)}
+        .buff-dropdown-item.active{background:rgba(212,168,75,.12)}
+        .buff-item-icon{font-size:.9rem;width:24px;text-align:center;flex-shrink:0;filter:grayscale(1) opacity(0.5)}
+        .buff-dropdown-item.active .buff-item-icon{filter:none}
+        .buff-item-label{flex:1;display:flex;flex-direction:column;gap:.1rem}
+        .buff-item-name{font-family:'Orbitron',sans-serif;font-size:.6rem;color:var(--text2);letter-spacing:.03em}
+        .buff-dropdown-item.active .buff-item-name{color:var(--gold)}
+        .buff-item-desc{font-size:.55rem;color:var(--text3)}
+        .buff-item-switch{width:34px;height:18px;border-radius:9px;background:var(--bg);border:1px solid var(--border);position:relative;flex-shrink:0;transition:all .2s ease}
+        .buff-item-switch::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:var(--text3);transition:all .2s ease}
+        .buff-dropdown-item.active .buff-item-switch{background:rgba(212,168,75,.3);border-color:var(--gold)}
+        .buff-dropdown-item.active .buff-item-switch::after{left:18px;background:var(--gold)}
         .stat-buffed{color:var(--green) !important}
         .wab.strat-buff{background:rgba(212,168,75,.35);border:1px solid var(--gold-dark)}
         .wab.strat-buff::before{content:'⚔ '}
@@ -184,15 +198,27 @@
         <div class="header-top">
             <div><div class="logo-title">LEAGUES OF VOTANN</div><div class="logo-sub">LED UNITS REFERENCE</div></div>
             <div class="det-btn tappable" id="detachment-banner"><span class="det-btn-icon">⚔</span><span class="det-btn-name" id="detachment-name">Loading...</span></div>
-            <div class="stratagem-toggles">
-                <div class="strat-toggle" id="strat-sub1k" data-tooltip="1000 pts list" onclick="toggleStratagem('sub1k')">
-                    <span class="strat-text">1K</span>
+            <div class="buff-dropdown" id="buff-dropdown">
+                <div class="buff-dropdown-btn" onclick="toggleBuffDropdown(event)">
+                    <span class="btn-icon">&#9776;</span>
+                    <span class="buff-badge" id="buff-badge">0</span>
                 </div>
-                <div class="strat-toggle" id="strat-closest" data-tooltip="Targeting Closest" onclick="toggleStratagem('closest')">
-                    <span class="strat-icon">🎯</span>
-                </div>
-                <div class="strat-toggle" id="strat-fury" data-tooltip="Fury of the Hearth" onclick="toggleStratagem('fury')">
-                    <span class="strat-icon">🔥</span>
+                <div class="buff-dropdown-menu" id="buff-menu">
+                    <div class="buff-dropdown-item" data-strat="sub1k" onclick="toggleStratagemItem('sub1k', event)">
+                        <span class="buff-item-icon">1K</span>
+                        <div class="buff-item-label"><div class="buff-item-name">1000 pts list</div><div class="buff-item-desc">Remove Ironskein, Bastion Shield, Uthar</div></div>
+                        <div class="buff-item-switch"></div>
+                    </div>
+                    <div class="buff-dropdown-item" data-strat="closest" onclick="toggleStratagemItem('closest', event)">
+                        <span class="buff-item-icon">🎯</span>
+                        <div class="buff-item-label"><div class="buff-item-name">Targeting Closest</div><div class="buff-item-desc">AP+1, re-roll hit/wound 1s</div></div>
+                        <div class="buff-item-switch"></div>
+                    </div>
+                    <div class="buff-dropdown-item" data-strat="fury" onclick="toggleStratagemItem('fury', event)">
+                        <span class="buff-item-icon">🔥</span>
+                        <div class="buff-item-label"><div class="buff-item-name">Fury of the Hearth</div><div class="buff-item-desc">+1 S, Sustained Hits 1 (ranged)</div></div>
+                        <div class="buff-item-switch"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -756,22 +782,52 @@ function toggleCardCollapse(header) {
     collapsedCards[leaderId] = card.classList.contains('collapsed');
 }
 
-// Toggle stratagem
-function toggleStratagem(stratId) {
-    stratagemState[stratId] = !stratagemState[stratId];
-    const toggle = document.getElementById(`strat-${stratId}`);
-    if (stratagemState[stratId]) {
-        toggle.classList.add('active');
+// Buff dropdown
+function toggleBuffDropdown(e) {
+    e.stopPropagation();
+    document.getElementById('buff-menu').classList.toggle('open');
+}
+
+function closeBuffDropdown() {
+    document.getElementById('buff-menu').classList.remove('open');
+}
+
+function updateBuffButton() {
+    const activeCount = Object.values(stratagemState).filter(Boolean).length;
+    const btn = document.querySelector('.buff-dropdown-btn');
+    const badge = document.getElementById('buff-badge');
+    if (activeCount > 0) {
+        btn.classList.add('has-active');
+        badge.textContent = activeCount;
     } else {
-        toggle.classList.remove('active');
+        btn.classList.remove('has-active');
     }
-    // Re-render units to apply stratagem effects
+}
+
+function toggleStratagemItem(stratId, e) {
+    e.stopPropagation();
+    stratagemState[stratId] = !stratagemState[stratId];
+
+    // Update dropdown item visual
+    const item = document.querySelector(`.buff-dropdown-item[data-strat="${stratId}"]`);
+    item.classList.toggle('active', stratagemState[stratId]);
+
+    // Update badge
+    updateBuffButton();
+
+    // Re-render units to apply effects
     renderUnits();
-    // Re-render character toggles if 1K mode changed (hides/shows units)
     if (stratId === 'sub1k') {
         renderCharacterToggles();
     }
 }
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.buff-dropdown')) {
+        closeBuffDropdown();
+    }
+});
 
 // Check if Fury of the Hearth applies to a unit
 function isFuryTarget(leaderId, bodyguardId) {
