@@ -151,7 +151,10 @@
         .card-collapse-info{display:flex;flex-direction:column;gap:.15rem}
         .card-collapse-title{font-family:'Orbitron',sans-serif;font-size:.85rem;color:var(--gold);letter-spacing:.03em}
         .card-collapse-subtitle{font-size:.65rem;color:var(--text2)}
-        .card-collapse-right{display:flex;align-items:center;gap:.75rem}
+        .card-collapse-right{display:flex;align-items:center;gap:.5rem}
+        .leader-death-toggle{width:28px;height:28px;border-radius:50%;border:2px solid var(--text3);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;transition:all .2s ease;font-size:.7rem;color:var(--text3)}
+        .leader-death-toggle:hover{border-color:var(--red);color:var(--red)}
+        .unit-card.leader-dead .leader-death-toggle{border-color:var(--red);background:var(--red);color:#fff}
         .card-collapse-points{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--gold-bright)}
         .card-collapse-toggle{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--text3);transition:transform .2s ease}
         .card-collapse-toggle::after{content:'';border:solid var(--text2);border-width:0 2px 2px 0;padding:4px;transform:rotate(45deg);transition:transform .2s ease}
@@ -418,6 +421,7 @@ function renderLedUnitCard(ledUnit) {
                     <div class="card-collapse-subtitle">${ledUnit.attachedBannerText}</div>
                 </div>
                 <div class="card-collapse-right">
+                    <button class="leader-death-toggle" onclick="toggleLeaderDeath('${ledUnit.leader}', event)" title="Mark leader as slain">☠</button>
                     <div class="card-collapse-toggle"></div>
                 </div>
             </div>
@@ -792,6 +796,22 @@ function toggleCardCollapse(header) {
     card.classList.toggle('collapsed');
     const leaderId = card.getAttribute('data-leader');
     collapsedCards[leaderId] = card.classList.contains('collapsed');
+}
+
+// Toggle leader death from unit card
+function toggleLeaderDeath(leaderId, e) {
+    e.stopPropagation();
+    characterState[leaderId] = !characterState[leaderId];
+    const isDead = characterState[leaderId];
+
+    // Update unit card
+    updateUnitCard(leaderId, isDead);
+
+    // Sync Configuration tab toggle if it exists
+    const configToggle = document.querySelector(`.char-toggle[data-char="${leaderId}"]`);
+    if (configToggle) {
+        updateCharToggle(configToggle, isDead);
+    }
 }
 
 // Buff dropdown
