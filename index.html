@@ -247,7 +247,7 @@
     </header>
     <nav class="tabs">
         <button class="tab active" data-tab="units">Units</button>
-        <button class="tab" data-tab="configuration">Configuration</button>
+        <button class="tab" data-tab="configuration" style="display:none">Configuration</button>
     </nav>
     <main class="container">
         <div id="units-tab" class="tab-content active">
@@ -256,7 +256,7 @@
                 <div id="units-container"><div class="loading">Loading units...</div></div>
             </section>
         </div>
-        <div id="configuration-tab" class="tab-content">
+        <div id="configuration-tab" class="tab-content" style="display:none!important">
             <section class="section">
                 <div class="section-header"><div class="section-icon"></div><div class="section-title">Characters</div><div class="section-count" id="char-count">-</div></div>
                 <p style="color:var(--text2);font-size:.75rem;margin-bottom:1rem;">Tap a character to mark them as slain. This will remove their buffs and abilities from attached units.</p>
