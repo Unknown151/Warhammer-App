@@ -648,7 +648,7 @@ function renderSoloUnitCard(entry) {
                     ${renderUnitHeader(unit, modelCount)}
                     ${renderUnitStats(unit)}
                     ${renderDefensiveRow(unit)}
-                    ${renderWeapons(filteredWeapons, [], null, stratagemState.fury, stratagemState.closest, {})}
+                    ${renderWeapons(filteredWeapons, [], null, false, stratagemState.closest, {})}
                     ${renderSoloAbilities(unit)}
                 </div>
                 <div class="keywords">${(unit.keywords || []).join(', ')}</div>
