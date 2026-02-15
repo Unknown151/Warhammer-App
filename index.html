@@ -253,6 +253,10 @@
         .config-total{background:var(--bg2);border:1px solid var(--gold-dark);border-radius:6px;padding:.75rem 1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
         .config-total-label{font-family:'Orbitron',sans-serif;font-size:.7rem;color:var(--text2);letter-spacing:.05em}
         .config-total-value{font-family:'Share Tech Mono',monospace;font-size:1.1rem;color:var(--gold-bright);font-weight:700}
+        .config-quantity{display:flex;align-items:center;gap:.4rem;margin-left:auto;margin-right:.5rem}
+        .config-quantity-label{font-size:.55rem;color:var(--text3);text-transform:uppercase}
+        .config-quantity-input{width:32px;background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--text);padding:.15rem .25rem;font-family:'Share Tech Mono',monospace;font-size:.7rem;text-align:center}
+        .config-unit-card.included .config-quantity-input{border-color:var(--gold-dark)}
     </style>
 </head>
 <body>
@@ -291,10 +295,8 @@
     </nav>
     <main class="container">
         <div id="units-tab" class="tab-content active">
-            <section class="section">
-                <div class="section-header"><div class="section-icon"></div><div class="section-title">Led Units</div><div class="section-count" id="led-units-count">-</div></div>
-                <div id="units-container"><div class="loading">Loading units...</div></div>
-            </section>
+            <div id="units-container"><div class="loading">Loading units...</div></div>
+            <div id="led-units-count" style="display:none">-</div>
         </div>
         <div id="configuration-tab" class="tab-content">
             <div class="config-total">
@@ -329,6 +331,7 @@ const configExpandedCards = {};
 // Unit configuration state
 const unitConfig = {
     included: {},           // { unitId: boolean }
+    quantity: {},           // { unitId: number } - how many of this unit
     weapons: {},            // { unitId: { weaponKey: { equipped, count } } }
     wargear: {},            // { unitId: { wargearId: boolean } }
     leaderAssignments: {},  // { bodyguardId: leaderId | null }
@@ -388,6 +391,11 @@ function initializeDefaultConfig() {
         // Initialize included state (default to false)
         if (unitConfig.included[unitId] === undefined) {
             unitConfig.included[unitId] = false;
+        }
+
+        // Initialize quantity (default to 1)
+        if (unitConfig.quantity[unitId] === undefined) {
+            unitConfig.quantity[unitId] = 1;
         }
 
         // Initialize weapons config
@@ -519,12 +527,13 @@ function renderSoloUnitCard(entry) {
     if (!unit) return '';
 
     const isLeader = entry.type === 'solo-leader';
+    const copyLabel = entry.copyNumber ? ` #${entry.copyNumber}` : '';
 
     return `
-        <div class="unit-card" data-unit="${entry.unit}">
+        <div class="unit-card" data-unit="${entry.id}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
                 <div class="card-collapse-info">
-                    <div class="card-collapse-title">${unit.name}</div>
+                    <div class="card-collapse-title">${unit.name}${copyLabel}</div>
                     <div class="card-collapse-subtitle">${unit.models || 1} model${(unit.models || 1) > 1 ? 's' : ''}</div>
                 </div>
                 <div class="card-collapse-right">
@@ -982,6 +991,8 @@ function renderConfigUnitCard(unitId) {
         bodyContent += renderWargearSelector(unitId);
     }
 
+    const quantity = unitConfig.quantity[unitId] || 1;
+
     return `
         <div class="config-unit-card ${isIncluded ? 'included' : ''} ${isExpanded ? 'expanded' : ''}" data-unit="${unitId}">
             <div class="config-unit-header" onclick="toggleConfigCard('${unitId}', event)">
@@ -989,6 +1000,10 @@ function renderConfigUnitCard(unitId) {
                 <div class="config-unit-info">
                     <div class="config-unit-name">${unit.name}</div>
                     <div class="config-unit-type">${unit.type?.join(' • ') || ''}</div>
+                </div>
+                <div class="config-quantity">
+                    <span class="config-quantity-label">Qty</span>
+                    <input type="number" class="config-quantity-input" value="${quantity}" min="1" max="10" onchange="setUnitQuantity('${unitId}', this.value)" onclick="event.stopPropagation()">
                 </div>
                 <div class="config-unit-points">${unit.points} pts</div>
                 <div class="config-unit-expand"></div>
@@ -1177,6 +1192,14 @@ function setWargearEquipped(unitId, wargearId, equipped) {
     renderUnits();
 }
 
+// Set unit quantity
+function setUnitQuantity(unitId, quantity) {
+    unitConfig.quantity[unitId] = Math.max(1, parseInt(quantity) || 1);
+    saveConfig();
+    renderConfigurationTab();
+    renderUnits();
+}
+
 // Assign leader to bodyguard
 function assignLeader(bodyguardId, leaderId) {
     // Clear any existing assignment for this bodyguard
@@ -1206,10 +1229,11 @@ function updateConfigPoints() {
     let total = 0;
     const countedLeaders = new Set();
 
-    // Count included units
+    // Count included units (multiplied by quantity)
     Object.entries(unitConfig.included).forEach(([unitId, included]) => {
         if (included && units[unitId]) {
-            total += units[unitId].points || 0;
+            const qty = unitConfig.quantity[unitId] || 1;
+            total += (units[unitId].points || 0) * qty;
         }
     });
 
@@ -1243,6 +1267,8 @@ function buildActiveArmy() {
         const unit = units[unitId];
         if (!unit) return;
 
+        const qty = unitConfig.quantity[unitId] || 1;
+
         // If it's a bodyguard with an assigned leader
         if (unit.canBeLeadBy && unitConfig.leaderAssignments[unitId]) {
             const leaderId = unitConfig.leaderAssignments[unitId];
@@ -1251,6 +1277,7 @@ function buildActiveArmy() {
 
             const enhancementId = unitConfig.enhancements[leaderId] || null;
 
+            // First one gets the leader attached
             activeUnits.push({
                 id: `${leaderId}-${unitId}`,
                 type: 'led',
@@ -1260,14 +1287,27 @@ function buildActiveArmy() {
                 attachedBannerText: 'Attached',
                 combinedKeywords: [...new Set([...(leader.keywords || []), ...(unit.keywords || [])])]
             });
+
+            // Additional copies are solo
+            for (let i = 1; i < qty; i++) {
+                activeUnits.push({
+                    id: `${unitId}-${i + 1}`,
+                    type: 'solo',
+                    unit: unitId,
+                    copyNumber: i + 1
+                });
+            }
         }
         // Standalone unit (not a leader, or is a leader not attached anywhere)
         else if (!unit.isLeader) {
-            activeUnits.push({
-                id: unitId,
-                type: 'solo',
-                unit: unitId
-            });
+            for (let i = 0; i < qty; i++) {
+                activeUnits.push({
+                    id: qty > 1 ? `${unitId}-${i + 1}` : unitId,
+                    type: 'solo',
+                    unit: unitId,
+                    copyNumber: qty > 1 ? i + 1 : null
+                });
+            }
         }
     });
 
@@ -1277,15 +1317,27 @@ function buildActiveArmy() {
         const unit = units[unitId];
         if (!unit?.isLeader) return;
 
+        const qty = unitConfig.quantity[unitId] || 1;
+
         // Check if this leader is attached to any bodyguard
         const isAttached = Object.values(unitConfig.leaderAssignments).includes(unitId);
         if (!isAttached) {
-            activeUnits.push({
-                id: unitId,
-                type: 'solo-leader',
-                unit: unitId
-            });
+            for (let i = 0; i < qty; i++) {
+                activeUnits.push({
+                    id: qty > 1 ? `${unitId}-${i + 1}` : unitId,
+                    type: 'solo-leader',
+                    unit: unitId,
+                    copyNumber: qty > 1 ? i + 1 : null
+                });
+            }
         }
+    });
+
+    // Sort alphabetically by unit name
+    activeUnits.sort((a, b) => {
+        const nameA = a.type === 'led' ? units[a.leader]?.name : units[a.unit]?.name;
+        const nameB = b.type === 'led' ? units[b.leader]?.name : units[b.unit]?.name;
+        return (nameA || '').localeCompare(nameB || '');
     });
 
     return activeUnits;
