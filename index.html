@@ -64,6 +64,10 @@
         .invuln-val{font-family:'Share Tech Mono',monospace;font-size:1rem;color:var(--text);font-weight:700}
         .invuln-row.inherited .invuln-val{color:var(--text)}
         .invuln-row.inherited::before{content:'';font-size:.7rem}
+        .invuln-row.fnp-only{background:rgba(200,120,50,.25);border:1px solid rgba(200,120,50,.4)}
+        .fnp-sep{color:var(--text3);font-size:.7rem;margin:0 .15rem}
+        .fnp-label{font-size:.6rem;color:var(--text);text-transform:uppercase;letter-spacing:.05em;cursor:pointer}
+        .fnp-val{font-family:'Share Tech Mono',monospace;font-size:1rem;color:var(--text);font-weight:700;cursor:pointer}
         .weapons{margin-bottom:.875rem}
         .weapon-category{background:var(--bg2);border-radius:4px;margin-bottom:.5rem;overflow:hidden}
         .weapon-category:last-child{margin-bottom:0}
@@ -241,6 +245,9 @@
         .weapon-checkbox input[type="checkbox"]{accent-color:var(--gold);width:14px;height:14px;cursor:pointer}
         .weapon-checkbox-name{flex:1;font-size:.7rem;color:var(--text)}
         .weapon-checkbox-count{width:36px;background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--text);padding:.15rem .25rem;font-family:'Share Tech Mono',monospace;font-size:.65rem;text-align:center}
+        .weapon-count-btn{width:28px;height:28px;background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--text);font-size:.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;padding:0;line-height:1}
+        .weapon-count-btn:active{background:var(--gold);color:var(--bg)}
+        .weapon-count-display{width:32px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:.2rem 0}
         .leader-select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:.5rem .6rem;font-family:'Rajdhani',sans-serif;font-size:.75rem;cursor:pointer}
         .leader-select:focus{border-color:var(--gold);outline:none}
         .leader-select option{background:var(--bg2);color:var(--text)}
@@ -280,6 +287,9 @@
         .weapon-checkbox input[type="checkbox"]{accent-color:var(--gold);width:14px;height:14px;cursor:pointer}
         .weapon-checkbox-name{flex:1;font-size:.7rem;color:var(--text)}
         .weapon-checkbox-count{width:36px;background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--text);padding:.15rem .25rem;font-family:'Share Tech Mono',monospace;font-size:.65rem;text-align:center}
+        .weapon-count-btn{width:28px;height:28px;background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--text);font-size:.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;padding:0;line-height:1}
+        .weapon-count-btn:active{background:var(--gold);color:var(--bg)}
+        .weapon-count-display{width:32px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:.2rem 0}
         .leader-select,.enhancement-select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:.5rem .6rem;font-family:'Rajdhani',sans-serif;font-size:.75rem;cursor:pointer}
         .leader-select:focus,.enhancement-select:focus{border-color:var(--gold);outline:none}
         .leader-select option,.enhancement-select option{background:var(--bg2);color:var(--text)}
@@ -637,7 +647,7 @@ function renderSoloUnitCard(entry) {
                 <div class="card-section">
                     ${renderUnitHeader(unit, modelCount)}
                     ${renderUnitStats(unit)}
-                    ${unit.invulnerableSave ? renderInvuln(unit.invulnerableSave, false, unit.invulnerableSource) : ''}
+                    ${renderDefensiveRow(unit)}
                     ${renderWeapons(filteredWeapons, [], null, stratagemState.fury, stratagemState.closest, {})}
                     ${renderSoloAbilities(unit)}
                 </div>
@@ -651,8 +661,9 @@ function renderSoloUnitCard(entry) {
 function renderSoloAbilities(unit) {
     let html = '<div class="abilities">';
 
-    // Core abilities
+    // Core abilities (exclude FNP - shown in defensive row)
     (unit.coreAbilities || []).forEach(ab => {
+        if (ab.startsWith('feel-no-pain')) return;
         const abData = abilities[ab];
         html += `<span class="ab core tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
     });
@@ -737,7 +748,7 @@ function renderLedUnitCard(ledUnit) {
                     <div class="sec-label">Leader</div>
                     ${renderUnitHeader(leader)}
                     ${renderUnitStats(leaderStats)}
-                    ${leader.invulnerableSave ? renderInvuln(leader.invulnerableSave, false) : ''}
+                    ${renderDefensiveRow(leader)}
                     ${renderWeapons(leader.weapons, weaponGrantedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses)}
                     ${renderAbilities(leader, enhancement)}
                 </div>
@@ -797,29 +808,67 @@ function renderStatsRow(stats) {
     `;
 }
 
-// Render invulnerable save
-function renderInvuln(value, inherited, source = null) {
+// Get Feel No Pain ability from a unit's coreAbilities
+function getUnitFnp(unit) {
+    const fnpAbility = (unit.coreAbilities || []).find(ab => ab.startsWith('feel-no-pain'));
+    if (!fnpAbility) return null;
+    const abData = abilities[fnpAbility];
+    return { id: fnpAbility, name: abData?.name || 'Feel No Pain' };
+}
+
+// Render invulnerable save (and optional FNP)
+function renderInvuln(value, inherited, source = null, fnp = null) {
     const classes = inherited ? 'invuln-row inherited tappable' : 'invuln-row tappable';
     const dataAb = source ? `data-ab="${source}"` : '';
+    const fnpHtml = fnp ? `<span class="fnp-sep">|</span><span class="fnp-label tappable" data-ab="${fnp.id}">FNP:</span><span class="fnp-val tappable" data-ab="${fnp.id}">${fnp.name.replace('Feel No Pain ', '')}</span>` : '';
     return `
         <div class="${classes}" ${dataAb}>
             <span class="invuln-label">Invulnerable Save:</span>
             <span class="invuln-val">${value}</span>
+            ${fnpHtml}
         </div>
     `;
 }
 
+// Render standalone FNP row (when no invuln save)
+function renderFnpRow(fnp) {
+    if (!fnp) return '';
+    return `
+        <div class="invuln-row fnp-only tappable" data-ab="${fnp.id}">
+            <span class="invuln-label">Feel No Pain:</span>
+            <span class="invuln-val">${fnp.name.replace('Feel No Pain ', '')}</span>
+        </div>
+    `;
+}
+
+// Render defensive row (invuln + FNP combined)
+function renderDefensiveRow(unit, inherited = false, source = null) {
+    const fnp = getUnitFnp(unit);
+    if (unit.invulnerableSave) {
+        return renderInvuln(unit.invulnerableSave, inherited, source || unit.invulnerableSource, fnp);
+    }
+    if (fnp) {
+        return renderFnpRow(fnp);
+    }
+    return '';
+}
+
 // Render bodyguard invuln (check for inherited from leader)
 function renderBodyguardInvuln(bodyguard, leader) {
+    const fnp = getUnitFnp(bodyguard);
     // Check if leader grants invuln
     const leaderGrantsInvuln = leader.leaderBonus?.grantsAbilities?.includes('invuln-5');
 
     if (leaderGrantsInvuln && !bodyguard.invulnerableSave) {
-        return renderInvuln('5+', true, 'invuln-5');
+        return renderInvuln('5+', true, 'invuln-5', fnp);
     }
 
     if (bodyguard.invulnerableSave) {
-        return renderInvuln(bodyguard.invulnerableSave, false, bodyguard.invulnerableSource);
+        return renderInvuln(bodyguard.invulnerableSave, false, bodyguard.invulnerableSource, fnp);
+    }
+
+    if (fnp) {
+        return renderFnpRow(fnp);
     }
 
     return '';
@@ -1009,8 +1058,9 @@ function renderAbilities(unit, enhancement) {
 function renderBodyguardAbilities(bodyguard, leader) {
     let html = '<div class="abilities">';
 
-    // Core abilities
+    // Core abilities (exclude FNP - shown in defensive row)
     (bodyguard.coreAbilities || []).forEach(ab => {
+        if (ab.startsWith('feel-no-pain')) return;
         const abData = abilities[ab];
         html += `<span class="ab core tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
     });
@@ -1209,36 +1259,30 @@ function renderInstanceWeaponSelector(instance) {
 
     let html = '';
 
+    const renderWeaponRow = (w) => {
+        const key = generateWeaponKey(w);
+        const config = instance.weapons[key] || { equipped: true, count: w.count || 1 };
+        return `
+            <label class="weapon-checkbox">
+                <input type="checkbox" ${config.equipped ? 'checked' : ''} onchange="setInstanceWeaponEquipped('${instance.instanceId}', '${key}', this.checked)">
+                <span class="weapon-checkbox-name">${w.name}</span>
+                <button class="weapon-count-btn" onclick="event.preventDefault();event.stopPropagation();adjustWeaponCount('${instance.instanceId}','${key}',-1)">−</button>
+                <span class="weapon-count-display">${config.count}</span>
+                <button class="weapon-count-btn" onclick="event.preventDefault();event.stopPropagation();adjustWeaponCount('${instance.instanceId}','${key}',1)">+</button>
+            </label>
+        `;
+    };
+
     // Ranged weapons
     if (unit.weapons.ranged?.length > 0) {
         html += '<div class="config-label">Ranged Weapons</div>';
-        unit.weapons.ranged.forEach(w => {
-            const key = generateWeaponKey(w);
-            const config = instance.weapons[key] || { equipped: true, count: w.count || 1 };
-            html += `
-                <label class="weapon-checkbox">
-                    <input type="checkbox" ${config.equipped ? 'checked' : ''} onchange="setInstanceWeaponEquipped('${instance.instanceId}', '${key}', this.checked)">
-                    <span class="weapon-checkbox-name">${w.name}</span>
-                    <input type="number" class="weapon-checkbox-count" value="${config.count}" min="0" max="20" onchange="setInstanceWeaponCount('${instance.instanceId}', '${key}', this.value)" onclick="event.stopPropagation()">
-                </label>
-            `;
-        });
+        unit.weapons.ranged.forEach(w => { html += renderWeaponRow(w); });
     }
 
     // Melee weapons
     if (unit.weapons.melee?.length > 0) {
         html += '<div class="config-label">Melee Weapons</div>';
-        unit.weapons.melee.forEach(w => {
-            const key = generateWeaponKey(w);
-            const config = instance.weapons[key] || { equipped: true, count: w.count || 1 };
-            html += `
-                <label class="weapon-checkbox">
-                    <input type="checkbox" ${config.equipped ? 'checked' : ''} onchange="setInstanceWeaponEquipped('${instance.instanceId}', '${key}', this.checked)">
-                    <span class="weapon-checkbox-name">${w.name}</span>
-                    <input type="number" class="weapon-checkbox-count" value="${config.count}" min="0" max="20" onchange="setInstanceWeaponCount('${instance.instanceId}', '${key}', this.value)" onclick="event.stopPropagation()">
-                </label>
-            `;
-        });
+        unit.weapons.melee.forEach(w => { html += renderWeaponRow(w); });
     }
 
     return html;
@@ -1282,6 +1326,19 @@ function setInstanceWeaponCount(instanceId, weaponKey, count) {
     if (instance) {
         if (!instance.weapons[weaponKey]) instance.weapons[weaponKey] = { equipped: true, count: 1 };
         instance.weapons[weaponKey].count = parseInt(count) || 0;
+        saveArmyList();
+        renderConfigurationTab();
+        renderUnits();
+    }
+}
+
+// Adjust weapon count by delta (+1 or -1)
+function adjustWeaponCount(instanceId, weaponKey, delta) {
+    const instance = armyList.find(i => i.instanceId === instanceId);
+    if (instance) {
+        if (!instance.weapons[weaponKey]) instance.weapons[weaponKey] = { equipped: true, count: 1 };
+        const newCount = Math.max(0, instance.weapons[weaponKey].count + delta);
+        instance.weapons[weaponKey].count = newCount;
         saveArmyList();
         renderConfigurationTab();
         renderUnits();
