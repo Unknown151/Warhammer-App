@@ -397,5 +397,10 @@
     "name": "Multicog Targeting",
     "type": "Ability — Hekaton Land Fortress",
     "description": "Each time this model makes a ranged attack, you can ignore any or all modifiers to the following: that attack's Ballistic Skill characteristic; the Hit roll."
+  },
+  "reroll-hit-1": {
+    "name": "Re-roll Hit 1",
+    "type": "Inherited (Panspectral Scanner)",
+    "description": "Each time a model in the bearer's unit makes a ranged attack, re-roll a Hit roll of 1."
   }
 }

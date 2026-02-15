@@ -632,6 +632,9 @@ function renderSoloUnitCard(entry) {
     const modelCount = instance ? instance.modelCount : (unit.models || 1);
     const filteredWeapons = instance ? getFilteredWeapons(unit, instance.weapons) : unit.weapons;
 
+    // Fury of the Hearth applies to Einhyr Hearthguard units (solo or led)
+    const furyActive = stratagemState.fury && entry.unit === 'einhyr-hearthguard';
+
     return `
         <div class="unit-card" data-unit="${entry.id}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
@@ -648,7 +651,7 @@ function renderSoloUnitCard(entry) {
                     ${renderUnitHeader(unit, modelCount)}
                     ${renderUnitStats(unit)}
                     ${renderDefensiveRow(unit)}
-                    ${renderWeapons(filteredWeapons, [], null, false, stratagemState.closest, {})}
+                    ${renderWeapons(filteredWeapons, [], null, furyActive, stratagemState.closest, {})}
                     ${renderSoloAbilities(unit)}
                 </div>
                 <div class="keywords">${(unit.keywords || []).join(', ')}</div>
