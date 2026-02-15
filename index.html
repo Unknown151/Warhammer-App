@@ -253,10 +253,52 @@
         .config-total{background:var(--bg2);border:1px solid var(--gold-dark);border-radius:6px;padding:.75rem 1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
         .config-total-label{font-family:'Orbitron',sans-serif;font-size:.7rem;color:var(--text2);letter-spacing:.05em}
         .config-total-value{font-family:'Share Tech Mono',monospace;font-size:1.1rem;color:var(--gold-bright);font-weight:700}
-        .config-quantity{display:flex;align-items:center;gap:.4rem;margin-left:auto;margin-right:.5rem}
-        .config-quantity-label{font-size:.55rem;color:var(--text3);text-transform:uppercase}
-        .config-quantity-input{width:32px;background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--text);padding:.15rem .25rem;font-family:'Share Tech Mono',monospace;font-size:.7rem;text-align:center}
-        .config-unit-card.included .config-quantity-input{border-color:var(--gold-dark)}
+        .config-add-btn{width:36px;height:36px;background:var(--gold);border:none;border-radius:4px;color:var(--bg);font-size:1.5rem;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;align-items:center;justify-content:center;transition:all .15s ease}
+        .config-add-btn:hover{background:var(--gold-bright)}
+        .army-list-empty{text-align:center;padding:2rem 1rem;color:var(--text3);font-size:.8rem}
+        .army-instance{background:var(--bg3);border:1px solid var(--border);border-radius:6px;margin-bottom:.5rem;overflow:hidden}
+        .army-instance-header{display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;cursor:pointer;touch-action:manipulation;background:linear-gradient(90deg,rgba(212,168,75,.05),transparent)}
+        .army-instance-header:hover{background:linear-gradient(90deg,rgba(212,168,75,.1),transparent)}
+        .army-instance-info{flex:1;min-width:0}
+        .army-instance-name{font-family:'Orbitron',sans-serif;font-size:.75rem;color:var(--gold);letter-spacing:.02em}
+        .army-instance-details{font-size:.6rem;color:var(--text3);margin-top:.15rem}
+        .army-instance-points{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--gold);background:rgba(212,168,75,.15);padding:.2rem .5rem;border-radius:3px}
+        .army-instance-delete{width:28px;height:28px;background:transparent;border:1px solid var(--text3);border-radius:4px;color:var(--text3);font-size:.8rem;cursor:pointer;touch-action:manipulation;display:flex;align-items:center;justify-content:center;transition:all .15s ease}
+        .army-instance-delete:hover{border-color:var(--red);color:var(--red);background:rgba(201,68,68,.1)}
+        .army-instance-expand{width:20px;height:20px;display:flex;align-items:center;justify-content:center;color:var(--text3)}
+        .army-instance-expand::after{content:'';border:solid var(--text2);border-width:0 2px 2px 0;padding:3px;transform:rotate(45deg);transition:transform .2s ease}
+        .army-instance.expanded .army-instance-expand::after{transform:rotate(-135deg)}
+        .army-instance-body{display:none;padding:.75rem;border-top:1px solid var(--border);background:var(--bg2)}
+        .army-instance.expanded .army-instance-body{display:block}
+        .config-label{font-size:.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin:.5rem 0 .3rem}
+        .config-label:first-child{margin-top:0}
+        .model-count-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
+        .model-count-label{font-size:.7rem;color:var(--text)}
+        .model-count-input{width:50px;background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--text);padding:.3rem .4rem;font-family:'Share Tech Mono',monospace;font-size:.75rem;text-align:center}
+        .weapon-checkbox{display:flex;align-items:center;gap:.5rem;padding:.35rem .5rem;background:var(--bg3);border-radius:3px;margin-bottom:.25rem;cursor:pointer;touch-action:manipulation;transition:background .15s ease}
+        .weapon-checkbox:hover{background:rgba(212,168,75,.1)}
+        .weapon-checkbox input[type="checkbox"]{accent-color:var(--gold);width:14px;height:14px;cursor:pointer}
+        .weapon-checkbox-name{flex:1;font-size:.7rem;color:var(--text)}
+        .weapon-checkbox-count{width:36px;background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--text);padding:.15rem .25rem;font-family:'Share Tech Mono',monospace;font-size:.65rem;text-align:center}
+        .leader-select,.enhancement-select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:.5rem .6rem;font-family:'Rajdhani',sans-serif;font-size:.75rem;cursor:pointer}
+        .leader-select:focus,.enhancement-select:focus{border-color:var(--gold);outline:none}
+        .leader-select option,.enhancement-select option{background:var(--bg2);color:var(--text)}
+        .leader-bonus-preview{background:linear-gradient(90deg,rgba(74,201,120,.1),transparent);border-left:3px solid var(--green);padding:.5rem .6rem;margin-top:.4rem;border-radius:0 4px 4px 0}
+        .leader-bonus-preview .preview-label{font-size:.5rem;color:var(--green);text-transform:uppercase;letter-spacing:.1em}
+        .leader-bonus-preview .preview-text{font-size:.7rem;color:var(--text)}
+        .unit-picker-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:200;display:none;padding:1rem;overflow-y:auto}
+        .unit-picker-overlay.open{display:block}
+        .unit-picker{background:var(--bg2);border:1px solid var(--border-gold);border-radius:8px;max-width:500px;margin:0 auto;overflow:hidden}
+        .unit-picker-header{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;border-bottom:1px solid var(--border);background:var(--bg3)}
+        .unit-picker-title{font-family:'Orbitron',sans-serif;font-size:.8rem;color:var(--gold);letter-spacing:.05em}
+        .unit-picker-close{width:32px;height:32px;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text2);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+        .unit-picker-close:hover{border-color:var(--gold);color:var(--gold)}
+        .unit-picker-section{padding:.5rem}
+        .unit-picker-section-title{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;padding:.5rem;border-bottom:1px solid var(--border)}
+        .unit-picker-item{display:flex;align-items:center;justify-content:space-between;padding:.6rem .75rem;cursor:pointer;touch-action:manipulation;border-radius:4px;transition:background .15s ease}
+        .unit-picker-item:hover{background:rgba(212,168,75,.1)}
+        .unit-picker-item-name{font-size:.75rem;color:var(--text)}
+        .unit-picker-item-pts{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--gold)}
     </style>
 </head>
 <body>
@@ -302,10 +344,22 @@
             <div class="config-total">
                 <span class="config-total-label">Total Points</span>
                 <span class="config-total-value" id="config-points">0</span>
+                <button class="config-add-btn" onclick="openUnitPicker()">+</button>
             </div>
-            <div id="config-container"><div class="loading">Loading units...</div></div>
+            <div id="army-list-container"></div>
         </div>
     </main>
+
+    <div class="unit-picker-overlay" id="unit-picker">
+        <div class="unit-picker">
+            <div class="unit-picker-header">
+                <span class="unit-picker-title">Add Unit</span>
+                <button class="unit-picker-close" onclick="closeUnitPicker()">×</button>
+            </div>
+            <div id="unit-picker-content"></div>
+        </div>
+    </div>
+
     <footer>LEAGUES OF VOTANN — LED UNITS REFERENCE</footer>
 
     <div id="modal">
@@ -328,15 +382,17 @@ let furyYP = false;
 const collapsedCards = {};
 const configExpandedCards = {};
 
-// Unit configuration state
-const unitConfig = {
-    included: {},           // { unitId: boolean }
-    quantity: {},           // { unitId: number } - how many of this unit
-    weapons: {},            // { unitId: { weaponKey: { equipped, count } } }
-    wargear: {},            // { unitId: { wargearId: boolean } }
-    leaderAssignments: {},  // { bodyguardId: leaderId | null }
-    enhancements: {}        // { leaderId: enhancementId | null }
-};
+// Army list - array of configured unit instances
+let armyList = [];
+// Structure: [{
+//   instanceId: string,
+//   unitId: string,
+//   modelCount: number,
+//   weapons: { weaponKey: { equipped: bool, count: number } },
+//   leaderId: string | null,
+//   enhancementId: string | null
+// }]
+let nextInstanceId = 1;
 
 // All available unit IDs
 const ALL_UNIT_IDS = [
@@ -367,64 +423,99 @@ async function fetchJSON(path) {
     return response.json();
 }
 
-// Save configuration to localStorage
-function saveConfig() {
-    localStorage.setItem('votann-unit-config', JSON.stringify(unitConfig));
+// Save army list to localStorage
+function saveArmyList() {
+    localStorage.setItem('votann-army-list', JSON.stringify({ armyList, nextInstanceId }));
 }
 
-// Load configuration from localStorage
-function loadConfig() {
-    const saved = localStorage.getItem('votann-unit-config');
+// Load army list from localStorage
+function loadArmyList() {
+    const saved = localStorage.getItem('votann-army-list');
     if (saved) {
         try {
             const parsed = JSON.parse(saved);
-            Object.assign(unitConfig, parsed);
+            armyList = parsed.armyList || [];
+            nextInstanceId = parsed.nextInstanceId || 1;
         } catch (e) {
-            console.warn('Failed to parse saved config:', e);
+            console.warn('Failed to parse saved army list:', e);
+            armyList = [];
         }
     }
-}
-
-// Initialize default configuration for all units
-function initializeDefaultConfig() {
-    ALL_UNIT_IDS.forEach(unitId => {
-        // Initialize included state (default to false)
-        if (unitConfig.included[unitId] === undefined) {
-            unitConfig.included[unitId] = false;
-        }
-
-        // Initialize quantity (default to 1)
-        if (unitConfig.quantity[unitId] === undefined) {
-            unitConfig.quantity[unitId] = 1;
-        }
-
-        // Initialize weapons config
-        if (!unitConfig.weapons[unitId]) {
-            unitConfig.weapons[unitId] = {};
-            const unit = units[unitId];
-            if (unit?.weapons) {
-                [...(unit.weapons.ranged || []), ...(unit.weapons.melee || [])].forEach(w => {
-                    const key = generateWeaponKey(w);
-                    unitConfig.weapons[unitId][key] = { equipped: true, count: w.count || 1 };
-                });
-            }
-        }
-
-        // Initialize wargear config
-        if (!unitConfig.wargear[unitId]) {
-            unitConfig.wargear[unitId] = {};
-            const unit = units[unitId];
-            (unit?.wargear || []).forEach(wg => {
-                unitConfig.wargear[unitId][wg] = true;
-            });
-        }
-    });
 }
 
 // Generate a unique key for a weapon
 function generateWeaponKey(weapon) {
     const base = weapon.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     return weapon.model ? `${base}-${weapon.model.toLowerCase().replace(/[^a-z0-9]+/g, '-')}` : base;
+}
+
+// Get filtered weapons based on instance configuration
+function getFilteredWeapons(unit, instanceWeapons) {
+    if (!unit.weapons) return { ranged: [], melee: [] };
+
+    const filterWeaponList = (list) => {
+        return (list || [])
+            .filter(w => {
+                const key = generateWeaponKey(w);
+                return instanceWeapons[key]?.equipped !== false;
+            })
+            .map(w => {
+                const key = generateWeaponKey(w);
+                const instConfig = instanceWeapons[key];
+                if (instConfig && instConfig.count !== undefined) {
+                    return { ...w, count: instConfig.count };
+                }
+                return w;
+            });
+    };
+
+    return {
+        ranged: filterWeaponList(unit.weapons.ranged),
+        melee: filterWeaponList(unit.weapons.melee)
+    };
+}
+
+// Create a new unit instance with default configuration
+function createUnitInstance(unitId) {
+    const unit = units[unitId];
+    if (!unit) return null;
+
+    const weapons = {};
+    if (unit.weapons) {
+        [...(unit.weapons.ranged || []), ...(unit.weapons.melee || [])].forEach(w => {
+            const key = generateWeaponKey(w);
+            weapons[key] = { equipped: true, count: w.count || 1 };
+        });
+    }
+
+    return {
+        instanceId: `inst-${nextInstanceId++}`,
+        unitId: unitId,
+        modelCount: unit.models || 1,
+        weapons: weapons,
+        leaderId: null,
+        enhancementId: null
+    };
+}
+
+// Add a unit to the army list
+function addUnitToArmy(unitId) {
+    const instance = createUnitInstance(unitId);
+    if (instance) {
+        armyList.push(instance);
+        saveArmyList();
+        renderConfigurationTab();
+        renderUnits();
+    }
+    closeUnitPicker();
+}
+
+// Remove a unit instance from the army list
+function removeUnitFromArmy(instanceId) {
+    armyList = armyList.filter(inst => inst.instanceId !== instanceId);
+    saveArmyList();
+    renderConfigurationTab();
+    renderUnits();
 }
 
 // Load all data
@@ -448,11 +539,8 @@ async function loadData() {
         });
         await Promise.all(unitPromises);
 
-        // Load saved configuration from localStorage
-        loadConfig();
-
-        // Initialize default states for all units
-        initializeDefaultConfig();
+        // Load saved army list from localStorage
+        loadArmyList();
 
         // Render everything
         renderApp();
@@ -527,14 +615,16 @@ function renderSoloUnitCard(entry) {
     if (!unit) return '';
 
     const isLeader = entry.type === 'solo-leader';
-    const copyLabel = entry.copyNumber ? ` #${entry.copyNumber}` : '';
+    const instance = entry.instance;
+    const modelCount = instance ? instance.modelCount : (unit.models || 1);
+    const filteredWeapons = instance ? getFilteredWeapons(unit, instance.weapons) : unit.weapons;
 
     return `
         <div class="unit-card" data-unit="${entry.id}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
                 <div class="card-collapse-info">
-                    <div class="card-collapse-title">${unit.name}${copyLabel}</div>
-                    <div class="card-collapse-subtitle">${unit.models || 1} model${(unit.models || 1) > 1 ? 's' : ''}</div>
+                    <div class="card-collapse-title">${unit.name}</div>
+                    <div class="card-collapse-subtitle">${modelCount} model${modelCount > 1 ? 's' : ''}</div>
                 </div>
                 <div class="card-collapse-right">
                     <div class="card-collapse-toggle"></div>
@@ -542,10 +632,10 @@ function renderSoloUnitCard(entry) {
             </div>
             <div class="card-collapse-content">
                 <div class="card-section">
-                    ${renderUnitHeader(unit)}
+                    ${renderUnitHeader(unit, modelCount)}
                     ${renderUnitStats(unit)}
                     ${unit.invulnerableSave ? renderInvuln(unit.invulnerableSave, false, unit.invulnerableSource) : ''}
-                    ${renderWeapons(unit.weapons, [], null, stratagemState.fury, stratagemState.closest, {})}
+                    ${renderWeapons(filteredWeapons, [], null, stratagemState.fury, stratagemState.closest, {})}
                     ${renderSoloAbilities(unit)}
                 </div>
                 <div class="keywords">${(unit.keywords || []).join(', ')}</div>
@@ -584,6 +674,12 @@ function renderSoloAbilities(unit) {
 function renderLedUnitCard(ledUnit) {
     const leader = units[ledUnit.leader];
     const bodyguard = units[ledUnit.bodyguard];
+    const instance = ledUnit.instance;
+
+    // Get bodyguard model count and weapons from instance
+    const bodyguardModelCount = instance ? instance.modelCount : (bodyguard.models || 1);
+    const bodyguardWeapons = instance ? getFilteredWeapons(bodyguard, instance.weapons) : bodyguard.weapons;
+
     // In 1K mode, suppress specific enhancements
     const sub1kRemovedEnhancements = ['ironskein', 'bastion-shield'];
     const enhancementId = ledUnit.enhancement;
@@ -644,10 +740,10 @@ function renderLedUnitCard(ledUnit) {
                 </div>
                 <div class="card-section">
                     <div class="sec-label"><span>Bodyguard</span><button class="bodyguard-wipe-toggle" onclick="toggleBodyguardWipe('${ledUnit.leader}', event)">☠ Wiped</button></div>
-                    ${renderUnitHeader(bodyguard)}
+                    ${renderUnitHeader(bodyguard, bodyguardModelCount)}
                     ${renderUnitStats(bodyguard)}
                     ${renderBodyguardInvuln(bodyguard, leader)}
-                    ${renderWeapons(bodyguard.weapons, weaponGrantedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses)}
+                    ${renderWeapons(bodyguardWeapons, weaponGrantedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses)}
                     ${renderBodyguardAbilities(bodyguard, leader)}
                 </div>
                 <div class="keywords">${ledUnit.combinedKeywords.join(', ')}</div>
@@ -657,10 +753,11 @@ function renderLedUnitCard(ledUnit) {
 }
 
 // Render unit header (name, type)
-function renderUnitHeader(unit) {
-    const modelText = unit.modelBreakdown
+function renderUnitHeader(unit, modelCountOverride = null) {
+    const modelCount = modelCountOverride !== null ? modelCountOverride : unit.models;
+    const modelText = (modelCountOverride === null && unit.modelBreakdown)
         ? `${unit.models} (${unit.modelBreakdown})`
-        : unit.models;
+        : modelCount;
 
     return `
         <div style="margin-bottom:.5rem">
@@ -931,103 +1028,124 @@ function renderBodyguardAbilities(bodyguard, leader) {
     return html;
 }
 
-// Render configuration tab
+// Render configuration tab (army list)
 function renderConfigurationTab() {
-    const container = document.getElementById('config-container');
-    let html = '';
+    const container = document.getElementById('army-list-container');
 
-    // Render each unit group
-    Object.entries(UNIT_GROUPS).forEach(([groupName, unitIds]) => {
-        const validUnits = unitIds.filter(id => units[id]);
-        if (validUnits.length === 0) return;
+    if (armyList.length === 0) {
+        container.innerHTML = '<div class="army-list-empty">No units added. Tap + to add units.</div>';
+    } else {
+        container.innerHTML = armyList.map(inst => renderArmyInstance(inst)).join('');
+    }
 
-        const includedCount = validUnits.filter(id => unitConfig.included[id]).length;
-
-        html += `
-            <div class="config-section">
-                <div class="section-header">
-                    <div class="section-icon"></div>
-                    <div class="section-title">${groupName}</div>
-                    <div class="section-count">${includedCount} / ${validUnits.length}</div>
-                </div>
-                <div class="config-units">
-                    ${validUnits.map(id => renderConfigUnitCard(id)).join('')}
-                </div>
-            </div>
-        `;
-    });
-
-    container.innerHTML = html;
     updateConfigPoints();
 }
 
-// Render a single unit config card
-function renderConfigUnitCard(unitId) {
-    const unit = units[unitId];
+// Render a single army instance card
+function renderArmyInstance(instance) {
+    const unit = units[instance.unitId];
     if (!unit) return '';
 
-    const isIncluded = unitConfig.included[unitId];
-    const isExpanded = configExpandedCards[unitId];
+    const isExpanded = configExpandedCards[instance.instanceId];
     const isLeader = unit.isLeader;
     const canBeLeadBy = unit.canBeLeadBy || [];
 
+    // Calculate instance points
+    const instancePoints = calculateInstancePoints(instance);
+
+    // Build details string
+    const weaponDetails = getWeaponSummary(instance);
+
     let bodyContent = '';
+
+    // Model count
+    bodyContent += `
+        <div class="model-count-row">
+            <span class="model-count-label">Models:</span>
+            <input type="number" class="model-count-input" value="${instance.modelCount}" min="1" max="20"
+                onchange="setInstanceModelCount('${instance.instanceId}', this.value)">
+        </div>
+    `;
 
     // Leader assignment dropdown (for non-leader units that can be led)
     if (!isLeader && canBeLeadBy.length > 0) {
-        bodyContent += renderLeaderSelector(unitId, canBeLeadBy);
+        bodyContent += renderInstanceLeaderSelector(instance, canBeLeadBy);
     }
 
     // Enhancement selector (for leader units)
     if (isLeader) {
-        bodyContent += renderEnhancementSelector(unitId);
+        bodyContent += renderInstanceEnhancementSelector(instance);
     }
 
     // Weapons section
-    bodyContent += renderWeaponSelector(unitId);
-
-    // Wargear section
-    if (unit.wargear?.length > 0) {
-        bodyContent += renderWargearSelector(unitId);
-    }
-
-    const quantity = unitConfig.quantity[unitId] || 1;
+    bodyContent += renderInstanceWeaponSelector(instance);
 
     return `
-        <div class="config-unit-card ${isIncluded ? 'included' : ''} ${isExpanded ? 'expanded' : ''}" data-unit="${unitId}">
-            <div class="config-unit-header" onclick="toggleConfigCard('${unitId}', event)">
-                <div class="include-toggle" onclick="toggleUnitIncluded('${unitId}', event)">✓</div>
-                <div class="config-unit-info">
-                    <div class="config-unit-name">${unit.name}</div>
-                    <div class="config-unit-type">${unit.type?.join(' • ') || ''}</div>
+        <div class="army-instance ${isExpanded ? 'expanded' : ''}" data-instance="${instance.instanceId}">
+            <div class="army-instance-header" onclick="toggleInstanceCard('${instance.instanceId}')">
+                <div class="army-instance-info">
+                    <div class="army-instance-name">${unit.name}</div>
+                    <div class="army-instance-details">${instance.modelCount}x ${unit.name} • ${weaponDetails}</div>
                 </div>
-                <div class="config-quantity">
-                    <span class="config-quantity-label">Qty</span>
-                    <input type="number" class="config-quantity-input" value="${quantity}" min="1" max="10" onchange="setUnitQuantity('${unitId}', this.value)" onclick="event.stopPropagation()">
-                </div>
-                <div class="config-unit-points">${unit.points} pts</div>
-                <div class="config-unit-expand"></div>
+                <div class="army-instance-points">${instancePoints} pts</div>
+                <button class="army-instance-delete" onclick="removeUnitFromArmy('${instance.instanceId}'); event.stopPropagation();">✕</button>
+                <div class="army-instance-expand"></div>
             </div>
-            <div class="config-unit-body">
+            <div class="army-instance-body">
                 ${bodyContent}
             </div>
         </div>
     `;
 }
 
-// Render leader selector dropdown
-function renderLeaderSelector(unitId, canBeLeadBy) {
-    const currentLeader = unitConfig.leaderAssignments[unitId] || '';
-    const assignedLeaders = Object.values(unitConfig.leaderAssignments).filter(l => l);
+// Get weapon summary for instance details
+function getWeaponSummary(instance) {
+    const weapons = [];
+    Object.entries(instance.weapons).forEach(([key, config]) => {
+        if (config.equipped && config.count > 0) {
+            // Find weapon name from key
+            const unit = units[instance.unitId];
+            let weaponName = key;
+            if (unit?.weapons) {
+                const allWeapons = [...(unit.weapons.ranged || []), ...(unit.weapons.melee || [])];
+                const found = allWeapons.find(w => generateWeaponKey(w) === key);
+                if (found) weaponName = found.name;
+            }
+            weapons.push(`${config.count}x ${weaponName}`);
+        }
+    });
+    return weapons.slice(0, 2).join(', ') + (weapons.length > 2 ? '...' : '') || 'No weapons';
+}
+
+// Calculate points for an instance
+function calculateInstancePoints(instance) {
+    const unit = units[instance.unitId];
+    if (!unit) return 0;
+
+    let points = unit.points || 0;
+
+    // Add leader points if attached
+    if (instance.leaderId && units[instance.leaderId]) {
+        points += units[instance.leaderId].points || 0;
+    }
+
+    // Add enhancement points
+    if (instance.enhancementId && enhancements[instance.enhancementId]) {
+        points += enhancements[instance.enhancementId].points || 0;
+    }
+
+    return points;
+}
+
+// Render leader selector for an instance
+function renderInstanceLeaderSelector(instance, canBeLeadBy) {
+    const currentLeader = instance.leaderId || '';
 
     let options = '<option value="">-- No Leader --</option>';
     canBeLeadBy.forEach(leaderId => {
         const leader = units[leaderId];
         if (!leader) return;
-        const isAssignedElsewhere = assignedLeaders.includes(leaderId) && currentLeader !== leaderId;
-        const disabled = isAssignedElsewhere ? 'disabled' : '';
-        const suffix = isAssignedElsewhere ? ' (assigned)' : ` (+${leader.points} pts)`;
-        options += `<option value="${leaderId}" ${currentLeader === leaderId ? 'selected' : ''} ${disabled}>${leader.name}${suffix}</option>`;
+        options += `<option value="${leaderId}" ${currentLeader === leaderId ? 'selected' : ''}>${leader.name} (+${leader.points} pts)</option>`;
     });
 
     let preview = '';
@@ -1043,21 +1161,20 @@ function renderLeaderSelector(unitId, canBeLeadBy) {
 
     return `
         <div class="config-label">Assigned Leader</div>
-        <select class="leader-select" onchange="assignLeader('${unitId}', this.value)">
+        <select class="leader-select" onchange="setInstanceLeader('${instance.instanceId}', this.value)">
             ${options}
         </select>
         ${preview}
     `;
 }
 
-// Render enhancement selector dropdown
-function renderEnhancementSelector(unitId) {
-    const currentEnh = unitConfig.enhancements[unitId] || '';
-    const unit = units[unitId];
+// Render enhancement selector for an instance
+function renderInstanceEnhancementSelector(instance) {
+    const currentEnh = instance.enhancementId || '';
+    const unit = units[instance.unitId];
 
     let options = '<option value="">-- No Enhancement --</option>';
     Object.entries(enhancements).forEach(([enhId, enh]) => {
-        // Check restriction
         const restriction = enh.restriction || '';
         const canUse = restriction === 'Leagues of Votann only' ||
             restriction.toLowerCase().includes(unit.name.toLowerCase()) ||
@@ -1070,15 +1187,15 @@ function renderEnhancementSelector(unitId) {
 
     return `
         <div class="config-label">Enhancement</div>
-        <select class="enhancement-select" onchange="assignEnhancement('${unitId}', this.value)">
+        <select class="enhancement-select" onchange="setInstanceEnhancement('${instance.instanceId}', this.value)">
             ${options}
         </select>
     `;
 }
 
-// Render weapon selector
-function renderWeaponSelector(unitId) {
-    const unit = units[unitId];
+// Render weapon selector for an instance
+function renderInstanceWeaponSelector(instance) {
+    const unit = units[instance.unitId];
     if (!unit?.weapons) return '';
 
     let html = '';
@@ -1088,12 +1205,12 @@ function renderWeaponSelector(unitId) {
         html += '<div class="config-label">Ranged Weapons</div>';
         unit.weapons.ranged.forEach(w => {
             const key = generateWeaponKey(w);
-            const config = unitConfig.weapons[unitId]?.[key] || { equipped: true, count: w.count || 1 };
+            const config = instance.weapons[key] || { equipped: true, count: w.count || 1 };
             html += `
                 <label class="weapon-checkbox">
-                    <input type="checkbox" ${config.equipped ? 'checked' : ''} onchange="setWeaponEquipped('${unitId}', '${key}', this.checked)">
+                    <input type="checkbox" ${config.equipped ? 'checked' : ''} onchange="setInstanceWeaponEquipped('${instance.instanceId}', '${key}', this.checked)">
                     <span class="weapon-checkbox-name">${w.name}</span>
-                    <input type="number" class="weapon-checkbox-count" value="${config.count}" min="0" max="20" onchange="setWeaponCount('${unitId}', '${key}', this.value)" onclick="event.stopPropagation()">
+                    <input type="number" class="weapon-checkbox-count" value="${config.count}" min="0" max="20" onchange="setInstanceWeaponCount('${instance.instanceId}', '${key}', this.value)" onclick="event.stopPropagation()">
                 </label>
             `;
         });
@@ -1104,12 +1221,12 @@ function renderWeaponSelector(unitId) {
         html += '<div class="config-label">Melee Weapons</div>';
         unit.weapons.melee.forEach(w => {
             const key = generateWeaponKey(w);
-            const config = unitConfig.weapons[unitId]?.[key] || { equipped: true, count: w.count || 1 };
+            const config = instance.weapons[key] || { equipped: true, count: w.count || 1 };
             html += `
                 <label class="weapon-checkbox">
-                    <input type="checkbox" ${config.equipped ? 'checked' : ''} onchange="setWeaponEquipped('${unitId}', '${key}', this.checked)">
+                    <input type="checkbox" ${config.equipped ? 'checked' : ''} onchange="setInstanceWeaponEquipped('${instance.instanceId}', '${key}', this.checked)">
                     <span class="weapon-checkbox-name">${w.name}</span>
-                    <input type="number" class="weapon-checkbox-count" value="${config.count}" min="0" max="20" onchange="setWeaponCount('${unitId}', '${key}', this.value)" onclick="event.stopPropagation()">
+                    <input type="number" class="weapon-checkbox-count" value="${config.count}" min="0" max="20" onchange="setInstanceWeaponCount('${instance.instanceId}', '${key}', this.value)" onclick="event.stopPropagation()">
                 </label>
             `;
         });
@@ -1118,218 +1235,140 @@ function renderWeaponSelector(unitId) {
     return html;
 }
 
-// Render wargear selector
-function renderWargearSelector(unitId) {
-    const unit = units[unitId];
-    if (!unit?.wargear?.length) return '';
-
-    let html = '<div class="config-label">Wargear</div>';
-    unit.wargear.forEach(wgId => {
-        const wg = abilities[wgId];
-        const isEquipped = unitConfig.wargear[unitId]?.[wgId] !== false;
-        html += `
-            <label class="weapon-checkbox">
-                <input type="checkbox" ${isEquipped ? 'checked' : ''} onchange="setWargearEquipped('${unitId}', '${wgId}', this.checked)">
-                <span class="weapon-checkbox-name">${wg?.name || wgId}</span>
-            </label>
-        `;
-    });
-
-    return html;
-}
-
-// Toggle unit inclusion
-function toggleUnitIncluded(unitId, event) {
-    event.stopPropagation();
-    unitConfig.included[unitId] = !unitConfig.included[unitId];
-
-    // Auto-include leader when assigning to a bodyguard
-    // Auto-exclude leader assignment when excluding bodyguard
-    if (!unitConfig.included[unitId]) {
-        unitConfig.leaderAssignments[unitId] = null;
-    }
-
-    saveConfig();
-    renderConfigurationTab();
-    renderUnits();
-}
-
-// Toggle config card expansion
-function toggleConfigCard(unitId, event) {
-    // Don't toggle if clicking include checkbox
-    if (event.target.closest('.include-toggle')) return;
-
-    configExpandedCards[unitId] = !configExpandedCards[unitId];
-    const card = document.querySelector(`.config-unit-card[data-unit="${unitId}"]`);
+// Toggle instance card expansion
+function toggleInstanceCard(instanceId) {
+    configExpandedCards[instanceId] = !configExpandedCards[instanceId];
+    const card = document.querySelector(`.army-instance[data-instance="${instanceId}"]`);
     if (card) {
-        card.classList.toggle('expanded', configExpandedCards[unitId]);
+        card.classList.toggle('expanded', configExpandedCards[instanceId]);
     }
 }
 
-// Set weapon equipped state
-function setWeaponEquipped(unitId, weaponKey, equipped) {
-    if (!unitConfig.weapons[unitId]) unitConfig.weapons[unitId] = {};
-    if (!unitConfig.weapons[unitId][weaponKey]) unitConfig.weapons[unitId][weaponKey] = { equipped: true, count: 1 };
-    unitConfig.weapons[unitId][weaponKey].equipped = equipped;
-    saveConfig();
-    renderUnits();
-}
-
-// Set weapon count
-function setWeaponCount(unitId, weaponKey, count) {
-    if (!unitConfig.weapons[unitId]) unitConfig.weapons[unitId] = {};
-    if (!unitConfig.weapons[unitId][weaponKey]) unitConfig.weapons[unitId][weaponKey] = { equipped: true, count: 1 };
-    unitConfig.weapons[unitId][weaponKey].count = parseInt(count) || 1;
-    saveConfig();
-    renderUnits();
-}
-
-// Set wargear equipped state
-function setWargearEquipped(unitId, wargearId, equipped) {
-    if (!unitConfig.wargear[unitId]) unitConfig.wargear[unitId] = {};
-    unitConfig.wargear[unitId][wargearId] = equipped;
-    saveConfig();
-    renderUnits();
-}
-
-// Set unit quantity
-function setUnitQuantity(unitId, quantity) {
-    unitConfig.quantity[unitId] = Math.max(1, parseInt(quantity) || 1);
-    saveConfig();
-    renderConfigurationTab();
-    renderUnits();
-}
-
-// Assign leader to bodyguard
-function assignLeader(bodyguardId, leaderId) {
-    // Clear any existing assignment for this bodyguard
-    unitConfig.leaderAssignments[bodyguardId] = leaderId || null;
-
-    // Auto-include both units when leader is assigned
-    if (leaderId) {
-        unitConfig.included[bodyguardId] = true;
-        unitConfig.included[leaderId] = true;
+// Set instance model count
+function setInstanceModelCount(instanceId, count) {
+    const instance = armyList.find(i => i.instanceId === instanceId);
+    if (instance) {
+        instance.modelCount = Math.max(1, parseInt(count) || 1);
+        saveArmyList();
+        renderConfigurationTab();
+        renderUnits();
     }
-
-    saveConfig();
-    renderConfigurationTab();
-    renderUnits();
 }
 
-// Assign enhancement to leader
-function assignEnhancement(leaderId, enhancementId) {
-    unitConfig.enhancements[leaderId] = enhancementId || null;
-    saveConfig();
-    renderConfigurationTab();
-    renderUnits();
+// Set instance weapon equipped state
+function setInstanceWeaponEquipped(instanceId, weaponKey, equipped) {
+    const instance = armyList.find(i => i.instanceId === instanceId);
+    if (instance) {
+        if (!instance.weapons[weaponKey]) instance.weapons[weaponKey] = { equipped: true, count: 1 };
+        instance.weapons[weaponKey].equipped = equipped;
+        saveArmyList();
+        renderConfigurationTab();
+        renderUnits();
+    }
+}
+
+// Set instance weapon count
+function setInstanceWeaponCount(instanceId, weaponKey, count) {
+    const instance = armyList.find(i => i.instanceId === instanceId);
+    if (instance) {
+        if (!instance.weapons[weaponKey]) instance.weapons[weaponKey] = { equipped: true, count: 1 };
+        instance.weapons[weaponKey].count = parseInt(count) || 0;
+        saveArmyList();
+        renderConfigurationTab();
+        renderUnits();
+    }
+}
+
+// Set instance leader
+function setInstanceLeader(instanceId, leaderId) {
+    const instance = armyList.find(i => i.instanceId === instanceId);
+    if (instance) {
+        instance.leaderId = leaderId || null;
+        saveArmyList();
+        renderConfigurationTab();
+        renderUnits();
+    }
+}
+
+// Set instance enhancement
+function setInstanceEnhancement(instanceId, enhancementId) {
+    const instance = armyList.find(i => i.instanceId === instanceId);
+    if (instance) {
+        instance.enhancementId = enhancementId || null;
+        saveArmyList();
+        renderConfigurationTab();
+        renderUnits();
+    }
 }
 
 // Update total points display
 function updateConfigPoints() {
     let total = 0;
-    const countedLeaders = new Set();
-
-    // Count included units (multiplied by quantity)
-    Object.entries(unitConfig.included).forEach(([unitId, included]) => {
-        if (included && units[unitId]) {
-            const qty = unitConfig.quantity[unitId] || 1;
-            total += (units[unitId].points || 0) * qty;
-        }
+    armyList.forEach(instance => {
+        total += calculateInstancePoints(instance);
     });
-
-    // Add points for assigned leaders (if not already counted)
-    Object.entries(unitConfig.leaderAssignments).forEach(([bodyguardId, leaderId]) => {
-        if (leaderId && units[leaderId] && !countedLeaders.has(leaderId)) {
-            if (!unitConfig.included[leaderId]) {
-                total += units[leaderId].points || 0;
-            }
-            countedLeaders.add(leaderId);
-        }
-    });
-
-    // Add enhancement points
-    Object.entries(unitConfig.enhancements).forEach(([leaderId, enhId]) => {
-        if (enhId && enhancements[enhId]) {
-            total += enhancements[enhId].points || 0;
-        }
-    });
-
     document.getElementById('config-points').textContent = total;
 }
 
-// Build active army from configuration (replaces static army.ledUnits)
+// Unit picker functions
+function openUnitPicker() {
+    const picker = document.getElementById('unit-picker');
+    const content = document.getElementById('unit-picker-content');
+
+    let html = '';
+    Object.entries(UNIT_GROUPS).forEach(([groupName, unitIds]) => {
+        const validUnits = unitIds.filter(id => units[id]);
+        if (validUnits.length === 0) return;
+
+        html += `<div class="unit-picker-section">
+            <div class="unit-picker-section-title">${groupName}</div>
+            ${validUnits.map(id => {
+                const unit = units[id];
+                return `<div class="unit-picker-item" onclick="addUnitToArmy('${id}')">
+                    <span class="unit-picker-item-name">${unit.name}</span>
+                    <span class="unit-picker-item-pts">${unit.points} pts</span>
+                </div>`;
+            }).join('')}
+        </div>`;
+    });
+
+    content.innerHTML = html;
+    picker.classList.add('open');
+}
+
+function closeUnitPicker() {
+    document.getElementById('unit-picker').classList.remove('open');
+}
+
+// Build active army from army list
 function buildActiveArmy() {
     const activeUnits = [];
 
-    // Find all included bodyguard units with assigned leaders
-    Object.entries(unitConfig.included).forEach(([unitId, included]) => {
-        if (!included) return;
-        const unit = units[unitId];
+    armyList.forEach(instance => {
+        const unit = units[instance.unitId];
         if (!unit) return;
 
-        const qty = unitConfig.quantity[unitId] || 1;
-
-        // If it's a bodyguard with an assigned leader
-        if (unit.canBeLeadBy && unitConfig.leaderAssignments[unitId]) {
-            const leaderId = unitConfig.leaderAssignments[unitId];
-            const leader = units[leaderId];
-            if (!leader) return;
-
-            const enhancementId = unitConfig.enhancements[leaderId] || null;
-
-            // First one gets the leader attached
+        // If it has an assigned leader, render as led unit
+        if (instance.leaderId && units[instance.leaderId]) {
+            const leader = units[instance.leaderId];
             activeUnits.push({
-                id: `${leaderId}-${unitId}`,
+                id: instance.instanceId,
                 type: 'led',
-                leader: leaderId,
-                bodyguard: unitId,
-                enhancement: enhancementId,
+                leader: instance.leaderId,
+                bodyguard: instance.unitId,
+                enhancement: instance.enhancementId,
                 attachedBannerText: 'Attached',
-                combinedKeywords: [...new Set([...(leader.keywords || []), ...(unit.keywords || [])])]
+                combinedKeywords: [...new Set([...(leader.keywords || []), ...(unit.keywords || [])])],
+                instance: instance
             });
-
-            // Additional copies are solo
-            for (let i = 1; i < qty; i++) {
-                activeUnits.push({
-                    id: `${unitId}-${i + 1}`,
-                    type: 'solo',
-                    unit: unitId,
-                    copyNumber: i + 1
-                });
-            }
-        }
-        // Standalone unit (not a leader, or is a leader not attached anywhere)
-        else if (!unit.isLeader) {
-            for (let i = 0; i < qty; i++) {
-                activeUnits.push({
-                    id: qty > 1 ? `${unitId}-${i + 1}` : unitId,
-                    type: 'solo',
-                    unit: unitId,
-                    copyNumber: qty > 1 ? i + 1 : null
-                });
-            }
-        }
-    });
-
-    // Add solo leaders (included but not attached to any bodyguard)
-    Object.entries(unitConfig.included).forEach(([unitId, included]) => {
-        if (!included) return;
-        const unit = units[unitId];
-        if (!unit?.isLeader) return;
-
-        const qty = unitConfig.quantity[unitId] || 1;
-
-        // Check if this leader is attached to any bodyguard
-        const isAttached = Object.values(unitConfig.leaderAssignments).includes(unitId);
-        if (!isAttached) {
-            for (let i = 0; i < qty; i++) {
-                activeUnits.push({
-                    id: qty > 1 ? `${unitId}-${i + 1}` : unitId,
-                    type: 'solo-leader',
-                    unit: unitId,
-                    copyNumber: qty > 1 ? i + 1 : null
-                });
-            }
+        } else {
+            // Standalone unit
+            activeUnits.push({
+                id: instance.instanceId,
+                type: unit.isLeader ? 'solo-leader' : 'solo',
+                unit: instance.unitId,
+                instance: instance
+            });
         }
     });
 
