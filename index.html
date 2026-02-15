@@ -1117,8 +1117,9 @@ function renderArmyInstance(instance) {
     bodyContent += `
         <div class="model-count-row">
             <span class="model-count-label">Models:</span>
-            <input type="number" class="model-count-input" value="${instance.modelCount}" min="${minModels}" max="${maxModels}"
-                onchange="setInstanceModelCount('${instance.instanceId}', this.value)">
+            <button class="weapon-count-btn" onclick="event.preventDefault();adjustModelCount('${instance.instanceId}',-1,${minModels},${maxModels})">−</button>
+            <span class="weapon-count-display">${instance.modelCount}</span>
+            <button class="weapon-count-btn" onclick="event.preventDefault();adjustModelCount('${instance.instanceId}',1,${minModels},${maxModels})">+</button>
         </div>
     `;
 
@@ -1302,6 +1303,18 @@ function setInstanceModelCount(instanceId, count) {
     const instance = armyList.find(i => i.instanceId === instanceId);
     if (instance) {
         instance.modelCount = Math.max(1, parseInt(count) || 1);
+        saveArmyList();
+        renderConfigurationTab();
+        renderUnits();
+    }
+}
+
+// Adjust model count by delta (+1 or -1) with min/max constraints
+function adjustModelCount(instanceId, delta, min, max) {
+    const instance = armyList.find(i => i.instanceId === instanceId);
+    if (instance) {
+        const newCount = Math.min(max, Math.max(min, instance.modelCount + delta));
+        instance.modelCount = newCount;
         saveArmyList();
         renderConfigurationTab();
         renderUnits();

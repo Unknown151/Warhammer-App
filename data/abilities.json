@@ -270,7 +270,7 @@
   "panspectral-scanner": {
     "name": "Panspectral Scanner",
     "type": "Wargear",
-    "description": "Ranged weapons equipped by the bearer have the <strong>[IGNORES COVER]</strong> ability."
+    "description": "Each time a model in the bearer's unit makes a ranged attack, re-roll a Hit roll of 1."
   },
   "multiwave-comms-array": {
     "name": "Multiwave Comms Array",
@@ -396,6 +396,6 @@
   "multicog-targeting": {
     "name": "Multicog Targeting",
     "type": "Ability — Hekaton Land Fortress",
-    "description": "This model's ranged weapons have the <strong>[IGNORES COVER]</strong> ability."
+    "description": "Each time this model makes a ranged attack, you can ignore any or all modifiers to the following: that attack's Ballistic Skill characteristic; the Hit roll."
   }
 }
