@@ -203,5 +203,199 @@
     "name": "Re-roll Wound Roll of 1",
     "type": "Inherited from Leader",
     "description": "While led by Iron-master, ranged attacks can <strong>re-roll Wound rolls of 1</strong> (from Multispectral Visor)."
+  },
+
+  "psychic": {
+    "name": "Psychic",
+    "type": "Weapon Ability",
+    "description": "This weapon has the <strong>PSYCHIC</strong> tag. Rules that interact with psychic weapons apply."
+  },
+  "one-shot": {
+    "name": "One Shot",
+    "type": "Weapon Ability",
+    "description": "This weapon can only be shot <strong>once per battle</strong>."
+  },
+  "overcharge": {
+    "name": "Overcharge",
+    "type": "Weapon Ability",
+    "description": "This is the <strong>overcharge</strong> profile of a weapon with multiple charge levels."
+  },
+
+  "lone-operative": {
+    "name": "Lone Operative",
+    "type": "Core Ability",
+    "description": "Unless part of an Attached unit, this unit can only be selected as the target of a ranged attack if the attacking model is within <strong>12\"</strong>."
+  },
+  "stealth": {
+    "name": "Stealth",
+    "type": "Core Ability",
+    "description": "If every model in this unit has this ability, then each time a ranged attack is made against it, subtract <strong>1 from the Hit roll</strong>."
+  },
+  "infiltrators": {
+    "name": "Infiltrators",
+    "type": "Core Ability",
+    "description": "During deployment, this unit can be set up anywhere on the battlefield that is more than <strong>9\" from all enemy models</strong>."
+  },
+  "scouts-9": {
+    "name": "Scouts 9\"",
+    "type": "Core Ability",
+    "description": "At the start of the first battle round, before the first turn begins, this unit can make a <strong>Normal move of up to 9\"</strong>."
+  },
+  "firing-deck-5": {
+    "name": "Firing Deck 5",
+    "type": "Core Ability",
+    "description": "Each time this model is selected to shoot in the Shooting phase, up to <strong>5 embarked models</strong> can shoot as well."
+  },
+  "feel-no-pain-4": {
+    "name": "Feel No Pain 4+",
+    "type": "Core Ability",
+    "description": "Each time this model would lose a wound, roll a D6. On a <strong>4+</strong>, that wound is not lost."
+  },
+  "deadly-demise-1": {
+    "name": "Deadly Demise 1",
+    "type": "Core Ability",
+    "description": "When this model is destroyed, roll a D6. On a <strong>6</strong>, each unit within 6\" suffers <strong>1 mortal wound</strong>."
+  },
+  "deadly-demise-d6": {
+    "name": "Deadly Demise D6",
+    "type": "Core Ability",
+    "description": "When this model is destroyed, roll a D6. On a <strong>6</strong>, each unit within 6\" suffers <strong>D6 mortal wounds</strong>."
+  },
+
+  "smoke-launcher": {
+    "name": "Smoke Launcher",
+    "type": "Wargear",
+    "description": "Once per battle, after your opponent selects this unit as a target, until the end of the phase the unit has the <strong>Benefit of Cover</strong> and the <strong>Stealth</strong> ability."
+  },
+  "panspectral-scanner": {
+    "name": "Panspectral Scanner",
+    "type": "Wargear",
+    "description": "Ranged weapons equipped by the bearer have the <strong>[IGNORES COVER]</strong> ability."
+  },
+  "multiwave-comms-array": {
+    "name": "Multiwave Comms Array",
+    "type": "Wargear",
+    "description": "Each time you target the bearer's unit with a Stratagem, roll one D6: on a <strong>5+</strong>, you gain <strong>1CP</strong>."
+  },
+  "rollbar-searchlight": {
+    "name": "Rollbar Searchlight",
+    "type": "Wargear",
+    "description": "Each time a model in the bearer's unit makes an attack, <strong>re-roll a Hit roll of 1</strong>."
+  },
+  "preymark-crest": {
+    "name": "Preymark Crest",
+    "type": "Wargear",
+    "description": "While an enemy unit is within <strong>18\" and visible</strong> to the bearer, each time a model in the bearer's unit makes an attack that targets that enemy unit, <strong>re-roll a Hit roll of 1</strong>."
+  },
+
+  "science-guild-support": {
+    "name": "Science Guild Support",
+    "type": "Ability — Arkanyst Evaluator",
+    "description": "Once per battle, after your opponent selects a unit as the target of a Stratagem, this model can use this ability. If it does, until the end of the phase, each time an attack is made against that enemy unit, <strong>improve the AP of that attack by 1</strong>."
+  },
+  "resource-transmutation": {
+    "name": "Resource Transmutation",
+    "type": "Ability — Arkanyst Evaluator",
+    "description": "Each time an enemy model is destroyed by an attack made by this model, you gain <strong>1YP</strong>."
+  },
+  "grudge-fuelled-fortitude": {
+    "name": "Grudge-fuelled Fortitude",
+    "type": "Ability — Buri Aegnirssen",
+    "description": "Each time an attack is allocated to this model, subtract <strong>1 from the Damage characteristic</strong> of that attack."
+  },
+  "unhinged-vengeance": {
+    "name": "Unhinged Vengeance",
+    "type": "Ability — Buri Aegnirssen",
+    "description": "Each time this model makes a melee attack, if this model's unit was below its Starting Strength at the start of your turn, add <strong>1 to the Wound roll</strong>."
+  },
+  "brokhyr-guild-support": {
+    "name": "Brôkhyr Guild Support",
+    "type": "Ability — Iron-master",
+    "description": "While this model is leading a unit, weapons equipped by models in that unit have the ability to <strong>re-roll Wound rolls of 1</strong>."
+  },
+  "fortify-psychic": {
+    "name": "Fortify (Psychic)",
+    "type": "Leader — Grimnyr",
+    "description": "While this model is leading a unit, models in that unit have a <strong>4+ invulnerable save</strong>."
+  },
+  "grimnyrs-regard": {
+    "name": "Grimnyr's Regard",
+    "type": "Ability — Grimnyr",
+    "description": "Once per battle, at the start of any phase, this model can use this ability. If it does, until the end of the phase, enemy units within <strong>18\" of this model</strong> cannot use any abilities that let them <strong>ignore wounds</strong>."
+  },
+  "computational-mastermind": {
+    "name": "Computational Mastermind",
+    "type": "Leader — Memnyr Strategist",
+    "description": "While this model is leading a unit, each time a model in that unit makes an attack, <strong>re-roll a Hit roll of 1</strong>."
+  },
+  "predictive-guidance": {
+    "name": "Predictive Guidance",
+    "type": "Ability — Memnyr Strategist",
+    "description": "Once per battle round, you can target this model's unit with the <strong>Command Re-roll</strong> Stratagem for <strong>0CP</strong>."
+  },
+  "cyberstimms": {
+    "name": "Cyberstimms",
+    "type": "Ability — Cthonian Beserks",
+    "description": "Each time a model in this unit is destroyed by a melee attack, if that model has not fought this phase, roll one D6: on a <strong>4+</strong>, do not remove it from play. The destroyed model can fight after the attacking model's unit has finished making its attacks, and is then removed from play."
+  },
+  "subterranean-explosives": {
+    "name": "Subterranean Explosives",
+    "type": "Ability — Cthonian Beserks",
+    "description": "In your Shooting phase, one model in this unit equipped with a mole grenade launcher can use it. If it does, select one point on the battlefield within <strong>18\"</strong> and roll one D6 for each enemy unit within <strong>3\" of that point</strong>: on a <strong>2+</strong>, that unit suffers <strong>D3 mortal wounds</strong>."
+  },
+  "destabilising-quakes": {
+    "name": "Destabilising Quakes",
+    "type": "Ability — Cthonian Earthshakers",
+    "description": "In your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks. Until the start of your next Shooting phase, that enemy unit is reduced to <strong>half its Move characteristic</strong>."
+  },
+  "geomantic-hunters": {
+    "name": "Geomantic Hunters",
+    "type": "Ability — Cthonian Earthshakers",
+    "description": "This unit is eligible to shoot in a turn in which it <strong>Fell Back</strong>."
+  },
+  "luck-has-need-keeps-toil-earns": {
+    "name": "Luck Has. Need Keeps. Toil Earns.",
+    "type": "Ability — Hearthkyn Warriors",
+    "description": "At the start of each battle round, you gain <strong>1YP</strong> for each objective marker you control that has one or more models from this unit within range of it."
+  },
+  "outflanking-mag-riders": {
+    "name": "Outflanking Mag-riders",
+    "type": "Ability — Hernkyn Pioneers",
+    "description": "At the end of your opponent's turn, if this unit is within <strong>6\" of any battlefield edge</strong> and is not within Engagement Range of one or more enemy units, you can remove this unit from the battlefield and place it into <strong>Strategic Reserves</strong>."
+  },
+  "pragmatic-hunters": {
+    "name": "Pragmatic Hunters",
+    "type": "Ability — Hernkyn Yaegirs",
+    "description": "This unit is eligible to shoot and declare a charge in a turn in which it <strong>Fell Back</strong>."
+  },
+  "purge-response": {
+    "name": "Purge Response",
+    "type": "Ability — Ironkin Steeljacks",
+    "description": "Each time a model in this unit makes a ranged attack that targets the closest eligible target, <strong>re-roll a Hit roll of 1</strong>."
+  },
+  "merciless-eradication": {
+    "name": "Merciless Eradication",
+    "type": "Ability — Ironkin Steeljacks",
+    "description": "Each time a model in this unit makes a melee attack, if this unit made a Charge move this turn, <strong>re-roll a Hit roll of 1</strong>."
+  },
+  "scanner-uplinks": {
+    "name": "Scanner Uplinks",
+    "type": "Ability — Kapricus Carrier",
+    "description": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks. Until the start of your next Shooting phase, each time a friendly <strong>LEAGUES OF VOTANN</strong> unit makes an attack that targets that unit, <strong>re-roll a Hit roll of 1</strong>."
+  },
+  "opportunistic-manoeuvre": {
+    "name": "Opportunistic Manoeuvre",
+    "type": "Ability — Kapricus Defenders",
+    "description": "Each time this model makes a ranged attack against a unit that is Below Half-strength, <strong>re-roll a Hit roll of 1</strong> and <strong>re-roll a Wound roll of 1</strong>."
+  },
+  "blistering-advance": {
+    "name": "Blistering Advance",
+    "type": "Ability — Sagitaur",
+    "description": "Units can disembark from this <strong>TRANSPORT</strong> after it has made a Normal move (but not an Advance or Fall Back move), and the disembarked unit is still eligible to act normally."
+  },
+  "multicog-targeting": {
+    "name": "Multicog Targeting",
+    "type": "Ability — Hekaton Land Fortress",
+    "description": "This model's ranged weapons have the <strong>[IGNORES COVER]</strong> ability."
   }
 }
