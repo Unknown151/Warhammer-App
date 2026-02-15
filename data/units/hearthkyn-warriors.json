@@ -88,5 +88,5 @@
   "abilities": ["panspectral-scanning"],
   "coreAbilities": ["feel-no-pain"],
   "wargear": ["weavefield-crest-theyn"],
-  "canBeLeadBy": ["kahl", "uthar", "ironmaster"]
+  "canBeLeadBy": ["kahl", "uthar", "iron-master"]
 }

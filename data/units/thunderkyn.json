@@ -5,7 +5,9 @@
   "keywords": ["INFANTRY", "EXO-FRAME", "BRÔKHYR", "THUNDERKYN"],
   "isLeader": false,
   "points": 160,
-  "models": 6,
+  "models": 3,
+  "baseModels": 3,
+  "maxModels": 6,
   "stats": {
     "m": "5\"",
     "t": 6,
@@ -58,5 +60,5 @@
   },
   "abilities": ["breaching-fire"],
   "wargear": [],
-  "canBeLeadBy": ["ironmaster"]
+  "canBeLeadBy": ["iron-master"]
 }

@@ -488,10 +488,13 @@ function createUnitInstance(unitId) {
         });
     }
 
+    // Use baseModels as default if available, otherwise models
+    const defaultModelCount = unit.baseModels || unit.models || 1;
+
     return {
         instanceId: `inst-${nextInstanceId++}`,
         unitId: unitId,
-        modelCount: unit.models || 1,
+        modelCount: defaultModelCount,
         weapons: weapons,
         leaderId: null,
         enhancementId: null
@@ -1058,11 +1061,13 @@ function renderArmyInstance(instance) {
 
     let bodyContent = '';
 
-    // Model count
+    // Model count - use baseModels as min and maxModels as max if available
+    const minModels = unit.baseModels || 1;
+    const maxModels = unit.maxModels || unit.models || 20;
     bodyContent += `
         <div class="model-count-row">
             <span class="model-count-label">Models:</span>
-            <input type="number" class="model-count-input" value="${instance.modelCount}" min="1" max="20"
+            <input type="number" class="model-count-input" value="${instance.modelCount}" min="${minModels}" max="${maxModels}"
                 onchange="setInstanceModelCount('${instance.instanceId}', this.value)">
         </div>
     `;
@@ -1122,7 +1127,11 @@ function calculateInstancePoints(instance) {
     const unit = units[instance.unitId];
     if (!unit) return 0;
 
+    // Tier-based points: if unit has baseModels and modelCount exceeds it, double the points
     let points = unit.points || 0;
+    if (unit.baseModels && instance.modelCount > unit.baseModels) {
+        points = points * 2;
+    }
 
     // Add leader points if attached
     if (instance.leaderId && units[instance.leaderId]) {

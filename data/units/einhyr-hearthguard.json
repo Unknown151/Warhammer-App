@@ -6,6 +6,8 @@
   "isLeader": false,
   "points": 135,
   "models": 5,
+  "baseModels": 5,
+  "maxModels": 10,
   "modelBreakdown": "1 Hesyr + 4 Hearthguard",
   "stats": {
     "m": "5\"",
