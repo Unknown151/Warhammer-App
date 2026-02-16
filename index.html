@@ -596,9 +596,9 @@ function renderUnits() {
     document.getElementById('led-units-count').textContent = activeArmy.length;
 
     // Restore collapsed states
-    Object.keys(collapsedCards).forEach(leaderId => {
-        if (collapsedCards[leaderId]) {
-            const card = container.querySelector(`.unit-card[data-leader="${leaderId}"]`);
+    Object.keys(collapsedCards).forEach(cardId => {
+        if (collapsedCards[cardId]) {
+            const card = container.querySelector(`.unit-card[data-card-id="${cardId}"]`);
             if (card) card.classList.add('collapsed');
         }
     });
@@ -635,8 +635,12 @@ function renderSoloUnitCard(entry) {
     // Fury of the Hearth applies to Einhyr Hearthguard units (solo or led)
     const furyActive = stratagemState.fury && entry.unit === 'einhyr-hearthguard';
 
+    // Closest target bonuses for solo units
+    const closestActive = stratagemState.closest;
+    const closestBonuses = closestActive ? getClosestBonusesForUnit(entry.unit, null) : { apImprove: false, rerollHit: false };
+
     return `
-        <div class="unit-card" data-unit="${entry.id}">
+        <div class="unit-card" data-unit="${entry.id}" data-card-id="${entry.id}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
                 <div class="card-collapse-info">
                     <div class="card-collapse-title">${unit.name}</div>
@@ -651,7 +655,7 @@ function renderSoloUnitCard(entry) {
                     ${renderUnitHeader(unit, modelCount)}
                     ${renderUnitStats(unit)}
                     ${renderDefensiveRow(unit)}
-                    ${renderWeapons(filteredWeapons, [], null, furyActive, stratagemState.closest, {})}
+                    ${renderWeapons(filteredWeapons, [], null, furyActive, closestActive, closestBonuses)}
                     ${renderSoloAbilities(unit)}
                 </div>
                 <div class="keywords">${(unit.keywords || []).join(', ')}</div>
@@ -725,7 +729,7 @@ function renderLedUnitCard(ledUnit) {
     const leaderAppliesTo = leader.leaderBonus?.appliesTo || null;
 
     return `
-        <div class="unit-card attached" data-leader="${ledUnit.leader}">
+        <div class="unit-card attached" data-leader="${ledUnit.leader}" data-card-id="${ledUnit.id}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
                 <div class="card-collapse-info">
                     <div class="card-collapse-title">${leader.name} + ${bodyguard.name}</div>
@@ -1480,8 +1484,8 @@ function updateUnitCard(charId, isDead) {
 function toggleCardCollapse(header) {
     const card = header.closest('.unit-card');
     card.classList.toggle('collapsed');
-    const leaderId = card.getAttribute('data-leader');
-    collapsedCards[leaderId] = card.classList.contains('collapsed');
+    const cardId = card.getAttribute('data-card-id');
+    if (cardId) collapsedCards[cardId] = card.classList.contains('collapsed');
 }
 
 // Toggle leader death from unit card
@@ -1598,12 +1602,24 @@ function isFuryTarget(leaderId, bodyguardId) {
 // Get closest-target bonuses for a led unit
 function getClosestBonuses(ledUnit) {
     const keywords = ledUnit.combinedKeywords || [];
+    return getClosestBonusesFromKeywords(keywords, ledUnit.bodyguard);
+}
+
+// Get closest-target bonuses for a solo unit by unitId
+function getClosestBonusesForUnit(unitId, bodyguardId) {
+    const unit = units[unitId];
+    if (!unit) return { apImprove: false, rerollHit: false };
+    return getClosestBonusesFromKeywords(unit.keywords || [], bodyguardId || unitId);
+}
+
+// Shared closest-target bonus logic
+function getClosestBonusesFromKeywords(keywords, bodyguardId) {
     // Prioritised Efficiency: AP improve for KÂHL, EINHYR HEARTHGUARD, or ÛTHAR THE DESTINED units
     const apImprove = keywords.some(k =>
         ['KÂHL', 'EINHYR HEARTHGUARD', 'ÛTHAR THE DESTINED'].includes(k)
     );
     // Decisive Destruction: re-roll hit 1 on ranged (Hearthguard unit ability, applies to whole led unit)
-    const rerollHit = (ledUnit.bodyguard === 'einhyr-hearthguard');
+    const rerollHit = (bodyguardId === 'einhyr-hearthguard');
     return { apImprove, rerollHit };
 }
 
