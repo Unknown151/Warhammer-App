@@ -14,7 +14,7 @@
     "ld": "7+",
     "oc": 1
   },
-  "invulnerableSave": "4+",
+  "invulnerableSave": null,
   "weapons": {
     "ranged": [
       {
