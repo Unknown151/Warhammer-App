@@ -127,7 +127,7 @@
   "weavefield-crest": {
     "name": "Weavefield Crest",
     "type": "Wargear",
-    "description": "Models in the bearer's unit have a <strong>5+ invulnerable save</strong>."
+    "description": "The bearer has a <strong>4+ invulnerable save</strong>."
   },
   "weavefield-crest-theyn": {
     "name": "Weavefield Crest (Theyn)",
@@ -152,7 +152,7 @@
   "mass-driver-accelerators": {
     "name": "Mass Driver Accelerators",
     "type": "Ability — Champion",
-    "description": "Each time this model ends a Charge move, select one enemy unit within Engagement Range and roll D6: <strong>2-5 = D3 mortal wounds</strong>, <strong>6 = D3+3 mortal wounds</strong>."
+    "description": "Each time this model ends a Charge move, you can select one enemy unit within Engagement Range of this model and roll one D6: on a <strong>2-5</strong>, that enemy unit suffers <strong>D3 mortal wounds</strong>; on a <strong>6</strong>, that enemy unit suffers <strong>D3+3 mortal wounds</strong>."
   },
   "ancestral-fortune": {
     "name": "Ancestral Fortune",
@@ -162,7 +162,7 @@
   "grim-efficiency": {
     "name": "Grim Efficiency",
     "type": "Ability — Ûthar",
-    "description": "Once per battle round, when a friendly LEAGUES OF VOTANN unit within 12\" is targeted with a Stratagem, reduce the CP cost of that Stratagem by <strong>1CP</strong>."
+    "description": "Once per battle round, when a friendly <strong>LEAGUES OF VOTANN</strong> unit within 12\" of this model is targeted with a Stratagem, this model can use this ability. If it does, reduce the CP cost of that use of that Stratagem by <strong>1CP</strong>."
   },
   "decisive-destruction": {
     "name": "Decisive Destruction",
@@ -182,7 +182,7 @@
   "forgewrought-expertise": {
     "name": "Forgewrought Expertise",
     "type": "Ability — Iron-master",
-    "description": "At the end of your Movement phase, this unit can repair one friendly LEAGUES OF VOTANN VEHICLE, EXOFRAME, or IRONKIN STEELJACKS unit within 3\". One model regains up to <strong>D3 lost wounds</strong>, or up to <strong>3 lost wounds</strong> if this unit contains an Ironkin Assistant."
+    "description": "At the end of your Movement phase, this unit can repair one friendly <strong>LEAGUES OF VOTANN VEHICLE</strong>, <strong>EXOFRAME</strong> or <strong>IRONKIN STEELJACKS</strong> unit within 3\" of it. One model in that unit regains up to <strong>D3 lost wounds</strong>, or up to <strong>3 lost wounds</strong> instead if this unit contains an Ironkin Assistant model. Each unit can only be repaired once per turn."
   },
   "breaching-fire": {
     "name": "Breaching Fire",
@@ -265,7 +265,7 @@
   "smoke-launcher": {
     "name": "Smoke Launcher",
     "type": "Wargear",
-    "description": "Once per battle, after your opponent selects this unit as a target, until the end of the phase the unit has the <strong>Benefit of Cover</strong> and the <strong>Stealth</strong> ability."
+    "description": "The bearer has the <strong>SMOKE</strong> keyword."
   },
   "panspectral-scanner": {
     "name": "Panspectral Scanner",
@@ -280,48 +280,48 @@
   "rollbar-searchlight": {
     "name": "Rollbar Searchlight",
     "type": "Wargear",
-    "description": "Each time a model in the bearer's unit makes an attack, <strong>re-roll a Hit roll of 1</strong>."
+    "description": "Each time a model in the bearer's unit makes a ranged attack, you can ignore any or all modifiers to the Hit roll."
   },
   "preymark-crest": {
     "name": "Preymark Crest",
     "type": "Wargear",
-    "description": "While an enemy unit is within <strong>18\" and visible</strong> to the bearer, each time a model in the bearer's unit makes an attack that targets that enemy unit, <strong>re-roll a Hit roll of 1</strong>."
+    "description": "Each time a model in the bearer's unit makes an attack that targets an enemy unit within range of one or more objective markers, on a Critical Wound, that attack has the <strong>[PRECISION]</strong> ability."
   },
 
   "science-guild-support": {
     "name": "Science Guild Support",
     "type": "Ability — Arkanyst Evaluator",
-    "description": "Once per battle, after your opponent selects a unit as the target of a Stratagem, this model can use this ability. If it does, until the end of the phase, each time an attack is made against that enemy unit, <strong>improve the AP of that attack by 1</strong>."
+    "description": "While this model is within 3\" of one or more other friendly <strong>LEAGUES OF VOTANN INFANTRY</strong> units (excluding units with the Lone Operative ability), this model has the <strong>Lone Operative</strong> ability."
   },
   "resource-transmutation": {
     "name": "Resource Transmutation",
     "type": "Ability — Arkanyst Evaluator",
-    "description": "Each time an enemy model is destroyed by an attack made by this model, you gain <strong>1YP</strong>."
+    "description": "Once per turn, in your Shooting phase, one model with this ability can use it when it is selected to shoot. If it does, you must spend <strong>1YP</strong> and, until the end of the phase, ranged weapons equipped by that model have the <strong>[SUSTAINED HITS 1]</strong> ability and, after that model has shot this phase, if one or more enemy units were destroyed by those attacks, you can gain up to <strong>2YP</strong>."
   },
   "grudge-fuelled-fortitude": {
     "name": "Grudge-fuelled Fortitude",
     "type": "Ability — Buri Aegnirssen",
-    "description": "Each time an attack is allocated to this model, subtract <strong>1 from the Damage characteristic</strong> of that attack."
+    "description": "The first time this model is destroyed, at the end of the phase, roll one D6: on a <strong>2+</strong>, set this model back up on the battlefield as close as possible to where it was destroyed and not within Engagement Range of one or more enemy units, with its full wounds remaining."
   },
   "unhinged-vengeance": {
     "name": "Unhinged Vengeance",
     "type": "Ability — Buri Aegnirssen",
-    "description": "Each time this model makes a melee attack, if this model's unit was below its Starting Strength at the start of your turn, add <strong>1 to the Wound roll</strong>."
+    "description": "In your opponent's Shooting phase, each time an enemy unit has shot, if this model lost one or more wounds as a result of those attacks, this model can make a Vengeance move. To do so, roll one D6 and add 2 to the result: it moves a number of inches up to this result, but it must end that move as close as possible to the closest enemy unit (excluding <strong>AIRCRAFT</strong>). When doing so, it can be moved within Engagement Range of that enemy unit. This model cannot make a Vengeance move while it is Battle-shocked or within Engagement Range of one or more enemy units, and can only make one Vengeance move per phase."
   },
   "brokhyr-guild-support": {
     "name": "Brôkhyr Guild Support",
     "type": "Ability — Iron-master",
-    "description": "While this model is leading a unit, weapons equipped by models in that unit have the ability to <strong>re-roll Wound rolls of 1</strong>."
+    "description": "While this unit is within 3\" of one or more friendly <strong>LEAGUES OF VOTANN VEHICLE</strong> or <strong>IRONKIN STEELJACKS</strong> units, if this unit is not an Attached unit, it has the <strong>Lone Operative</strong> ability."
   },
   "fortify-psychic": {
     "name": "Fortify (Psychic)",
     "type": "Leader — Grimnyr",
-    "description": "While this model is leading a unit, models in that unit have a <strong>4+ invulnerable save</strong>."
+    "description": "While this model is leading a unit, models in that unit have the <strong>Feel No Pain 5+</strong> ability."
   },
   "grimnyrs-regard": {
     "name": "Grimnyr's Regard",
     "type": "Ability — Grimnyr",
-    "description": "Once per battle, at the start of any phase, this model can use this ability. If it does, until the end of the phase, enemy units within <strong>18\" of this model</strong> cannot use any abilities that let them <strong>ignore wounds</strong>."
+    "description": "Once per battle, at the start of any phase, you can select one friendly <strong>LEAGUES OF VOTANN</strong> unit that is Battle-shocked and within 12\" of this unit's <strong>GRIMNYR</strong> model. That unit is no longer Battle-shocked."
   },
   "computational-mastermind": {
     "name": "Computational Mastermind",
@@ -336,12 +336,12 @@
   "cyberstimms": {
     "name": "Cyberstimms",
     "type": "Ability — Cthonian Beserks",
-    "description": "Each time a model in this unit is destroyed by a melee attack, if that model has not fought this phase, roll one D6: on a <strong>4+</strong>, do not remove it from play. The destroyed model can fight after the attacking model's unit has finished making its attacks, and is then removed from play."
+    "description": "Each time a model in this unit is destroyed by a melee attack, if that model has not fought this phase, roll one D6, adding 1 to the result if units from your army have Fortify Takeover: on a <strong>4+</strong>, do not remove it from play. The destroyed model can fight after the attacking unit has finished making its attacks, and is then removed from play."
   },
   "subterranean-explosives": {
     "name": "Subterranean Explosives",
     "type": "Ability — Cthonian Beserks",
-    "description": "In your Shooting phase, one model in this unit equipped with a mole grenade launcher can use it. If it does, select one point on the battlefield within <strong>18\"</strong> and roll one D6 for each enemy unit within <strong>3\" of that point</strong>: on a <strong>2+</strong>, that unit suffers <strong>D3 mortal wounds</strong>."
+    "description": "In your Shooting phase, after this unit has shot, select one enemy unit (excluding <strong>MONSTERS</strong> and <strong>VEHICLES</strong>) hit by one or more of those attacks made with a mole grenade launcher. Until the start of your next Shooting phase, that enemy unit cannot be targeted with the <strong>Fire Overwatch</strong> Stratagem."
   },
   "destabilising-quakes": {
     "name": "Destabilising Quakes",
@@ -356,27 +356,27 @@
   "luck-has-need-keeps-toil-earns": {
     "name": "Luck Has. Need Keeps. Toil Earns.",
     "type": "Ability — Hearthkyn Warriors",
-    "description": "At the start of each battle round, you gain <strong>1YP</strong> for each objective marker you control that has one or more models from this unit within range of it."
+    "description": "At the end of your Command phase, if this unit is within range of an objective marker you control, that objective marker remains under your control until your opponent's Level of Control over that objective marker is greater than yours at the end of a phase."
   },
   "outflanking-mag-riders": {
     "name": "Outflanking Mag-riders",
     "type": "Ability — Hernkyn Pioneers",
-    "description": "At the end of your opponent's turn, if this unit is within <strong>6\" of any battlefield edge</strong> and is not within Engagement Range of one or more enemy units, you can remove this unit from the battlefield and place it into <strong>Strategic Reserves</strong>."
+    "description": "At the end of your opponent's turn, if this unit is wholly within <strong>9\"</strong> of one or more battlefield edges and not within Engagement Range of one or more enemy units, you can remove it from the battlefield and place it into <strong>Strategic Reserves</strong>."
   },
   "pragmatic-hunters": {
     "name": "Pragmatic Hunters",
     "type": "Ability — Hernkyn Yaegirs",
-    "description": "This unit is eligible to shoot and declare a charge in a turn in which it <strong>Fell Back</strong>."
+    "description": "Once per turn, when an enemy unit ends a Normal, Advance or Fall Back move within <strong>9\"</strong> of this unit, it can make a Normal move of up to <strong>D6\"</strong>."
   },
   "purge-response": {
     "name": "Purge Response",
     "type": "Ability — Ironkin Steeljacks",
-    "description": "Each time a model in this unit makes a ranged attack that targets the closest eligible target, <strong>re-roll a Hit roll of 1</strong>."
+    "description": "Each time you target this unit with the <strong>Fire Overwatch</strong> Stratagem, hits are scored on unmodified Hit rolls of <strong>5+</strong> while resolving that Stratagem. If units from your army have Fortify Takeover, hits are scored on unmodified Hit rolls of <strong>4+</strong> while resolving that Stratagem instead."
   },
   "merciless-eradication": {
     "name": "Merciless Eradication",
     "type": "Ability — Ironkin Steeljacks",
-    "description": "Each time a model in this unit makes a melee attack, if this unit made a Charge move this turn, <strong>re-roll a Hit roll of 1</strong>."
+    "description": "Each time an enemy unit (excluding <strong>MONSTERS</strong> and <strong>VEHICLES</strong>) that is within Engagement Range of this unit Falls Back, all models in that enemy unit must take a Desperate Escape test. When doing so, if that enemy unit is Battle-shocked, subtract 1 from each of those tests."
   },
   "scanner-uplinks": {
     "name": "Scanner Uplinks",
@@ -386,12 +386,12 @@
   "opportunistic-manoeuvre": {
     "name": "Opportunistic Manoeuvre",
     "type": "Ability — Kapricus Defenders",
-    "description": "Each time this model makes a ranged attack against a unit that is Below Half-strength, <strong>re-roll a Hit roll of 1</strong> and <strong>re-roll a Wound roll of 1</strong>."
+    "description": "In your Shooting phase, after this unit has shot, it can make a Normal move of up to <strong>D6\"</strong>. If it does, until the end of the turn, this unit is not eligible to declare a charge."
   },
   "blistering-advance": {
     "name": "Blistering Advance",
     "type": "Ability — Sagitaur",
-    "description": "Units can disembark from this <strong>TRANSPORT</strong> after it has made a Normal move (but not an Advance or Fall Back move), and the disembarked unit is still eligible to act normally."
+    "description": "Units can disembark from this <strong>TRANSPORT</strong> after it has Advanced. Units that do so count as having made a Normal move that phase, and cannot declare a charge in the same turn, but can otherwise act normally in the remainder of the turn."
   },
   "multicog-targeting": {
     "name": "Multicog Targeting",
