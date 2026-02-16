@@ -325,13 +325,13 @@
   },
   "computational-mastermind": {
     "name": "Computational Mastermind",
-    "type": "Leader — Memnyr Strategist",
-    "description": "While this model is leading a unit, each time a model in that unit makes an attack, <strong>re-roll a Hit roll of 1</strong>."
+    "type": "Ability — Memnyr Strategist",
+    "description": "At the end of your Command phase, before you determine if units from your army have Hostile Acquisition or Fortify Takeover, for each objective marker you control that has one or more models with this ability within range of it, you can spend <strong>1YP</strong> or gain <strong>1YP</strong>."
   },
   "predictive-guidance": {
     "name": "Predictive Guidance",
     "type": "Ability — Memnyr Strategist",
-    "description": "Once per battle round, you can target this model's unit with the <strong>Command Re-roll</strong> Stratagem for <strong>0CP</strong>."
+    "description": "Once per battle round, this model can use this ability. If it does, you can target this unit with the <strong>Fire Overwatch</strong> or <strong>Heroic Intervention</strong> Stratagem for <strong>0CP</strong>."
   },
   "cyberstimms": {
     "name": "Cyberstimms",
