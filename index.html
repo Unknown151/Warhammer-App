@@ -11,10 +11,12 @@
         :root{--gold:#D4A84B;--gold-bright:#F5D77A;--gold-dark:#8B6914;--bg:#0A0A0C;--bg2:#111116;--bg3:#18181E;--border:#2A2A35;--border-gold:#3D2E0A;--text:#E8E8EC;--text2:#9090A0;--text3:#606070;--red:#C94444;--blue:#4A8ED4;--green:#4AC978;--purple:#8B5CF6}
         *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:rgba(212,168,75,0.3)}
         body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.4;padding-bottom:60px}
-        .header{background:var(--bg2);border-bottom:1px solid var(--border);padding:.75rem 1rem;position:sticky;top:0;z-index:100}
-        .header-top{display:flex;align-items:center;gap:.6rem}
-        .logo-title{font-family:'Orbitron',sans-serif;font-weight:700;font-size:1rem;color:var(--gold);letter-spacing:.05em}
-        .logo-sub{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--text3)}
+        .header-compact{background:var(--bg2);border-bottom:1px solid var(--border);padding:.5rem .75rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:.5rem}
+        .tabs-compact{display:flex;gap:0;flex:1}
+        .tab-compact{padding:.5rem .75rem;font-family:'Orbitron',sans-serif;font-size:.7rem;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;cursor:pointer;border:none;background:transparent;transition:all .2s ease;touch-action:manipulation;position:relative}
+        .tab-compact:hover{color:var(--text2)}
+        .tab-compact.active{color:var(--gold);background:rgba(212,168,75,.1);border-radius:4px}
+        .header-actions{display:flex;align-items:center;gap:.5rem}
         .army-stats{display:flex;gap:1rem}
         .stat-block{text-align:center}
         .stat-value{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;color:var(--gold-bright)}
@@ -119,11 +121,6 @@
         .modal-desc{font-size:.9rem;color:var(--text);line-height:1.7}
         .modal-desc strong{color:var(--gold-bright)}
         footer{text-align:center;padding:1.5rem 1rem;color:var(--text3);font-size:.65rem;border-top:1px solid var(--border)}
-        .tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:99}
-        .tab{flex:1;padding:.875rem 1rem;font-family:'Orbitron',sans-serif;font-size:.7rem;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;text-align:center;cursor:pointer;border:none;background:transparent;transition:all .2s ease;touch-action:manipulation;position:relative}
-        .tab:hover{color:var(--text2);background:rgba(212,168,75,.05)}
-        .tab.active{color:var(--gold);background:rgba(212,168,75,.1)}
-        .tab.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gold)}
         .tab-content{display:none}
         .tab-content.active{display:block}
         .char-list{display:flex;flex-direction:column;gap:.75rem}
@@ -312,9 +309,12 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-top">
-            <div><div class="logo-title">LEAGUES OF VOTANN</div><div class="logo-sub">LED UNITS REFERENCE</div></div>
+    <header class="header-compact">
+        <nav class="tabs-compact">
+            <button class="tab-compact active" data-tab="units">Army</button>
+            <button class="tab-compact" data-tab="configuration">Builder</button>
+        </nav>
+        <div class="header-actions">
             <div class="det-btn tappable" id="detachment-banner"><span class="det-btn-icon">⚔</span><span class="det-btn-name" id="detachment-name">Loading...</span></div>
             <div class="buff-dropdown" id="buff-dropdown">
                 <div class="buff-dropdown-btn" onclick="toggleBuffDropdown(event)">
@@ -341,10 +341,6 @@
             </div>
         </div>
     </header>
-    <nav class="tabs">
-        <button class="tab active" data-tab="units">Units</button>
-        <button class="tab" data-tab="configuration">Configuration</button>
-    </nav>
     <main class="container">
         <div id="units-tab" class="tab-content active">
             <div id="units-container"><div class="loading">Loading units...</div></div>
@@ -1665,10 +1661,10 @@ document.addEventListener('keydown', function(e) {
 });
 
 // Tab switching
-document.querySelectorAll('.tab').forEach(tab => {
+document.querySelectorAll('.tab-compact').forEach(tab => {
     tab.addEventListener('click', function() {
         const tabId = this.getAttribute('data-tab');
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-compact').forEach(t => t.classList.remove('active'));
         this.classList.add('active');
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.getElementById(tabId + '-tab').classList.add('active');
