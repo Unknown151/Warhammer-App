@@ -381,7 +381,7 @@
   "scanner-uplinks": {
     "name": "Scanner Uplinks",
     "type": "Ability — Kapricus Carrier",
-    "description": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks. Until the start of your next Shooting phase, each time a friendly <strong>LEAGUES OF VOTANN</strong> unit makes an attack that targets that unit, <strong>re-roll a Hit roll of 1</strong>."
+    "description": "In your Shooting phase, after this model has shot, select one enemy unit (excluding <strong>MONSTERS</strong> and <strong>VEHICLES</strong>) hit by one or more of those attacks. Until the start of your next turn, that enemy unit is suppressed. While a unit is suppressed, each time a model in that unit makes an attack, subtract 1 from the Hit roll."
   },
   "opportunistic-manoeuvre": {
     "name": "Opportunistic Manoeuvre",
