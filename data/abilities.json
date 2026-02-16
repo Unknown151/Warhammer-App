@@ -346,12 +346,12 @@
   "destabilising-quakes": {
     "name": "Destabilising Quakes",
     "type": "Ability — Cthonian Earthshakers",
-    "description": "In your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks. Until the start of your next Shooting phase, that enemy unit is reduced to <strong>half its Move characteristic</strong>."
+    "description": "In your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks made with its tremor shells. That unit must take a Battle-shock test, subtracting 1 from the result."
   },
   "geomantic-hunters": {
     "name": "Geomantic Hunters",
     "type": "Ability — Cthonian Earthshakers",
-    "description": "This unit is eligible to shoot in a turn in which it <strong>Fell Back</strong>."
+    "description": "Up to twice per battle, in your Shooting phase, when this unit is selected to shoot, it can use this ability. If it does, until the end of the phase, each time a model in this unit makes an attack with its breacher ordnance, you can re-roll the Wound roll."
   },
   "luck-has-need-keeps-toil-earns": {
     "name": "Luck Has. Need Keeps. Toil Earns.",
