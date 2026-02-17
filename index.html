@@ -385,7 +385,7 @@ const characterState = {};
 const bodyguardState = {}; // Tracks if bodyguard unit is wiped (leader now solo)
 const stratagemState = { fury: false, closest: false, sub1k: false };
 let furyYP = false;
-const collapsedCards = {};
+const expandedCards = {};
 const configExpandedCards = {};
 
 // Army list - array of configured unit instances
@@ -591,11 +591,11 @@ function renderUnits() {
 
     document.getElementById('led-units-count').textContent = activeArmy.length;
 
-    // Restore collapsed states
-    Object.keys(collapsedCards).forEach(cardId => {
-        if (collapsedCards[cardId]) {
-            const card = container.querySelector(`.unit-card[data-card-id="${cardId}"]`);
-            if (card) card.classList.add('collapsed');
+    // All cards start collapsed; restore expanded states
+    container.querySelectorAll('.unit-card').forEach(card => {
+        const cardId = card.getAttribute('data-card-id');
+        if (cardId && expandedCards[cardId]) {
+            card.classList.remove('collapsed');
         }
     });
 
@@ -636,7 +636,7 @@ function renderSoloUnitCard(entry) {
     const closestBonuses = closestActive ? getClosestBonusesForUnit(entry.unit, null) : { apImprove: false, rerollHit: false };
 
     return `
-        <div class="unit-card" data-unit="${entry.id}" data-card-id="${entry.id}">
+        <div class="unit-card collapsed" data-unit="${entry.id}" data-card-id="${entry.id}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
                 <div class="card-collapse-info">
                     <div class="card-collapse-title">${unit.name}</div>
@@ -725,7 +725,7 @@ function renderLedUnitCard(ledUnit) {
     const leaderAppliesTo = leader.leaderBonus?.appliesTo || null;
 
     return `
-        <div class="unit-card attached" data-leader="${ledUnit.leader}" data-card-id="${ledUnit.id}">
+        <div class="unit-card attached collapsed" data-leader="${ledUnit.leader}" data-card-id="${ledUnit.id}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
                 <div class="card-collapse-info">
                     <div class="card-collapse-title">${leader.name} + ${bodyguard.name}</div>
@@ -1481,7 +1481,7 @@ function toggleCardCollapse(header) {
     const card = header.closest('.unit-card');
     card.classList.toggle('collapsed');
     const cardId = card.getAttribute('data-card-id');
-    if (cardId) collapsedCards[cardId] = card.classList.contains('collapsed');
+    if (cardId) expandedCards[cardId] = !card.classList.contains('collapsed');
 }
 
 // Toggle leader death from unit card
