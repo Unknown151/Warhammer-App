@@ -9,6 +9,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root{--gold:#D4A84B;--gold-bright:#F5D77A;--gold-dark:#8B6914;--bg:#0A0A0C;--bg2:#111116;--bg3:#18181E;--border:#2A2A35;--border-gold:#3D2E0A;--text:#E8E8EC;--text2:#9090A0;--text3:#606070;--red:#C94444;--blue:#4A8ED4;--green:#4AC978;--purple:#8B5CF6}
+        body.light-theme{--gold:#9E7A20;--gold-bright:#7A5C10;--gold-dark:#C9A84E;--bg:#F0EDE6;--bg2:#E6E2D9;--bg3:#DDDAD2;--border:#C5C0B5;--border-gold:#D4C490;--text:#1A1A1E;--text2:#55555F;--text3:#808088;--red:#B83030;--blue:#2E6FB0;--green:#2E8B57;--purple:#6B3FC4}
+        body.light-theme .weapon{border-bottom-color:rgba(0,0,0,.08)}
+        body.light-theme .weapon-group .weapon{border-bottom-color:rgba(0,0,0,.12)}
+        body.light-theme #modal{background:rgba(0,0,0,.5)}
+        body.light-theme .fury-prompt{background:rgba(0,0,0,.5)}
+        body.light-theme .buff-dropdown-menu{box-shadow:0 8px 24px rgba(0,0,0,.2)}
+        body.light-theme .wab{background:rgba(139,92,246,.15);color:var(--text)}
+        body.light-theme .ab{background:rgba(139,92,246,.12);border-color:rgba(139,92,246,.25)}
+        body.light-theme .ab.core{background:rgba(74,142,212,.12);border-color:rgba(74,142,212,.25)}
+        body.light-theme .ab.wg{background:rgba(158,122,32,.12);border-color:rgba(158,122,32,.25)}
+        body.light-theme .ab.inherited,.light-theme .wab.inherited{background:rgba(46,139,87,.12);border-color:var(--green)}
+        body.light-theme .weapon-category.ranged .weapon-category-header{background:rgba(74,142,212,.1)}
+        body.light-theme .weapon-category.melee .weapon-category-header{background:rgba(201,68,68,.1)}
+        body.light-theme .wab.strat-buff{background:rgba(158,122,32,.15);border-color:var(--gold-dark)}
+        body.light-theme .wab.closest-buff{background:rgba(74,142,212,.15);border-color:rgba(74,142,212,.3)}
+        body.light-theme .invuln-row{background:rgba(158,122,32,.12);border-color:var(--gold-dark)}
+        body.light-theme .invuln-row.inherited{background:rgba(46,139,87,.12)}
+        body.light-theme .invuln-row.fnp-only{background:rgba(200,120,50,.12);border-color:rgba(200,120,50,.3)}
+        body.light-theme .card-collapse-header{background:linear-gradient(90deg,rgba(158,122,32,.08),transparent)}
+        body.light-theme .card-collapse-header:hover{background:linear-gradient(90deg,rgba(158,122,32,.14),transparent)}
+        body.light-theme .army-instance-header{background:linear-gradient(90deg,rgba(158,122,32,.06),transparent)}
+        body.light-theme .army-instance-header:hover{background:linear-gradient(90deg,rgba(158,122,32,.12),transparent)}
+        body.light-theme .leader-bonus{background:linear-gradient(90deg,rgba(46,139,87,.08),transparent)}
+        body.light-theme .attached-banner{background:linear-gradient(90deg,var(--gold-dark),transparent)}
+        body.light-theme .stat.hl{background:rgba(158,122,32,.1);border-color:var(--border-gold)}
+        body.light-theme .buff-dropdown-item:hover{background:rgba(158,122,32,.06)}
+        body.light-theme .buff-dropdown-item.active{background:rgba(158,122,32,.1)}
+        body.light-theme .buff-item-switch{background:var(--bg)}
+        body.light-theme .enh{background:linear-gradient(90deg,rgba(158,122,32,.1),rgba(158,122,32,.05));border-color:var(--gold-dark)}
+        .theme-toggle{width:32px;height:32px;border:1px solid var(--border);border-radius:4px;background:var(--bg3);display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;transition:all .2s ease;font-size:.85rem;line-height:1;padding:0;color:var(--text2)}
+        .theme-toggle:hover{border-color:var(--gold-dark);background:rgba(212,168,75,.1)}
         *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:rgba(212,168,75,0.3)}
         body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.4;padding-bottom:60px}
         .header-compact{background:var(--bg2);border-bottom:1px solid var(--border);padding:.5rem .75rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:.5rem}
@@ -315,6 +346,7 @@
             <button class="tab-compact" data-tab="configuration">Builder</button>
         </nav>
         <div class="header-actions">
+            <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark theme">&#9788;</button>
             <div class="det-btn tappable" id="detachment-banner"><span class="det-btn-icon">⚔</span><span class="det-btn-name" id="detachment-name">Loading...</span></div>
             <div class="buff-dropdown" id="buff-dropdown">
                 <div class="buff-dropdown-btn" onclick="toggleBuffDropdown(event)">
@@ -387,6 +419,21 @@ const stratagemState = { fury: false, closest: false, sub1k: false };
 let furyYP = false;
 const expandedCards = {};
 const configExpandedCards = {};
+
+// Theme toggle
+function toggleTheme() {
+    const isLight = document.body.classList.toggle('light-theme');
+    localStorage.setItem('votann-theme', isLight ? 'light' : 'dark');
+    document.getElementById('theme-toggle').innerHTML = isLight ? '&#9790;' : '&#9788;';
+}
+(function initTheme() {
+    if (localStorage.getItem('votann-theme') === 'light') {
+        document.body.classList.add('light-theme');
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('theme-toggle').innerHTML = '&#9790;';
+        });
+    }
+})();
 
 // Army list - array of configured unit instances
 let armyList = [];
