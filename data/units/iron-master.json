@@ -139,5 +139,5 @@
     "grantsAbilities": ["reroll-wound-1"],
     "appliesTo": "ranged"
   },
-  "canLead": ["thunderkyn", "hearthkyn-warriors"]
+  "canLead": ["thunderkyn"]
 }
