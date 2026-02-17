@@ -16,7 +16,8 @@
     "ld": "7+",
     "oc": 2
   },
-  "invulnerableSave": null,
+  "invulnerableSave": "5+",
+  "invulnerableSource": "weavefield-crest-theyn",
   "weapons": {
     "ranged": [
       {

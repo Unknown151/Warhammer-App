@@ -132,7 +132,7 @@
   "weavefield-crest-theyn": {
     "name": "Weavefield Crest (Theyn)",
     "type": "Wargear",
-    "description": "Models in the bearer's unit have a <strong>5+ invulnerable save</strong>. Note: The Theyn has this, but Ûthar's Rampart Crest already provides 5+ to the unit."
+    "description": "Models in the bearer's unit have a <strong>5+ invulnerable save</strong>."
   },
   "kindred-hero": {
     "name": "Kindred Hero",
