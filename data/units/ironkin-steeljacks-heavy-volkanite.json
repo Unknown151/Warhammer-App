@@ -5,7 +5,9 @@
   "keywords": ["INFANTRY", "IRONKIN STEELJACKS", "IRONKIN STEELJACKS WITH HEAVY VOLKANITE DISINTEGRATORS"],
   "isLeader": false,
   "points": 85,
-  "models": 2,
+  "models": 3,
+  "baseModels": 3,
+  "maxModels": 6,
   "stats": {
     "m": "5\"",
     "t": 6,
