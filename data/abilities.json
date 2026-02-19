@@ -223,7 +223,7 @@
   "overcharge": {
     "name": "Overcharge",
     "type": "Weapon Ability",
-    "description": "This is the <strong>overcharge</strong> profile of a weapon with multiple charge levels."
+    "description": "Each time the bearer takes a Hazardous test for this weapon profile, <strong>subtract 2</strong> from the result."
   },
 
   "lone-operative": {
