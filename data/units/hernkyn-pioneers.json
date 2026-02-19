@@ -88,7 +88,8 @@
   },
   "abilities": ["outflanking-mag-riders"],
   "coreAbilities": ["scouts-9"],
-  "wargear": ["multiwave-comms-array", "panspectral-scanner", "rollbar-searchlight"],
+  "wargear": [],
+  "wargearChoices": ["panspectral-scanner", "multiwave-comms-array", "rollbar-searchlight"],
   "wargearOptions": [
     "For every 3 models in this unit, 1 model can be equipped with one of the following: 1 HYLas rotary cannon or 1 ion beamer.",
     "1 model that is not equipped with either a HYLas rotary cannon or an ion beamer can be equipped with 1 multiwave comms array.",

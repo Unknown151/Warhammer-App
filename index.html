@@ -593,7 +593,8 @@ function createUnitInstance(unitId) {
         modelCount: defaultModelCount,
         weapons: weapons,
         leaderId: null,
-        enhancementId: null
+        enhancementId: null,
+        selectedWargear: null
     };
 }
 
@@ -744,6 +745,22 @@ function renderSoloUnitCard(entry) {
         }
     }
 
+    // Apply selected wargear effects
+    const selectedWargear = instance?.selectedWargear;
+    let wargearInheritedAbilities = [];
+    let wargearAppliesTo = null;
+    let extraWargear = [];
+
+    if (selectedWargear === 'panspectral-scanner') {
+        wargearInheritedAbilities = [{ id: 'panspectral-scanner', display: 'Re-roll Hit 1' }];
+        wargearAppliesTo = 'ranged';
+    } else if (selectedWargear === 'rollbar-searchlight') {
+        wargearInheritedAbilities = [{ id: 'rollbar-searchlight', display: 'Ignores Hit Modifiers' }];
+        wargearAppliesTo = 'ranged';
+    } else if (selectedWargear === 'multiwave-comms-array') {
+        extraWargear = ['multiwave-comms-array'];
+    }
+
     return `
         <div class="unit-card collapsed" data-unit="${entry.id}" data-card-id="${entry.id}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
@@ -760,8 +777,8 @@ function renderSoloUnitCard(entry) {
                     ${renderUnitHeader(unit, modelCount)}
                     ${renderUnitStats(displayUnit)}
                     ${renderDefensiveRow(unit)}
-                    ${renderWeapons(filteredWeapons, [], null, furyActive, closestActive, closestBonuses)}
-                    ${renderSoloAbilities(unit)}
+                    ${renderWeapons(filteredWeapons, wargearInheritedAbilities, wargearAppliesTo, furyActive, closestActive, closestBonuses)}
+                    ${renderSoloAbilities(unit, extraWargear)}
                 </div>
                 <div class="keywords">${(unit.keywords || []).join(', ')}</div>
             </div>
@@ -770,7 +787,7 @@ function renderSoloUnitCard(entry) {
 }
 
 // Render abilities for a solo unit
-function renderSoloAbilities(unit) {
+function renderSoloAbilities(unit, extraWargear = []) {
     let html = '<div class="abilities">';
 
     // Core abilities (exclude FNP - shown in defensive row)
@@ -780,8 +797,8 @@ function renderSoloAbilities(unit) {
         html += `<span class="ab core tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
     });
 
-    // Wargear abilities
-    (unit.wargear || []).forEach(ab => {
+    // Wargear abilities (static + chosen optional)
+    [...(unit.wargear || []), ...extraWargear].forEach(ab => {
         const abData = abilities[ab];
         html += `<span class="ab wg tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
     });
@@ -1263,6 +1280,11 @@ function renderArmyInstance(instance) {
         bodyContent += renderInstanceEnhancementSelector(instance, instance.unitId);
     }
 
+    // Wargear choice selector (for units with optional wargear)
+    if (unit.wargearChoices?.length) {
+        bodyContent += renderInstanceWargearChoiceSelector(instance, unit.wargearChoices);
+    }
+
     // Weapons section
     bodyContent += renderInstanceWeaponSelector(instance);
 
@@ -1404,6 +1426,22 @@ function renderInstanceEnhancementSelector(instance, characterId) {
     `;
 }
 
+// Render optional wargear choice selector
+function renderInstanceWargearChoiceSelector(instance, wargearChoices) {
+    const current = instance.selectedWargear || '';
+    let options = '<option value="">-- None --</option>';
+    wargearChoices.forEach(id => {
+        const ab = abilities[id];
+        options += `<option value="${id}" ${current === id ? 'selected' : ''}>${ab?.name || id}</option>`;
+    });
+    return `
+        <div class="config-label">Wargear</div>
+        <select class="enhancement-select" onchange="setInstanceWargearChoice('${instance.instanceId}', this.value)">
+            ${options}
+        </select>
+    `;
+}
+
 // Render weapon selector for an instance
 function renderInstanceWeaponSelector(instance) {
     const unit = units[instance.unitId];
@@ -1534,6 +1572,17 @@ function setInstanceEnhancement(instanceId, enhancementId) {
     const instance = armyList.find(i => i.instanceId === instanceId);
     if (instance) {
         instance.enhancementId = enhancementId || null;
+        saveArmyList();
+        renderConfigurationTab();
+        renderUnits();
+    }
+}
+
+// Set wargear choice for an instance
+function setInstanceWargearChoice(instanceId, wargearId) {
+    const instance = armyList.find(i => i.instanceId === instanceId);
+    if (instance) {
+        instance.selectedWargear = wargearId || null;
         saveArmyList();
         renderConfigurationTab();
         renderUnits();
