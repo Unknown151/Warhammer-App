@@ -295,6 +295,9 @@
         .config-total-value{font-family:'Share Tech Mono',monospace;font-size:1.1rem;color:var(--gold-bright);font-weight:700}
         .config-add-btn{width:36px;height:36px;background:var(--gold);border:none;border-radius:4px;color:var(--bg);font-size:1.5rem;font-weight:700;cursor:pointer;touch-action:manipulation;display:flex;align-items:center;justify-content:center;transition:all .15s ease}
         .config-add-btn:hover{background:var(--gold-bright)}
+        .config-share-btn{height:36px;padding:0 .75rem;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text2);font-size:.65rem;font-family:'Orbitron',sans-serif;cursor:pointer;touch-action:manipulation;transition:all .15s ease;white-space:nowrap}
+        .config-share-btn:hover{border-color:var(--gold);color:var(--gold)}
+        .config-share-btn.copied{border-color:var(--green);color:var(--green)}
         .army-list-empty{text-align:center;padding:2rem 1rem;color:var(--text3);font-size:.8rem}
         .army-instance{background:var(--bg3);border:1px solid var(--border);border-radius:6px;margin-bottom:.5rem;overflow:hidden}
         .army-instance-header{display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;cursor:pointer;touch-action:manipulation;background:linear-gradient(90deg,rgba(212,168,75,.05),transparent)}
@@ -387,6 +390,7 @@
             <div class="config-total">
                 <span class="config-total-label">Total Points</span>
                 <span class="config-total-value" id="config-points">0</span>
+                <button class="config-share-btn" id="share-btn" onclick="shareArmyUrl()">Share</button>
                 <button class="config-add-btn" onclick="openUnitPicker()">+</button>
             </div>
             <div id="army-list-container"></div>
@@ -503,6 +507,38 @@ function loadArmyList() {
     }
 }
 
+// Encode army list into a shareable URL
+function shareArmyUrl() {
+    const data = JSON.stringify({ armyList, nextInstanceId });
+    const encoded = btoa(unescape(encodeURIComponent(data)));
+    const url = window.location.href.split('#')[0] + '#' + encoded;
+    navigator.clipboard.writeText(url).then(() => {
+        const btn = document.getElementById('share-btn');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Share'; btn.classList.remove('copied'); }, 2000);
+    });
+}
+
+// Load army list from URL hash (if present)
+function loadArmyFromUrl() {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return false;
+    try {
+        const parsed = JSON.parse(decodeURIComponent(escape(atob(hash))));
+        if (parsed.armyList) {
+            armyList = parsed.armyList;
+            nextInstanceId = parsed.nextInstanceId || 1;
+            saveArmyList(); // persist to localStorage on this device
+            history.replaceState(null, '', window.location.pathname); // clean up URL
+            return true;
+        }
+    } catch (e) {
+        console.warn('Failed to load army from URL:', e);
+    }
+    return false;
+}
+
 // Generate a unique key for a weapon
 function generateWeaponKey(weapon) {
     const base = weapon.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -602,8 +638,10 @@ async function loadData() {
         });
         await Promise.all(unitPromises);
 
-        // Load saved army list from localStorage
-        loadArmyList();
+        // Load army list: URL hash takes priority over localStorage
+        if (!loadArmyFromUrl()) {
+            loadArmyList();
+        }
 
         // Render everything
         renderApp();
