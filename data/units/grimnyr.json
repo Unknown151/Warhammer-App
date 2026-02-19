@@ -27,7 +27,9 @@
         "ap": "-2",
         "d": "D3",
         "abilities": ["psychic"],
-        "inheritedAbilities": []
+        "inheritedAbilities": [],
+        "weaponGroup": "ancestral-wrath",
+        "weaponGroupLabel": "Choose one profile per shooting phase"
       },
       {
         "name": "Ancestral Wrath – focused witchfire",
@@ -38,7 +40,8 @@
         "ap": "-2",
         "d": "D3",
         "abilities": ["hazardous", "psychic"],
-        "inheritedAbilities": []
+        "inheritedAbilities": [],
+        "weaponGroup": "ancestral-wrath"
       },
       {
         "name": "Autoch-pattern bolter",
@@ -79,5 +82,9 @@
   "coreAbilities": ["leader"],
   "wargear": [],
   "wargearOptions": [],
+  "leaderBonus": {
+    "text": "Feel No Pain 5+",
+    "grantsFnp": "feel-no-pain-5"
+  },
   "canLead": ["hearthkyn-warriors"]
 }

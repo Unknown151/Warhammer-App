@@ -38,7 +38,9 @@
         "ap": "0",
         "d": "1",
         "abilities": ["blast"],
-        "inheritedAbilities": []
+        "inheritedAbilities": [],
+        "weaponGroup": "l7-launcher",
+        "weaponGroupLabel": "Choose one profile per shooting phase"
       },
       {
         "name": "L7 missile launcher – focused",
@@ -49,7 +51,8 @@
         "ap": "-2",
         "d": "D6",
         "abilities": [],
-        "inheritedAbilities": []
+        "inheritedAbilities": [],
+        "weaponGroup": "l7-launcher"
       },
       {
         "name": "MATR autocannon",

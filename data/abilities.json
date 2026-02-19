@@ -109,6 +109,11 @@
     "type": "Core Ability",
     "description": "Each time this model would lose a wound, roll a D6. On a <strong>6+</strong>, that wound is not lost."
   },
+  "feel-no-pain-5": {
+    "name": "Feel No Pain 5+",
+    "type": "Core Ability",
+    "description": "Each time this model would lose a wound, roll a D6. On a <strong>5+</strong>, that wound is not lost."
+  },
   "deep-strike": {
     "name": "Deep Strike",
     "type": "Core Ability",

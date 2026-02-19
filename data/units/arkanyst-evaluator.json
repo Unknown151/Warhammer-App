@@ -26,7 +26,9 @@
         "ap": "-1",
         "d": "1",
         "abilities": [{"id": "rapid-fire", "display": "Rapid Fire 1"}],
-        "inheritedAbilities": []
+        "inheritedAbilities": [],
+        "weaponGroup": "transmatter-inverter",
+        "weaponGroupLabel": "Choose one profile per shooting phase"
       },
       {
         "name": "Transmatter inverter – full charge",
@@ -37,7 +39,8 @@
         "ap": "-2",
         "d": "2",
         "abilities": ["hazardous", {"id": "rapid-fire", "display": "Rapid Fire 2"}],
-        "inheritedAbilities": []
+        "inheritedAbilities": [],
+        "weaponGroup": "transmatter-inverter"
       },
       {
         "name": "Transmatter inverter – overcharge",
@@ -48,7 +51,8 @@
         "ap": "-3",
         "d": "3",
         "abilities": ["hazardous", "overcharge", {"id": "rapid-fire", "display": "Rapid Fire 3"}],
-        "inheritedAbilities": []
+        "inheritedAbilities": [],
+        "weaponGroup": "transmatter-inverter"
       }
     ],
     "melee": [

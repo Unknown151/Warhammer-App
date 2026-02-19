@@ -244,6 +244,11 @@
         .fury-prompt-btn.no{background:rgba(201,68,68,.2);border-color:var(--red);color:var(--red)}
         .fury-prompt-btn.no:hover{background:rgba(201,68,68,.3)}
         @keyframes promptIn{from{opacity:0}to{opacity:1}}
+        /* Floating Target Closest Button */
+        .closest-fab{position:fixed;bottom:1.2rem;right:1.2rem;width:52px;height:52px;border-radius:50%;border:2px solid var(--border);background:var(--bg2);color:var(--text3);font-size:1.4rem;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;z-index:100;box-shadow:0 4px 16px rgba(0,0,0,.5);transition:all .2s ease;line-height:1}
+        .closest-fab.active{border-color:rgba(74,142,212,.6);background:rgba(74,142,212,.2);color:var(--blue);box-shadow:0 4px 20px rgba(74,142,212,.3)}
+        body.light-theme .closest-fab{box-shadow:0 4px 16px rgba(0,0,0,.15)}
+        body.light-theme .closest-fab.active{background:rgba(74,142,212,.15);box-shadow:0 4px 20px rgba(74,142,212,.2)}
         @media(min-width:768px){.container{max-width:800px;margin:0 auto;padding:1.5rem}#modal{align-items:center}.modal-content{border-radius:12px;max-height:60vh}}
         /* Configuration Tab Styles */
         .config-section{margin-bottom:1.5rem}
@@ -387,6 +392,8 @@
             <div id="army-list-container"></div>
         </div>
     </main>
+
+    <button class="closest-fab" id="closest-fab" onclick="toggleClosestFab()" title="Targeting Closest">🎯</button>
 
     <div class="unit-picker-overlay" id="unit-picker">
         <div class="unit-picker">
@@ -905,7 +912,12 @@ function renderDefensiveRow(unit, inherited = false, source = null) {
 
 // Render bodyguard invuln (check for inherited from leader)
 function renderBodyguardInvuln(bodyguard, leader) {
-    const fnp = getUnitFnp(bodyguard);
+    let fnp = getUnitFnp(bodyguard);
+    // Check if leader upgrades FNP (e.g. Grimnyr's Fortify grants FNP 5+)
+    const leaderFnpId = leader.leaderBonus?.grantsFnp;
+    if (leaderFnpId && abilities[leaderFnpId]) {
+        fnp = { id: leaderFnpId, name: abilities[leaderFnpId].name };
+    }
     // Check if leader grants invuln
     const leaderGrantsInvuln = leader.leaderBonus?.grantsAbilities?.includes('invuln-5');
 
@@ -1610,6 +1622,11 @@ function toggleStratagemItem(stratId, e) {
     const item = document.querySelector(`.buff-dropdown-item[data-strat="${stratId}"]`);
     item.classList.toggle('active', stratagemState[stratId]);
 
+    // Sync FAB if closest was toggled from dropdown
+    if (stratId === 'closest') {
+        document.getElementById('closest-fab').classList.toggle('active', stratagemState.closest);
+    }
+
     // Update badge
     updateBuffButton();
 
@@ -1627,6 +1644,17 @@ function toggleStratagemItem(stratId, e) {
     if (stratId === 'sub1k') {
         renderCharacterToggles();
     }
+}
+
+function toggleClosestFab() {
+    stratagemState.closest = !stratagemState.closest;
+    // Sync dropdown item visual
+    const item = document.querySelector('.buff-dropdown-item[data-strat="closest"]');
+    if (item) item.classList.toggle('active', stratagemState.closest);
+    // Sync FAB visual
+    document.getElementById('closest-fab').classList.toggle('active', stratagemState.closest);
+    updateBuffButton();
+    renderUnits();
 }
 
 // Close dropdown when clicking outside
