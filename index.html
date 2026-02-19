@@ -727,6 +727,23 @@ function renderSoloUnitCard(entry) {
     const closestActive = stratagemState.closest;
     const closestBonuses = closestActive ? getClosestBonusesForUnit(entry.unit, null) : { apImprove: false, rerollHit: false };
 
+    // Check if Ironskein enhancement is active (for solo leaders)
+    const enhancementId = instance?.enhancementId;
+    const suppressEnhancement = stratagemState.sub1k && ['ironskein', 'bastion-shield'].includes(enhancementId);
+    const ironskeinActive = enhancementId === 'ironskein' && !suppressEnhancement;
+
+    // Apply Ironskein +2 wounds if active
+    let displayUnit = unit;
+    if (ironskeinActive) {
+        if (unit.modelProfiles) {
+            displayUnit = { ...unit, modelProfiles: unit.modelProfiles.map((p, i) =>
+                i === 0 ? { ...p, stats: { ...p.stats, w: (parseInt(p.stats.w) || 0) + 2 + '+' } } : p
+            )};
+        } else if (unit.stats) {
+            displayUnit = { ...unit, stats: { ...unit.stats, w: (parseInt(unit.stats.w) || 0) + 2 + '+' } };
+        }
+    }
+
     return `
         <div class="unit-card collapsed" data-unit="${entry.id}" data-card-id="${entry.id}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
@@ -741,7 +758,7 @@ function renderSoloUnitCard(entry) {
             <div class="card-collapse-content">
                 <div class="card-section">
                     ${renderUnitHeader(unit, modelCount)}
-                    ${renderUnitStats(unit)}
+                    ${renderUnitStats(displayUnit)}
                     ${renderDefensiveRow(unit)}
                     ${renderWeapons(filteredWeapons, [], null, furyActive, closestActive, closestBonuses)}
                     ${renderSoloAbilities(unit)}
@@ -795,12 +812,18 @@ function renderLedUnitCard(ledUnit) {
     const suppressEnhancement = stratagemState.sub1k && sub1kRemovedEnhancements.includes(enhancementId);
     const enhancement = (enhancementId && !suppressEnhancement) ? enhancements[enhancementId] : null;
 
-    // If Ironskein is suppressed, strip +wounds bonus from leader stats
+    // If Ironskein is active, add +2 wounds to leader stats
     let leaderStats = leader;
-    if (suppressEnhancement && enhancementId === 'ironskein' && leader.modelProfiles) {
-        leaderStats = { ...leader, modelProfiles: leader.modelProfiles.map(p => ({
-            ...p, stats: { ...p.stats, w: typeof p.stats.w === 'string' && p.stats.w.includes('+') ? parseInt(p.stats.w) : p.stats.w }
-        }))};
+    const ironskeinActive = enhancementId === 'ironskein' && !suppressEnhancement;
+    if (ironskeinActive) {
+        if (leader.modelProfiles) {
+            // For units with multiple profiles, add +2 to the main character profile (first one)
+            leaderStats = { ...leader, modelProfiles: leader.modelProfiles.map((p, i) =>
+                i === 0 ? { ...p, stats: { ...p.stats, w: (parseInt(p.stats.w) || 0) + 2 + '+' } } : p
+            )};
+        } else if (leader.stats) {
+            leaderStats = { ...leader, stats: { ...leader.stats, w: (parseInt(leader.stats.w) || 0) + 2 + '+' } };
+        }
     }
 
     // Check if Fury of the Hearth applies to this unit
