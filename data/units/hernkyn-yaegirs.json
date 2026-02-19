@@ -5,7 +5,7 @@
   "keywords": ["INFANTRY", "GRENADES", "HERNKYN", "YAEGIRS"],
   "isLeader": false,
   "points": 90,
-  "models": 9,
+  "models": 10,
   "stats": {
     "m": "6\"",
     "t": 5,
