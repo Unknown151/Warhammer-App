@@ -4,7 +4,7 @@
   "type": ["Infantry", "Exo-frame"],
   "keywords": ["INFANTRY", "EXO-FRAME", "BRÔKHYR", "THUNDERKYN"],
   "isLeader": false,
-  "points": 160,
+  "points": 80,
   "models": 3,
   "baseModels": 3,
   "maxModels": 6,

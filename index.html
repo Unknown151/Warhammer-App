@@ -1226,11 +1226,18 @@ function renderArmyInstance(instance) {
     // Leader assignment dropdown (for non-leader units that can be led)
     if (!isLeader && canBeLeadBy.length > 0) {
         bodyContent += renderInstanceLeaderSelector(instance, canBeLeadBy);
+        // Enhancement selector for attached leader (if leader is selected and not Epic Hero)
+        if (instance.leaderId) {
+            const attachedLeader = units[instance.leaderId];
+            if (attachedLeader && !attachedLeader.isEpicHero) {
+                bodyContent += renderInstanceEnhancementSelector(instance, instance.leaderId);
+            }
+        }
     }
 
-    // Enhancement selector (for leader units)
-    if (isLeader) {
-        bodyContent += renderInstanceEnhancementSelector(instance);
+    // Enhancement selector (for standalone leader units, if not Epic Hero)
+    if (isLeader && !unit.isEpicHero) {
+        bodyContent += renderInstanceEnhancementSelector(instance, instance.unitId);
     }
 
     // Weapons section
@@ -1328,26 +1335,47 @@ function renderInstanceLeaderSelector(instance, canBeLeadBy) {
     `;
 }
 
+// Get all used enhancement IDs (excluding the current instance)
+function getUsedEnhancements(excludeInstanceId) {
+    const used = [];
+    armyList.forEach(inst => {
+        if (inst.instanceId !== excludeInstanceId && inst.enhancementId) {
+            used.push(inst.enhancementId);
+        }
+    });
+    return used;
+}
+
 // Render enhancement selector for an instance
-function renderInstanceEnhancementSelector(instance) {
+function renderInstanceEnhancementSelector(instance, characterId) {
     const currentEnh = instance.enhancementId || '';
-    const unit = units[instance.unitId];
+    const character = units[characterId];
+    if (!character) return '';
+
+    // Get already-used enhancements (excluding this instance)
+    const usedEnhancements = getUsedEnhancements(instance.instanceId);
+    const totalUsed = usedEnhancements.length + (currentEnh ? 1 : 0);
 
     let options = '<option value="">-- No Enhancement --</option>';
     Object.entries(enhancements).forEach(([enhId, enh]) => {
-        const restriction = enh.restriction || '';
-        const canUse = restriction === 'Leagues of Votann only' ||
-            restriction.toLowerCase().includes(unit.name.toLowerCase()) ||
-            (unit.keywords?.includes('KÂHL') && restriction.includes('Kâhl'));
+        // Skip if already used by another unit (unless it's this unit's current)
+        if (usedEnhancements.includes(enhId) && enhId !== currentEnh) return;
 
-        if (canUse) {
+        // Check restrictedTo field (e.g., Kâhl only)
+        if (enh.restrictedTo && !enh.restrictedTo.includes(characterId)) return;
+
+        // All Leagues of Votann characters can use unrestricted enhancements
+        const isUnrestricted = !enh.restrictedTo;
+        if (isUnrestricted || enh.restrictedTo.includes(characterId)) {
             options += `<option value="${enhId}" ${currentEnh === enhId ? 'selected' : ''}>${enh.name} (+${enh.points} pts)</option>`;
         }
     });
 
+    const countLabel = totalUsed >= 3 && !currentEnh ? ' (Max 3 reached)' : ` (${totalUsed}/3 used)`;
+
     return `
-        <div class="config-label">Enhancement</div>
-        <select class="enhancement-select" onchange="setInstanceEnhancement('${instance.instanceId}', this.value)">
+        <div class="config-label">Enhancement${countLabel}</div>
+        <select class="enhancement-select" onchange="setInstanceEnhancement('${instance.instanceId}', this.value)" ${totalUsed >= 3 && !currentEnh ? 'disabled' : ''}>
             ${options}
         </select>
     `;
@@ -1462,7 +1490,16 @@ function adjustWeaponCount(instanceId, weaponKey, delta) {
 function setInstanceLeader(instanceId, leaderId) {
     const instance = armyList.find(i => i.instanceId === instanceId);
     if (instance) {
+        const oldLeader = instance.leaderId;
         instance.leaderId = leaderId || null;
+        // Clear enhancement if leader is removed or changed to Epic Hero
+        if (!leaderId || (units[leaderId]?.isEpicHero)) {
+            instance.enhancementId = null;
+        }
+        // Clear enhancement if leader changed (enhancement may not be valid for new leader)
+        if (oldLeader && leaderId && oldLeader !== leaderId) {
+            instance.enhancementId = null;
+        }
         saveArmyList();
         renderConfigurationTab();
         renderUnits();
