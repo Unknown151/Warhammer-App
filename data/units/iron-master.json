@@ -4,7 +4,7 @@
   "type": ["Character", "Infantry", "Brôkhyr"],
   "keywords": ["INFANTRY", "CHARACTER", "BRÔKHYR", "IRON-MASTER"],
   "isLeader": true,
-  "points": 85,
+  "points": 75,
   "models": 5,
   "modelBreakdown": "Iron-master, Ironkin Assistant, 3 E-COGs",
   "modelProfiles": [
