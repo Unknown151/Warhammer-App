@@ -290,6 +290,14 @@
         .enhancement-select{width:100%;background:var(--bg3);border:1px solid var(--gold-dark);border-radius:4px;color:var(--gold);padding:.5rem .6rem;font-family:'Rajdhani',sans-serif;font-size:.75rem;cursor:pointer}
         .enhancement-select:focus{outline:none;border-color:var(--gold)}
         .enhancement-select option{background:var(--bg2);color:var(--text)}
+        .wargear-checkboxes{display:flex;flex-direction:column;gap:.25rem}
+        .wargear-checkbox{display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;background:var(--bg3);border:1px solid var(--border);border-radius:4px;cursor:pointer;transition:all .15s ease}
+        .wargear-checkbox:hover{border-color:var(--gold-dark)}
+        .wargear-checkbox.checked{border-color:var(--gold);background:rgba(212,168,75,.1)}
+        .wargear-checkbox.disabled{opacity:.4;cursor:not-allowed}
+        .wargear-checkbox input[type="checkbox"]{accent-color:var(--gold);width:14px;height:14px;cursor:pointer}
+        .wargear-checkbox.disabled input[type="checkbox"]{cursor:not-allowed}
+        .wargear-checkbox span{font-size:.7rem;color:var(--text)}
         .config-total{background:var(--bg2);border:1px solid var(--gold-dark);border-radius:6px;padding:.75rem 1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
         .config-total-label{font-family:'Orbitron',sans-serif;font-size:.7rem;color:var(--text2);letter-spacing:.05em}
         .config-total-value{font-family:'Share Tech Mono',monospace;font-size:1.1rem;color:var(--gold-bright);font-weight:700}
@@ -594,7 +602,7 @@ function createUnitInstance(unitId) {
         weapons: weapons,
         leaderId: null,
         enhancementId: null,
-        selectedWargear: null
+        selectedWargear: []
     };
 }
 
@@ -745,20 +753,22 @@ function renderSoloUnitCard(entry) {
         }
     }
 
-    // Apply selected wargear effects
-    const selectedWargear = instance?.selectedWargear;
+    // Apply selected wargear effects (supports multiple selections)
+    const selectedWargear = Array.isArray(instance?.selectedWargear) ? instance.selectedWargear : (instance?.selectedWargear ? [instance.selectedWargear] : []);
     let wargearInheritedAbilities = [];
     let wargearAppliesTo = null;
     let extraWargear = [];
 
-    if (selectedWargear === 'panspectral-scanner') {
-        wargearInheritedAbilities = [{ id: 'panspectral-scanner', display: 'Re-roll Hit 1' }];
+    if (selectedWargear.includes('panspectral-scanner')) {
+        wargearInheritedAbilities.push({ id: 'panspectral-scanner', display: 'Re-roll Hit 1' });
         wargearAppliesTo = 'ranged';
-    } else if (selectedWargear === 'rollbar-searchlight') {
-        wargearInheritedAbilities = [{ id: 'rollbar-searchlight', display: 'Ignores Hit Modifiers' }];
+    }
+    if (selectedWargear.includes('rollbar-searchlight')) {
+        wargearInheritedAbilities.push({ id: 'rollbar-searchlight', display: 'Ignores Hit Modifiers' });
         wargearAppliesTo = 'ranged';
-    } else if (selectedWargear === 'multiwave-comms-array') {
-        extraWargear = ['multiwave-comms-array'];
+    }
+    if (selectedWargear.includes('multiwave-comms-array')) {
+        extraWargear.push('multiwave-comms-array');
     }
 
     return `
@@ -1426,20 +1436,24 @@ function renderInstanceEnhancementSelector(instance, characterId) {
     `;
 }
 
-// Render optional wargear choice selector
+// Render optional wargear choice selector (checkboxes, max 2)
 function renderInstanceWargearChoiceSelector(instance, wargearChoices) {
-    const current = instance.selectedWargear || '';
-    let options = '<option value="">-- None --</option>';
+    const selected = Array.isArray(instance.selectedWargear) ? instance.selectedWargear : (instance.selectedWargear ? [instance.selectedWargear] : []);
+    let html = '<div class="config-label">Wargear (up to 2)</div><div class="wargear-checkboxes">';
     wargearChoices.forEach(id => {
         const ab = abilities[id];
-        options += `<option value="${id}" ${current === id ? 'selected' : ''}>${ab?.name || id}</option>`;
+        const isChecked = selected.includes(id);
+        const isDisabled = !isChecked && selected.length >= 2;
+        html += `
+            <label class="wargear-checkbox ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}">
+                <input type="checkbox" ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}
+                    onchange="toggleInstanceWargear('${instance.instanceId}', '${id}', this.checked)">
+                <span>${ab?.name || id}</span>
+            </label>
+        `;
     });
-    return `
-        <div class="config-label">Wargear</div>
-        <select class="enhancement-select" onchange="setInstanceWargearChoice('${instance.instanceId}', this.value)">
-            ${options}
-        </select>
-    `;
+    html += '</div>';
+    return html;
 }
 
 // Render weapon selector for an instance
@@ -1578,11 +1592,18 @@ function setInstanceEnhancement(instanceId, enhancementId) {
     }
 }
 
-// Set wargear choice for an instance
-function setInstanceWargearChoice(instanceId, wargearId) {
+// Toggle wargear choice for an instance (array-based, max 2)
+function toggleInstanceWargear(instanceId, wargearId, isChecked) {
     const instance = armyList.find(i => i.instanceId === instanceId);
     if (instance) {
-        instance.selectedWargear = wargearId || null;
+        // Ensure it's an array
+        let selected = Array.isArray(instance.selectedWargear) ? [...instance.selectedWargear] : (instance.selectedWargear ? [instance.selectedWargear] : []);
+        if (isChecked && !selected.includes(wargearId) && selected.length < 2) {
+            selected.push(wargearId);
+        } else if (!isChecked) {
+            selected = selected.filter(id => id !== wargearId);
+        }
+        instance.selectedWargear = selected;
         saveArmyList();
         renderConfigurationTab();
         renderUnits();
