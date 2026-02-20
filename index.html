@@ -52,6 +52,11 @@
         @keyframes slideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
         @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
         @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+        /* CRT Terminal Effects */
+        @keyframes crtScanline{0%{top:-100%}100%{top:100%}}
+        @keyframes crtFlicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.8}94%{opacity:1}97%{opacity:.9}98%{opacity:1}}
+        @keyframes crtGlow{0%,100%{filter:brightness(1) saturate(1)}50%{filter:brightness(1.05) saturate(1.1)}}
+        @keyframes votannPulse{0%,100%{box-shadow:0 0 5px rgba(139,92,246,.3),0 0 10px rgba(212,168,75,.2),inset 0 0 20px rgba(139,92,246,.05)}50%{box-shadow:0 0 15px rgba(139,92,246,.5),0 0 25px rgba(212,168,75,.3),inset 0 0 30px rgba(139,92,246,.1)}}
         /* Fancy Mode Active Styles */
         body.fancy-mode .unit-card{animation:slideIn .4s ease backwards;transition:all .3s ease}
         body.fancy-mode .unit-card:nth-child(1){animation-delay:.05s}
@@ -86,6 +91,31 @@
         body.fancy-mode .attached-icon{animation:fancyPulse 2s ease-in-out infinite}
         body.fancy-mode .leader-bonus{position:relative;overflow:hidden}
         body.fancy-mode .leader-bonus::before{content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(74,201,120,.2),transparent);animation:shimmer 4s linear infinite}
+        /* CRT Terminal Effect for Expanded Cards */
+        body.fancy-mode .unit-card:not(.collapsed){position:relative;overflow:hidden;animation:crtFlicker 4s linear infinite,votannPulse 3s ease-in-out infinite}
+        body.fancy-mode .unit-card:not(.collapsed) .card-collapse-content{position:relative;background:linear-gradient(180deg,rgba(139,92,246,.03) 0%,transparent 50%,rgba(139,92,246,.03) 100%)}
+        /* CRT Scanlines overlay */
+        body.fancy-mode .unit-card:not(.collapsed)::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(139,92,246,.03) 2px,rgba(139,92,246,.03) 4px);pointer-events:none;z-index:1}
+        /* CRT Moving render line */
+        body.fancy-mode .unit-card:not(.collapsed)::after{content:'';position:absolute;left:0;right:0;height:4px;background:linear-gradient(180deg,transparent,rgba(212,168,75,.15),rgba(255,255,255,.1),rgba(212,168,75,.15),transparent);animation:crtScanline 3s linear infinite;pointer-events:none;z-index:2;box-shadow:0 0 20px rgba(212,168,75,.3)}
+        /* Votann Enhanced Color Scheme */
+        body.fancy-mode .unit-card:not(.collapsed){border:1px solid rgba(139,92,246,.4);background:linear-gradient(135deg,var(--bg2) 0%,rgba(139,92,246,.05) 50%,var(--bg2) 100%)}
+        body.fancy-mode .unit-card:not(.collapsed) .unit-name{color:#fff;text-shadow:0 0 10px rgba(212,168,75,.6),0 0 20px rgba(139,92,246,.4)}
+        body.fancy-mode .unit-card:not(.collapsed) .stat-val{color:#fff;text-shadow:0 0 5px rgba(255,255,255,.3)}
+        body.fancy-mode .unit-card:not(.collapsed) .stat-label{color:rgba(212,168,75,.9)}
+        body.fancy-mode .unit-card:not(.collapsed) .weapon-name{color:var(--gold);text-shadow:0 0 8px rgba(212,168,75,.4)}
+        body.fancy-mode .unit-card:not(.collapsed) .section-title{color:var(--purple);text-shadow:0 0 10px rgba(139,92,246,.5);border-bottom-color:rgba(139,92,246,.3)}
+        body.fancy-mode .unit-card:not(.collapsed) .ab{border-color:rgba(139,92,246,.4);background:rgba(139,92,246,.1)}
+        body.fancy-mode .unit-card:not(.collapsed) .wab{border-color:rgba(212,168,75,.4);background:rgba(212,168,75,.1)}
+        body.fancy-mode .unit-card:not(.collapsed) .invuln-val{color:#fff;text-shadow:0 0 15px rgba(139,92,246,.8),0 0 30px rgba(212,168,75,.4)}
+        body.fancy-mode .unit-card:not(.collapsed) .stat.hl{border-color:rgba(212,168,75,.6);box-shadow:0 0 10px rgba(212,168,75,.3),inset 0 0 5px rgba(139,92,246,.2)}
+        /* Config/Army sections CRT effect */
+        body.fancy-mode .config-unit-card.expanded{position:relative;overflow:hidden;animation:crtFlicker 4s linear infinite}
+        body.fancy-mode .config-unit-card.expanded::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(139,92,246,.02) 2px,rgba(139,92,246,.02) 4px);pointer-events:none;z-index:1}
+        body.fancy-mode .config-unit-card.expanded::after{content:'';position:absolute;left:0;right:0;height:3px;background:linear-gradient(180deg,transparent,rgba(212,168,75,.1),rgba(255,255,255,.08),transparent);animation:crtScanline 4s linear infinite;pointer-events:none;z-index:2}
+        body.fancy-mode .army-instance.expanded{position:relative;overflow:hidden;animation:crtFlicker 5s linear infinite}
+        body.fancy-mode .army-instance.expanded::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(139,92,246,.02) 2px,rgba(139,92,246,.02) 4px);pointer-events:none;z-index:1}
+        body.fancy-mode .army-instance.expanded::after{content:'';position:absolute;left:0;right:0;height:3px;background:linear-gradient(180deg,transparent,rgba(212,168,75,.1),rgba(255,255,255,.08),transparent);animation:crtScanline 3.5s linear infinite;pointer-events:none;z-index:2}
         /* Reduce motion for accessibility */
         @media(prefers-reduced-motion:reduce){body.fancy-mode *{animation:none !important;transition:none !important}}
         *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:rgba(212,168,75,0.3)}
