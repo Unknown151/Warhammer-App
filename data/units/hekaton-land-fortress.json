@@ -28,7 +28,7 @@
         "ap": "-2",
         "d": "2",
         "abilities": ["blast"],
-        "inheritedAbilities": ["reroll-hit-1"]
+        "inheritedAbilities": ["reroll-hit-1", "multicog-targeting"]
       },
       {
         "name": "Heavy magna-rail cannon",
@@ -39,7 +39,7 @@
         "ap": "-4",
         "d": "D6+4",
         "abilities": ["devastating-wounds", "heavy"],
-        "inheritedAbilities": ["reroll-hit-1"]
+        "inheritedAbilities": ["reroll-hit-1", "multicog-targeting"]
       },
       {
         "name": "Hekaton warhead",
@@ -50,7 +50,7 @@
         "ap": "-2",
         "d": "2",
         "abilities": ["blast", "one-shot"],
-        "inheritedAbilities": ["reroll-hit-1"]
+        "inheritedAbilities": ["reroll-hit-1", "multicog-targeting"]
       },
       {
         "name": "MATR autocannon",
@@ -61,7 +61,7 @@
         "ap": "-1",
         "d": "2",
         "abilities": ["assault", {"id": "sustained-hits", "display": "Sustained Hits 1"}],
-        "inheritedAbilities": ["reroll-hit-1"]
+        "inheritedAbilities": ["reroll-hit-1", "multicog-targeting"]
       },
       {
         "name": "SP heavy conversion beamer",
@@ -72,7 +72,7 @@
         "ap": "-2",
         "d": "4",
         "abilities": ["conversion", "lethal-hits"],
-        "inheritedAbilities": ["reroll-hit-1"]
+        "inheritedAbilities": ["reroll-hit-1", "multicog-targeting"]
       },
       {
         "name": "Twin bolt cannon",
@@ -83,7 +83,7 @@
         "ap": "-1",
         "d": "2",
         "abilities": [{"id": "sustained-hits", "display": "Sustained Hits 2"}, "twin-linked"],
-        "inheritedAbilities": ["reroll-hit-1"]
+        "inheritedAbilities": ["reroll-hit-1", "multicog-targeting"]
       },
       {
         "name": "Twin ion beamer",
@@ -94,7 +94,7 @@
         "ap": "-2",
         "d": "1",
         "abilities": ["blast", "twin-linked"],
-        "inheritedAbilities": ["reroll-hit-1"]
+        "inheritedAbilities": ["reroll-hit-1", "multicog-targeting"]
       }
     ],
     "melee": [
