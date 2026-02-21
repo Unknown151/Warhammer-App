@@ -18,6 +18,7 @@
         body.light-theme .wab{background:rgba(139,92,246,.15);color:var(--text)}
         body.light-theme .ab{background:rgba(139,92,246,.12);border-color:rgba(139,92,246,.25)}
         body.light-theme .ab.core{background:rgba(74,142,212,.12);border-color:rgba(74,142,212,.25)}
+        body.light-theme .invuln-core-ab{background:rgba(74,142,212,.1);border-color:rgba(74,142,212,.3)}
         body.light-theme .ab.wg{background:rgba(158,122,32,.12);border-color:rgba(158,122,32,.25)}
         body.light-theme .ab.inherited,.light-theme .wab.inherited{background:rgba(46,139,87,.12);border-color:var(--green)}
         body.light-theme .weapon-category.ranged .weapon-category-header{background:rgba(74,142,212,.1)}
@@ -106,6 +107,7 @@
         body.fancy-mode .unit-card:not(.collapsed) .weapon-name{color:var(--gold);text-shadow:0 0 8px rgba(212,168,75,.4)}
         body.fancy-mode .unit-card:not(.collapsed) .section-title{color:var(--purple);text-shadow:0 0 10px rgba(139,92,246,.5);border-bottom-color:rgba(139,92,246,.3)}
         body.fancy-mode .unit-card:not(.collapsed) .ab{border-color:rgba(139,92,246,.4);background:rgba(139,92,246,.1)}
+        body.fancy-mode .unit-card:not(.collapsed) .invuln-core-ab{border-color:rgba(74,142,212,.6);background:rgba(74,142,212,.2);text-shadow:0 0 6px rgba(74,142,212,.5)}
         body.fancy-mode .unit-card:not(.collapsed) .wab{border-color:rgba(212,168,75,.4);background:rgba(212,168,75,.1)}
         body.fancy-mode .unit-card:not(.collapsed) .invuln-val{color:#fff;text-shadow:0 0 15px rgba(139,92,246,.8),0 0 30px rgba(212,168,75,.4)}
         body.fancy-mode .unit-card:not(.collapsed) .stat.hl{border-color:rgba(212,168,75,.6);box-shadow:0 0 10px rgba(212,168,75,.3),inset 0 0 5px rgba(139,92,246,.2)}
@@ -179,6 +181,7 @@
         .fnp-sep{color:var(--text3);font-size:.7rem;margin:0 .15rem}
         .fnp-label{font-size:.6rem;color:var(--text);text-transform:uppercase;letter-spacing:.05em;cursor:pointer}
         .fnp-val{font-family:'Share Tech Mono',monospace;font-size:1rem;color:var(--text);font-weight:700;cursor:pointer}
+        .invuln-core-ab{font-size:.58rem;font-weight:700;padding:.2rem .45rem;background:rgba(74,142,212,.25);border:1px solid rgba(74,142,212,.5);color:var(--text);border-radius:2px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;margin-left:.15rem}
         .weapons{margin-bottom:.875rem}
         .weapon-category{background:var(--bg2);border-radius:4px;margin-bottom:.5rem;overflow:hidden}
         .weapon-category:last-child{margin-bottom:0}
@@ -894,9 +897,10 @@ function renderSoloUnitCard(entry) {
 function renderSoloAbilities(unit, extraWargear = []) {
     let html = '<div class="abilities">';
 
-    // Core abilities (exclude FNP - shown in defensive row)
+    // Core abilities (exclude FNP - shown in defensive row; exclude INVULN_ROW_CORE_ABS when unit has invuln)
     (unit.coreAbilities || []).forEach(ab => {
         if (ab.startsWith('feel-no-pain')) return;
+        if (unit.invulnerableSave && INVULN_ROW_CORE_ABS.includes(ab)) return;
         const abData = abilities[ab];
         html += `<span class="ab core tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
     });
@@ -1055,16 +1059,23 @@ function getUnitFnp(unit) {
     return { id: fnpAbility, name: abData?.name || 'Feel No Pain' };
 }
 
+// Core abilities that belong beside the defensive row rather than in the ability list
+const INVULN_ROW_CORE_ABS = ['lone-operative', 'stealth'];
+
 // Render invulnerable save (and optional FNP)
-function renderInvuln(value, inherited, source = null, fnp = null) {
+function renderInvuln(value, inherited, source = null, fnp = null, defensiveCoreAbs = []) {
     const classes = inherited ? 'invuln-row inherited tappable' : 'invuln-row tappable';
     const dataAb = source ? `data-ab="${source}"` : '';
     const fnpHtml = fnp ? `<span class="fnp-sep">|</span><span class="fnp-label tappable" data-ab="${fnp.id}">FNP:</span><span class="fnp-val tappable" data-ab="${fnp.id}">${fnp.name.replace('Feel No Pain ', '')}</span>` : '';
+    const coreAbHtml = defensiveCoreAbs.map(ab =>
+        `<span class="invuln-core-ab tappable" data-ab="${ab.id}">${ab.name}</span>`
+    ).join('');
     return `
         <div class="${classes}" ${dataAb}>
             <span class="invuln-label">Invulnerable Save:</span>
             <span class="invuln-val">${value}</span>
             ${fnpHtml}
+            ${coreAbHtml}
         </div>
     `;
 }
@@ -1083,8 +1094,11 @@ function renderFnpRow(fnp) {
 // Render defensive row (invuln + FNP combined)
 function renderDefensiveRow(unit, inherited = false, source = null) {
     const fnp = getUnitFnp(unit);
+    const defensiveCoreAbs = (unit.coreAbilities || [])
+        .filter(ab => INVULN_ROW_CORE_ABS.includes(ab))
+        .map(ab => ({ id: ab, name: abilities[ab]?.name || ab }));
     if (unit.invulnerableSave) {
-        return renderInvuln(unit.invulnerableSave, inherited, source || unit.invulnerableSource, fnp);
+        return renderInvuln(unit.invulnerableSave, inherited, source || unit.invulnerableSource, fnp, defensiveCoreAbs);
     }
     if (fnp) {
         return renderFnpRow(fnp);

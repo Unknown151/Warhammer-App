@@ -132,7 +132,7 @@
       }
     ]
   },
-  "abilities": ["multispectral-visor", "forgewrought-expertise"],
+  "abilities": ["brokhyr-guild-support", "multispectral-visor", "forgewrought-expertise"],
   "wargear": [],
   "leaderBonus": {
     "text": "Re-roll Wound rolls of 1 (ranged)",
