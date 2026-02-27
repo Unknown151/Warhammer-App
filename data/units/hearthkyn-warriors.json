@@ -30,7 +30,7 @@
         "ap": "0",
         "d": "1",
         "abilities": [],
-        "inheritedAbilities": []
+        "inheritedAbilities": [{ "id": "panspectral-scanning", "display": "Re-roll Hit 1" }]
       },
       {
         "name": "L7 missile launcher – Blast",
@@ -42,7 +42,7 @@
         "ap": "0",
         "d": "1",
         "abilities": ["blast"],
-        "inheritedAbilities": [],
+        "inheritedAbilities": [{ "id": "panspectral-scanning", "display": "Re-roll Hit 1" }],
         "weaponGroup": "l7-launcher",
         "weaponGroupLabel": "Choose one profile per shooting phase"
       },
@@ -56,7 +56,7 @@
         "ap": "-2",
         "d": "D6",
         "abilities": [],
-        "inheritedAbilities": [],
+        "inheritedAbilities": [{ "id": "panspectral-scanning", "display": "Re-roll Hit 1" }],
         "weaponGroup": "l7-launcher"
       },
       {
@@ -69,7 +69,7 @@
         "ap": "-3",
         "d": "D3+3",
         "abilities": ["devastating-wounds", "heavy"],
-        "inheritedAbilities": []
+        "inheritedAbilities": [{ "id": "panspectral-scanning", "display": "Re-roll Hit 1" }]
       }
     ],
     "melee": [
@@ -86,7 +86,7 @@
       }
     ]
   },
-  "abilities": ["panspectral-scanning"],
+  "abilities": ["panspectral-scanning", "luck-has-need-keeps-toil-earns"],
   "coreAbilities": ["feel-no-pain"],
   "wargear": ["weavefield-crest-theyn"],
   "canBeLeadBy": ["kahl", "uthar", "grimnyr", "iron-master"]

@@ -964,6 +964,14 @@ function renderLedUnitCard(ledUnit) {
         .filter(ab => !nonWeaponAbilities.includes(typeof ab === 'string' ? ab : ab.id));
     const leaderAppliesTo = leader.leaderBonus?.appliesTo || null;
 
+    // If bodyguard has Panspectral Scanning, leader also benefits (ranged only) — models in same unit
+    const leaderInheritedAbilities = [...weaponGrantedAbilities];
+    if ((bodyguard.abilities || []).includes('panspectral-scanning')) {
+        if (!leaderInheritedAbilities.some(ab => (typeof ab === 'object' ? ab.id : ab) === 'panspectral-scanning')) {
+            leaderInheritedAbilities.push({ id: 'panspectral-scanning', display: 'Re-roll Hit 1', abilityAppliesTo: 'ranged' });
+        }
+    }
+
     return `
         <div class="unit-card attached collapsed" data-leader="${ledUnit.leader}" data-card-id="${ledUnit.id}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
@@ -992,7 +1000,7 @@ function renderLedUnitCard(ledUnit) {
                     ${renderUnitHeader(leader)}
                     ${renderUnitStats(leaderStats)}
                     ${renderDefensiveRow(leader)}
-                    ${renderWeapons(leader.weapons, weaponGrantedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses)}
+                    ${renderWeapons(leader.weapons, leaderInheritedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses)}
                     ${renderAbilities(leader, enhancement)}
                 </div>
                 <div class="card-section">
@@ -1199,21 +1207,21 @@ function renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive = 
     const nameDisplay = weapon.name + countText + modelText;
 
     // Determine which inherited abilities apply
-    let applicableInherited = [];
-    if (appliesTo === null || appliesTo === type) {
-        // Check weapon's own inherited abilities first
-        applicableInherited = [...(weapon.inheritedAbilities || [])];
-        // Then add global inherited abilities if not already present
-        inheritedAbilities.forEach(ab => {
+    // weapon.inheritedAbilities are always included (weapon-specific)
+    // Global inheritedAbilities are filtered by appliesTo, with per-ability abilityAppliesTo override
+    let applicableInherited = [...(weapon.inheritedAbilities || [])];
+    inheritedAbilities.forEach(ab => {
+        // Per-ability appliesTo takes priority; fall back to global appliesTo
+        const abAppliesTo = (typeof ab === 'object' && ab.abilityAppliesTo !== undefined)
+            ? ab.abilityAppliesTo
+            : appliesTo;
+        if (abAppliesTo === null || abAppliesTo === type) {
             const parsed = parseAbility(ab);
             if (!applicableInherited.some(a => parseAbility(a).id === parsed.id)) {
                 applicableInherited.push(ab);
             }
-        });
-    } else {
-        // Only use weapon's own inherited abilities
-        applicableInherited = [...(weapon.inheritedAbilities || [])];
-    }
+        }
+    });
 
     // Apply Fury of the Hearth buff (only for ranged weapons)
     const strengthDisplay = furyActive && type === 'ranged'
