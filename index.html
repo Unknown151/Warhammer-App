@@ -864,6 +864,13 @@ function renderSoloUnitCard(entry) {
         wargearInheritedAbilities.push({ id: 'rollbar-searchlight', display: 'Ignores Hit Modifiers' });
         wargearAppliesTo = 'ranged';
     }
+
+    // Units with Panspectral Scanning show the badge on all their ranged weapons
+    if ((unit.abilities || []).includes('panspectral-scanning')) {
+        if (!wargearInheritedAbilities.some(ab => (typeof ab === 'object' ? ab.id : ab) === 'panspectral-scanning')) {
+            wargearInheritedAbilities.push({ id: 'panspectral-scanning', display: 'Re-roll Hit 1', abilityAppliesTo: 'ranged' });
+        }
+    }
     if (selectedWargear.includes('multiwave-comms-array')) {
         extraWargear.push('multiwave-comms-array');
     }
@@ -964,11 +971,21 @@ function renderLedUnitCard(ledUnit) {
         .filter(ab => !nonWeaponAbilities.includes(typeof ab === 'string' ? ab : ab.id));
     const leaderAppliesTo = leader.leaderBonus?.appliesTo || null;
 
-    // If bodyguard has Panspectral Scanning, leader also benefits (ranged only) — models in same unit
+    // If bodyguard has Panspectral Scanning, all models in the unit benefit (ranged only)
+    const panspectralEntry = { id: 'panspectral-scanning', display: 'Re-roll Hit 1', abilityAppliesTo: 'ranged' };
+    const bodyguardHasPanspectral = (bodyguard.abilities || []).includes('panspectral-scanning');
+
     const leaderInheritedAbilities = [...weaponGrantedAbilities];
-    if ((bodyguard.abilities || []).includes('panspectral-scanning')) {
+    if (bodyguardHasPanspectral) {
         if (!leaderInheritedAbilities.some(ab => (typeof ab === 'object' ? ab.id : ab) === 'panspectral-scanning')) {
-            leaderInheritedAbilities.push({ id: 'panspectral-scanning', display: 'Re-roll Hit 1', abilityAppliesTo: 'ranged' });
+            leaderInheritedAbilities.push(panspectralEntry);
+        }
+    }
+
+    const bodyguardInheritedAbilities = [...weaponGrantedAbilities];
+    if (bodyguardHasPanspectral) {
+        if (!bodyguardInheritedAbilities.some(ab => (typeof ab === 'object' ? ab.id : ab) === 'panspectral-scanning')) {
+            bodyguardInheritedAbilities.push(panspectralEntry);
         }
     }
 
@@ -1008,7 +1025,7 @@ function renderLedUnitCard(ledUnit) {
                     ${renderUnitHeader(bodyguard, bodyguardModelCount)}
                     ${renderUnitStats(bodyguard)}
                     ${renderBodyguardInvuln(bodyguard, leader)}
-                    ${renderWeapons(bodyguardWeapons, weaponGrantedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses)}
+                    ${renderWeapons(bodyguardWeapons, bodyguardInheritedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses)}
                     ${renderBodyguardAbilities(bodyguard, leader)}
                 </div>
                 <div class="keywords">${ledUnit.combinedKeywords.join(', ')}</div>
