@@ -121,8 +121,8 @@
         /* Reduce motion for accessibility */
         @media(prefers-reduced-motion:reduce){body.fancy-mode *{animation:none !important;transition:none !important}}
         *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:rgba(212,168,75,0.3)}
-        body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.4;padding-bottom:60px;font-weight:500;font-size:16px}
-        .header-compact{background:var(--bg2);border-bottom:1px solid var(--border);padding:.5rem .75rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:.5rem}
+        body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.4;padding-bottom:110px;font-weight:500;font-size:16px}
+        .header-compact{background:var(--bg2);border-bottom:1px solid var(--border);padding:.5rem .75rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
         .tabs-compact{display:flex;gap:0;flex:1}
         .tab-compact{padding:.5rem .75rem;font-family:'Orbitron',sans-serif;font-size:.75rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;cursor:pointer;border:none;background:transparent;transition:all .2s ease;touch-action:manipulation;position:relative}
         .tab-compact:hover{color:var(--text2)}
@@ -326,10 +326,17 @@
         .fury-prompt-btn.no:hover{background:rgba(201,68,68,.3)}
         @keyframes promptIn{from{opacity:0}to{opacity:1}}
         /* Floating Target Closest Button */
-        .closest-fab{position:fixed;bottom:1.2rem;right:1.2rem;width:52px;height:52px;border-radius:50%;border:2px solid var(--border);background:var(--bg2);color:var(--text3);font-size:1.4rem;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;z-index:100;box-shadow:0 4px 16px rgba(0,0,0,.5);transition:all .2s ease;line-height:1}
+        .closest-fab{position:fixed;bottom:calc(48px + 1rem);right:1.2rem;width:52px;height:52px;border-radius:50%;border:2px solid var(--border);background:var(--bg2);color:var(--text3);font-size:1.4rem;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;z-index:100;box-shadow:0 4px 16px rgba(0,0,0,.5);transition:all .2s ease;line-height:1}
         .closest-fab.active{border-color:rgba(74,142,212,.6);background:rgba(74,142,212,.2);color:var(--blue);box-shadow:0 4px 20px rgba(74,142,212,.3)}
         body.light-theme .closest-fab{box-shadow:0 4px 16px rgba(0,0,0,.15)}
         body.light-theme .closest-fab.active{background:rgba(74,142,212,.15);box-shadow:0 4px 20px rgba(74,142,212,.2)}
+        /* VP / CP point trackers */
+        .vp-tracker{flex:0 0 100%;display:flex;align-items:center;justify-content:center;gap:.6rem;padding:.3rem 0 .15rem;border-top:1px solid var(--border)}
+        .cp-tracker{position:fixed;bottom:0;left:0;right:0;z-index:99;background:var(--bg2);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:.6rem;height:48px;padding:0 .75rem}
+        .pt-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;min-width:1.8rem;text-align:center}
+        .pt-val{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text);min-width:2.2rem;text-align:center}
+        .pt-btn{width:30px;height:30px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;line-height:1;flex-shrink:0;transition:background .1s}
+        .pt-btn:active{background:var(--border-gold);border-color:var(--gold-dark)}
         @media(min-width:768px){.container{max-width:800px;margin:0 auto;padding:1.5rem}#modal{align-items:center}.modal-content{border-radius:12px;max-height:60vh}}
         /* Configuration Tab Styles */
         .config-section{margin-bottom:1.5rem}
@@ -490,6 +497,12 @@
                 </div>
             </div>
         </div>
+        <div class="vp-tracker">
+            <span class="pt-label">VP</span>
+            <button class="pt-btn" onclick="changeVP(-1)">−</button>
+            <span class="pt-val" id="vp-val">0</span>
+            <button class="pt-btn" onclick="changeVP(1)">+</button>
+        </div>
     </header>
     <main class="container">
         <div id="units-tab" class="tab-content active">
@@ -519,6 +532,13 @@
         </div>
     </div>
 
+    <div class="cp-tracker">
+        <span class="pt-label">CP</span>
+        <button class="pt-btn" onclick="changeCP(-1)">−</button>
+        <span class="pt-val" id="cp-val">0</span>
+        <button class="pt-btn" onclick="changeCP(1)">+</button>
+    </div>
+
     <footer>LEAGUES OF VOTANN — LED UNITS REFERENCE</footer>
 
     <div id="modal">
@@ -538,6 +558,17 @@ const characterState = {};
 const bodyguardState = {}; // Tracks if bodyguard unit is wiped (leader now solo)
 const stratagemState = { fury: false, closest: false, sub1k: false };
 let furyYP = false;
+let vp = 0;
+let cp = 0;
+
+function changeVP(delta) {
+    vp = Math.max(0, vp + delta);
+    document.getElementById('vp-val').textContent = vp;
+}
+function changeCP(delta) {
+    cp = Math.max(0, cp + delta);
+    document.getElementById('cp-val').textContent = cp;
+}
 
 // Detachment definitions (rule text is embedded here so it never depends on abilities.json cache)
 const DETACHMENTS = {
