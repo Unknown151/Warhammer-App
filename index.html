@@ -1976,7 +1976,7 @@ function toggleCardCollapse(header) {
 
     if (isCollapsed) {
         // After layout settles, scroll the newly expanded card into view
-        requestAnimationFrame(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+        requestAnimationFrame(() => card.scrollIntoView({ block: 'start' }));
     }
 }
 
