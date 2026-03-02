@@ -4,6 +4,11 @@
     "type": "Detachment Rule — Hearthband",
     "description": "Each time a <strong>LEAGUES OF VOTANN</strong> model from your army makes an attack with a weapon that targets the <strong>closest eligible target</strong> or a target that is within <strong>Engagement Range</strong> of that model's unit:<br><br>• <strong>Re-roll a Wound roll of 1</strong><br><br>• If your unit is a <strong>KÂHL</strong>, <strong>EINHYR HEARTHGUARD</strong> or <strong>ÛTHAR THE DESTINED</strong> unit, <strong>improve the AP</strong> of that attack by 1."
   },
+  "needgaard-oathband-rule": {
+    "name": "Needgaârd Oathband",
+    "type": "Detachment Rule — Needgaârd Oathband",
+    "description": "Each time an enemy unit is destroyed, you gain <strong>1YP</strong>."
+  },
   "assault": {
     "name": "Assault",
     "type": "Weapon Ability",

@@ -3,6 +3,7 @@
     "name": "Bastion Shield",
     "type": "Enhancement (25 pts)",
     "restriction": "Leagues of Votann only",
+    "detachment": "hearthband",
     "points": 25,
     "description": "Each time a ranged attack targets the bearer's unit, if the attacking model is within 12\", <strong>worsen the AP</strong> of that attack by 1. If you spend <strong>1YP</strong>, until the end of the phase, if the attacking model is within 18\", worsen the AP by 1 instead."
   },
@@ -11,6 +12,7 @@
     "type": "Enhancement (15 pts)",
     "restriction": "Kâhl only",
     "restrictedTo": ["kahl"],
+    "detachment": "hearthband",
     "points": 15,
     "description": "In your Shooting phase, after the bearer has shot, select one enemy unit (excluding TITANIC) hit by one or more of those attacks. Until the start of your next turn, that enemy unit is <strong>suppressed</strong>. While suppressed, each time a model in that unit makes an attack, <strong>subtract 1 from the Hit roll</strong>."
   },
@@ -18,6 +20,7 @@
     "name": "Ironskein",
     "type": "Enhancement (10 pts)",
     "restriction": "Leagues of Votann only",
+    "detachment": "hearthband",
     "points": 10,
     "description": "Add <strong>+2</strong> to the bearer's Wounds characteristic."
   },
@@ -26,7 +29,41 @@
     "type": "Enhancement (30 pts)",
     "restriction": "Kâhl only",
     "restrictedTo": ["kahl"],
+    "detachment": "hearthband",
     "points": 30,
     "description": "Each time a model in the bearer's unit is destroyed by a melee attack, if it has not fought this phase, roll one D6: on a 4+, do not remove it from play. The destroyed model can fight after the attacking unit has finished making its attacks, and is then removed from play."
+  },
+  "oathbound-speculator": {
+    "name": "Oathbound Speculator",
+    "type": "Enhancement (30 pts)",
+    "restriction": "Leagues of Votann only",
+    "detachment": "needgaard-oathband",
+    "points": 30,
+    "description": "Each time a model in the bearer's unit makes an attack, <strong>re-roll a Wound roll of 1</strong>.<br><br>Each time the bearer's unit is selected to shoot or fight, you can spend <strong>3YP</strong>. If you do, until the end of the phase, each time a model in the bearer's unit makes an attack, <strong>add 1 to the Wound roll</strong>."
+  },
+  "dead-reckoning": {
+    "name": "Dead Reckoning",
+    "type": "Enhancement (10 pts)",
+    "restriction": "Leagues of Votann only",
+    "detachment": "needgaard-oathband",
+    "points": 10,
+    "description": "At the end of the turn, if the bearer is on the battlefield and you spent <strong>no YP</strong> in that turn, you can gain <strong>1YP</strong>."
+  },
+  "iron-ambassador": {
+    "name": "Iron Ambassador",
+    "type": "Enhancement (5 pts)",
+    "restriction": "LEAGUES OF VOTANN model with Autoch-pattern combi-bolter only",
+    "restrictedToWeapon": "Autoch-pattern combi-bolter",
+    "detachment": "needgaard-oathband",
+    "points": 5,
+    "description": "Once per battle, when the bearer's unit is selected to shoot, the bearer can use this Enhancement. If it does, spend up to <strong>3YP</strong> and, until the end of the phase, add the number of YP you just spent to the <strong>Damage</strong> characteristic of the bearer's ranged weapons."
+  },
+  "ancestral-crest": {
+    "name": "Ancestral Crest",
+    "type": "Enhancement (15 pts)",
+    "restriction": "Leagues of Votann only",
+    "detachment": "needgaard-oathband",
+    "points": 15,
+    "description": "Once per turn, when you target the bearer's unit with the <strong>Command Re-roll</strong> Stratagem, the bearer can use this Enhancement. If it does, spend <strong>1YP</strong> and reduce the CP cost of that use of that Stratagem by <strong>1CP</strong>."
   }
 }

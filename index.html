@@ -388,6 +388,14 @@
         .config-share-btn:hover{border-color:var(--gold);color:var(--gold)}
         .config-share-btn.copied{border-color:var(--green);color:var(--green)}
         .army-list-empty{text-align:center;padding:2rem 1rem;color:var(--text3);font-size:.8rem}
+        .detachment-selector{background:var(--bg2);border:1px solid var(--gold-dark);border-radius:8px;padding:.85rem 1rem;margin-bottom:.75rem}
+        .detachment-selector-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:.5rem}
+        .detachment-options{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem}
+        .detachment-option{padding:.35rem .85rem;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:.75rem;cursor:pointer;transition:all .15s}
+        .detachment-option:hover{border-color:var(--gold-dark);color:var(--text)}
+        .detachment-option.active{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700}
+        .detachment-rule-preview{font-size:.72rem;color:var(--text2);line-height:1.4;border-top:1px solid var(--border);padding-top:.5rem;cursor:pointer}
+        .detachment-rule-preview strong{color:var(--gold-bright)}
         .army-instance{background:var(--bg3);border:1px solid var(--border);border-radius:6px;margin-bottom:.5rem;overflow:hidden}
         .army-instance-header{display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;cursor:pointer;touch-action:manipulation;background:linear-gradient(90deg,rgba(212,168,75,.05),transparent)}
         .army-instance-header:hover{background:linear-gradient(90deg,rgba(212,168,75,.1),transparent)}
@@ -457,12 +465,12 @@
                         <div class="buff-item-label"><div class="buff-item-name">1000 pts list</div><div class="buff-item-desc">Remove Ironskein, Bastion Shield, Uthar</div></div>
                         <div class="buff-item-switch"></div>
                     </div>
-                    <div class="buff-dropdown-item" data-strat="closest" onclick="toggleStratagemItem('closest', event)">
+                    <div class="buff-dropdown-item" data-strat="closest" data-hearthband="true" onclick="toggleStratagemItem('closest', event)">
                         <span class="buff-item-icon">🎯</span>
                         <div class="buff-item-label"><div class="buff-item-name">Targeting Closest</div><div class="buff-item-desc">AP+1, re-roll hit/wound 1s</div></div>
                         <div class="buff-item-switch"></div>
                     </div>
-                    <div class="buff-dropdown-item" data-strat="fury" onclick="toggleStratagemItem('fury', event)">
+                    <div class="buff-dropdown-item" data-strat="fury" data-hearthband="true" onclick="toggleStratagemItem('fury', event)">
                         <span class="buff-item-icon">🔥</span>
                         <div class="buff-item-label"><div class="buff-item-name">Fury of the Hearth</div><div class="buff-item-desc">+1 S, Sustained Hits 1 (ranged)</div></div>
                         <div class="buff-item-switch"></div>
@@ -518,6 +526,67 @@ const characterState = {};
 const bodyguardState = {}; // Tracks if bodyguard unit is wiped (leader now solo)
 const stratagemState = { fury: false, closest: false, sub1k: false };
 let furyYP = false;
+
+// Detachment definitions
+const DETACHMENTS = {
+    'hearthband': {
+        name: 'Hearthband',
+        ruleId: 'prioritised-efficiency'
+    },
+    'needgaard-oathband': {
+        name: 'Needgaârd Oathband',
+        ruleId: 'needgaard-oathband-rule'
+    }
+};
+let selectedDetachment = 'hearthband';
+
+function loadDetachment() {
+    selectedDetachment = localStorage.getItem('votann-detachment') || 'hearthband';
+}
+function saveDetachment() {
+    localStorage.setItem('votann-detachment', selectedDetachment);
+}
+function updateDetachmentBanner() {
+    const det = DETACHMENTS[selectedDetachment];
+    document.getElementById('detachment-name').textContent = det.name;
+    document.getElementById('detachment-banner').setAttribute('data-ab', det.ruleId);
+}
+function updateStratagemVisibility() {
+    const isHearthband = selectedDetachment === 'hearthband';
+    document.querySelectorAll('.buff-dropdown-item[data-hearthband]').forEach(el => {
+        el.style.display = isHearthband ? '' : 'none';
+        if (!isHearthband) el.classList.remove('active');
+    });
+    const fab = document.getElementById('closest-fab');
+    fab.style.display = isHearthband ? '' : 'none';
+    if (!isHearthband) fab.classList.remove('active');
+}
+function selectDetachment(id) {
+    if (selectedDetachment === id) return;
+    selectedDetachment = id;
+    saveDetachment();
+    // Reset Hearthband-only stratagems when leaving
+    if (id !== 'hearthband') {
+        stratagemState.closest = false;
+        stratagemState.fury = false;
+        furyYP = false;
+    }
+    // Clear enhancements that don't belong to the new detachment
+    armyList.forEach(inst => {
+        if (inst.enhancementId) {
+            const enh = enhancements[inst.enhancementId];
+            if (enh?.detachment && enh.detachment !== id) {
+                inst.enhancementId = null;
+            }
+        }
+    });
+    saveArmyList();
+    updateDetachmentBanner();
+    updateStratagemVisibility();
+    updateBuffButton();
+    renderConfigurationTab();
+    renderUnits();
+}
 const expandedCards = {};
 const configExpandedCards = {};
 
@@ -760,10 +829,10 @@ async function loadData() {
 
 // Render the entire app
 function renderApp() {
-    // Update header
-    document.getElementById('detachment-name').textContent =
-        `${army.detachment.name}`;
-    document.getElementById('detachment-banner').setAttribute('data-ab', army.detachment.rule);
+    // Load and apply saved detachment
+    loadDetachment();
+    updateDetachmentBanner();
+    updateStratagemVisibility();
 
     // Render units
     renderUnits();
@@ -1364,15 +1433,35 @@ function renderBodyguardAbilities(bodyguard, leader) {
     return html;
 }
 
+// Render detachment selector card
+function renderDetachmentSelector() {
+    const det = DETACHMENTS[selectedDetachment];
+    const ruleData = abilities[det.ruleId];
+    return `
+        <div class="detachment-selector">
+            <div class="detachment-selector-label">Detachment</div>
+            <div class="detachment-options">
+                ${Object.entries(DETACHMENTS).map(([id, d]) => `
+                    <button class="detachment-option ${selectedDetachment === id ? 'active' : ''}"
+                            onclick="selectDetachment('${id}')">${d.name}</button>
+                `).join('')}
+            </div>
+            ${ruleData ? `<div class="detachment-rule-preview tappable" data-ab="${det.ruleId}">${ruleData.name}: ${ruleData.description}</div>` : ''}
+        </div>
+    `;
+}
+
 // Render configuration tab (army list)
 function renderConfigurationTab() {
     const container = document.getElementById('army-list-container');
 
+    let html = renderDetachmentSelector();
     if (armyList.length === 0) {
-        container.innerHTML = '<div class="army-list-empty">No units added. Tap + to add units.</div>';
+        html += '<div class="army-list-empty">No units added. Tap + to add units.</div>';
     } else {
-        container.innerHTML = armyList.map(inst => renderArmyInstance(inst)).join('');
+        html += armyList.map(inst => renderArmyInstance(inst)).join('');
     }
+    container.innerHTML = html;
 
     updateConfigPoints();
 }
@@ -1549,14 +1638,20 @@ function renderInstanceEnhancementSelector(instance, characterId) {
         // Skip if already used by another unit (unless it's this unit's current)
         if (usedEnhancements.includes(enhId) && enhId !== currentEnh) return;
 
+        // Filter by currently selected detachment
+        if (enh.detachment && enh.detachment !== selectedDetachment) return;
+
         // Check restrictedTo field (e.g., Kâhl only)
         if (enh.restrictedTo && !enh.restrictedTo.includes(characterId)) return;
 
-        // All Leagues of Votann characters can use unrestricted enhancements
-        const isUnrestricted = !enh.restrictedTo;
-        if (isUnrestricted || enh.restrictedTo.includes(characterId)) {
-            options += `<option value="${enhId}" ${currentEnh === enhId ? 'selected' : ''}>${enh.name} (+${enh.points} pts)</option>`;
+        // Check weapon restriction (e.g., Iron Ambassador requires Autoch-pattern combi-bolter)
+        if (enh.restrictedToWeapon) {
+            const allWeapons = [...(character.weapons?.ranged || []), ...(character.weapons?.melee || [])];
+            const hasWeapon = allWeapons.some(w => w.name.toLowerCase().includes(enh.restrictedToWeapon.toLowerCase()));
+            if (!hasWeapon) return;
         }
+
+        options += `<option value="${enhId}" ${currentEnh === enhId ? 'selected' : ''}>${enh.name} (+${enh.points} pts)</option>`;
     });
 
     const countLabel = totalUsed >= 3 && !currentEnh ? ' (Max 3 reached)' : ` (${totalUsed}/3 used)`;
