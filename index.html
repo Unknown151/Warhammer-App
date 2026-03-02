@@ -453,7 +453,7 @@
         <div class="header-actions">
             <button class="fancy-toggle" id="fancy-toggle" onclick="toggleFancyMode()" title="Toggle fancy graphics">&#10024;</button>
             <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark theme">&#9788;</button>
-            <div class="det-btn tappable" id="detachment-banner"><span class="det-btn-icon">⚔</span><span class="det-btn-name" id="detachment-name">Loading...</span></div>
+            <div class="det-btn tappable" id="detachment-banner" title="Detachment Rule"><span class="det-btn-icon">⚔</span></div>
             <div class="buff-dropdown" id="buff-dropdown">
                 <div class="buff-dropdown-btn" onclick="toggleBuffDropdown(event)">
                     <span class="btn-icon">&#9776;</span>
@@ -548,7 +548,6 @@ function saveDetachment() {
 }
 function updateDetachmentBanner() {
     const det = DETACHMENTS[selectedDetachment];
-    document.getElementById('detachment-name').textContent = det.name;
     document.getElementById('detachment-banner').setAttribute('data-ab', det.ruleId);
 }
 function updateStratagemVisibility() {
