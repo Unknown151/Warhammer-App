@@ -371,6 +371,8 @@
         .enhancement-select{width:100%;background:var(--bg3);border:1px solid var(--gold-dark);border-radius:4px;color:var(--gold);padding:.5rem .6rem;font-family:'Rajdhani',sans-serif;font-size:.75rem;cursor:pointer}
         .enhancement-select:focus{outline:none;border-color:var(--gold)}
         .enhancement-select option{background:var(--bg2);color:var(--text)}
+        .enh-preview{background:linear-gradient(90deg,rgba(184,143,51,.1),transparent);border-left:3px solid var(--gold-dark);padding:.4rem .6rem;margin-top:.3rem;border-radius:0 4px 4px 0;font-size:.75rem;color:var(--text);line-height:1.5;cursor:pointer}
+        .enh-preview strong{color:var(--gold-bright)}
         .wargear-checkboxes{display:flex;flex-direction:column;gap:.25rem}
         .wargear-checkbox{display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;background:var(--bg3);border:1px solid var(--border);border-radius:4px;cursor:pointer;transition:all .15s ease}
         .wargear-checkbox:hover{border-color:var(--gold-dark)}
@@ -1662,11 +1664,17 @@ function renderInstanceEnhancementSelector(instance, characterId) {
 
     const countLabel = totalUsed >= 3 && !currentEnh ? ' (Max 3 reached)' : ` (${totalUsed}/3 used)`;
 
+    const enhData = currentEnh ? enhancements[currentEnh] : null;
+    const enhPreview = enhData
+        ? `<div class="enh-preview tappable" data-ab="${currentEnh}">${enhData.description}</div>`
+        : '';
+
     return `
         <div class="config-label">Enhancement${countLabel}</div>
         <select class="enhancement-select" onchange="setInstanceEnhancement('${instance.instanceId}', this.value)" ${totalUsed >= 3 && !currentEnh ? 'disabled' : ''}>
             ${options}
         </select>
+        ${enhPreview}
     `;
 }
 
