@@ -1954,9 +1954,22 @@ function updateUnitCard(charId, isDead) {
     }
 }
 
-// Toggle card collapse
+// Toggle card collapse (accordion: only one expanded at a time)
 function toggleCardCollapse(header) {
     const card = header.closest('.unit-card');
+    const isCollapsed = card.classList.contains('collapsed');
+
+    if (isCollapsed) {
+        // Expanding this card — collapse all others first
+        document.querySelectorAll('.unit-card').forEach(c => {
+            if (c !== card) {
+                c.classList.add('collapsed');
+                const cId = c.getAttribute('data-card-id');
+                if (cId) expandedCards[cId] = false;
+            }
+        });
+    }
+
     card.classList.toggle('collapsed');
     const cardId = card.getAttribute('data-card-id');
     if (cardId) expandedCards[cardId] = !card.classList.contains('collapsed');
