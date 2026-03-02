@@ -682,7 +682,7 @@ function loadArmyList() {
 
 // Encode army list into a shareable URL
 function shareArmyUrl() {
-    const data = JSON.stringify({ armyList, nextInstanceId });
+    const data = JSON.stringify({ armyList, nextInstanceId, detachment: selectedDetachment });
     const encoded = btoa(unescape(encodeURIComponent(data)));
     const url = window.location.href.split('#')[0] + '#' + encoded;
     navigator.clipboard.writeText(url).then(() => {
@@ -702,6 +702,10 @@ function loadArmyFromUrl() {
         if (parsed.armyList) {
             armyList = parsed.armyList;
             nextInstanceId = parsed.nextInstanceId || 1;
+            if (parsed.detachment && DETACHMENTS[parsed.detachment]) {
+                selectedDetachment = parsed.detachment;
+                saveDetachment();
+            }
             saveArmyList(); // persist to localStorage on this device
             history.replaceState(null, '', window.location.pathname); // clean up URL
             return true;
