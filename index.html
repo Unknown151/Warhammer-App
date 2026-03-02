@@ -371,8 +371,18 @@
         .enhancement-select{width:100%;background:var(--bg3);border:1px solid var(--gold-dark);border-radius:4px;color:var(--gold);padding:.5rem .6rem;font-family:'Rajdhani',sans-serif;font-size:.75rem;cursor:pointer}
         .enhancement-select:focus{outline:none;border-color:var(--gold)}
         .enhancement-select option{background:var(--bg2);color:var(--text)}
-        .enh-preview{background:linear-gradient(90deg,rgba(184,143,51,.1),transparent);border-left:3px solid var(--gold-dark);padding:.4rem .6rem;margin-top:.3rem;border-radius:0 4px 4px 0;font-size:.75rem;color:var(--text);line-height:1.5;cursor:pointer}
-        .enh-preview strong{color:var(--gold-bright)}
+        .enh-option-list{display:flex;flex-direction:column;gap:.2rem;margin-top:.25rem}
+        .enh-option{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:.45rem .6rem;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;-webkit-user-select:none}
+        .enh-option:active{background:var(--bg2)}
+        .enh-option.active{border-color:var(--gold);background:rgba(184,143,51,.08)}
+        .enh-option.disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+        .enh-option.none-opt{color:var(--text3);font-family:'Rajdhani',sans-serif;font-size:.75rem;font-style:italic}
+        .enh-option-header{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem}
+        .enh-option-name{font-family:'Rajdhani',sans-serif;font-size:.8rem;color:var(--gold);font-weight:600}
+        .enh-option.active .enh-option-name{color:var(--gold-bright)}
+        .enh-option-pts{font-size:.65rem;color:var(--text3);font-family:'Share Tech Mono',monospace;white-space:nowrap;flex-shrink:0}
+        .enh-option-desc{font-size:.7rem;color:var(--text2);line-height:1.5;margin-top:.2rem}
+        .enh-option-desc strong{color:var(--gold-bright)}
         .wargear-checkboxes{display:flex;flex-direction:column;gap:.25rem}
         .wargear-checkbox{display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;background:var(--bg3);border:1px solid var(--border);border-radius:4px;cursor:pointer;transition:all .15s ease}
         .wargear-checkbox:hover{border-color:var(--gold-dark)}
@@ -1637,44 +1647,43 @@ function renderInstanceEnhancementSelector(instance, characterId) {
     const character = units[characterId];
     if (!character) return '';
 
-    // Get already-used enhancements (excluding this instance)
     const usedEnhancements = getUsedEnhancements(instance.instanceId);
     const totalUsed = usedEnhancements.length + (currentEnh ? 1 : 0);
+    const maxReached = totalUsed >= 3 && !currentEnh;
+    const countLabel = maxReached ? ' (Max 3 reached)' : ` (${totalUsed}/3 used)`;
 
-    let options = '<option value="">-- No Enhancement --</option>';
-    Object.entries(enhancements).forEach(([enhId, enh]) => {
-        // Skip if already used by another unit (unless it's this unit's current)
-        if (usedEnhancements.includes(enhId) && enhId !== currentEnh) return;
-
-        // Filter by currently selected detachment
-        if (enh.detachment && enh.detachment !== selectedDetachment) return;
-
-        // Check restrictedTo field (e.g., Kâhl only)
-        if (enh.restrictedTo && !enh.restrictedTo.includes(characterId)) return;
-
-        // Check weapon restriction (e.g., Iron Ambassador requires Autoch-pattern combi-bolter)
+    // Filter available enhancements (same rules as before)
+    const available = Object.entries(enhancements).filter(([enhId, enh]) => {
+        if (usedEnhancements.includes(enhId) && enhId !== currentEnh) return false;
+        if (enh.detachment && enh.detachment !== selectedDetachment) return false;
+        if (enh.restrictedTo && !enh.restrictedTo.includes(characterId)) return false;
         if (enh.restrictedToWeapon) {
             const allWeapons = [...(character.weapons?.ranged || []), ...(character.weapons?.melee || [])];
-            const hasWeapon = allWeapons.some(w => w.name.toLowerCase().includes(enh.restrictedToWeapon.toLowerCase()));
-            if (!hasWeapon) return;
+            if (!allWeapons.some(w => w.name.toLowerCase().includes(enh.restrictedToWeapon.toLowerCase()))) return false;
         }
-
-        options += `<option value="${enhId}" ${currentEnh === enhId ? 'selected' : ''}>${enh.name} (+${enh.points} pts)</option>`;
+        return true;
     });
 
-    const countLabel = totalUsed >= 3 && !currentEnh ? ' (Max 3 reached)' : ` (${totalUsed}/3 used)`;
+    const noneActive = !currentEnh;
+    let cards = `<div class="enh-option none-opt ${noneActive ? 'active' : ''}" onclick="setInstanceEnhancement('${instance.instanceId}', '')">No Enhancement</div>`;
 
-    const enhData = currentEnh ? enhancements[currentEnh] : null;
-    const enhPreview = enhData
-        ? `<div class="enh-preview tappable" data-ab="${currentEnh}">${enhData.description}</div>`
-        : '';
+    available.forEach(([enhId, enh]) => {
+        const isActive = currentEnh === enhId;
+        const isDisabled = maxReached && !isActive;
+        cards += `
+            <div class="enh-option ${isActive ? 'active' : ''} ${isDisabled ? 'disabled' : ''}"
+                 onclick="setInstanceEnhancement('${instance.instanceId}', '${enhId}')">
+                <div class="enh-option-header">
+                    <span class="enh-option-name">${enh.name}</span>
+                    <span class="enh-option-pts">+${enh.points} pts</span>
+                </div>
+                <div class="enh-option-desc">${enh.description}</div>
+            </div>`;
+    });
 
     return `
         <div class="config-label">Enhancement${countLabel}</div>
-        <select class="enhancement-select" onchange="setInstanceEnhancement('${instance.instanceId}', this.value)" ${totalUsed >= 3 && !currentEnh ? 'disabled' : ''}>
-            ${options}
-        </select>
-        ${enhPreview}
+        <div class="enh-option-list">${cards}</div>
     `;
 }
 
