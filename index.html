@@ -527,15 +527,19 @@ const bodyguardState = {}; // Tracks if bodyguard unit is wiped (leader now solo
 const stratagemState = { fury: false, closest: false, sub1k: false };
 let furyYP = false;
 
-// Detachment definitions
+// Detachment definitions (rule text is embedded here so it never depends on abilities.json cache)
 const DETACHMENTS = {
     'hearthband': {
         name: 'Hearthband',
-        ruleId: 'prioritised-efficiency'
+        ruleId: 'prioritised-efficiency',
+        ruleType: 'Detachment Rule — Hearthband',
+        ruleDescription: 'Each time a <strong>LEAGUES OF VOTANN</strong> model from your army makes an attack with a weapon that targets the <strong>closest eligible target</strong> or a target that is within <strong>Engagement Range</strong> of that model\'s unit:<br><br>• <strong>Re-roll a Wound roll of 1</strong><br><br>• If your unit is a <strong>KÂHL</strong>, <strong>EINHYR HEARTHGUARD</strong> or <strong>ÛTHAR THE DESTINED</strong> unit, <strong>improve the AP</strong> of that attack by 1.'
     },
     'needgaard-oathband': {
         name: 'Needgaârd Oathband',
-        ruleId: 'needgaard-oathband-rule'
+        ruleId: 'needgaard-oathband-rule',
+        ruleType: 'Detachment Rule — Needgaârd Oathband',
+        ruleDescription: 'Each time an enemy unit is destroyed, you gain <strong>1YP</strong>.'
     }
 };
 let selectedDetachment = 'hearthband';
@@ -1439,7 +1443,6 @@ function renderBodyguardAbilities(bodyguard, leader) {
 // Render detachment selector card
 function renderDetachmentSelector() {
     const det = DETACHMENTS[selectedDetachment];
-    const ruleData = abilities[det.ruleId];
     return `
         <div class="detachment-selector">
             <div class="detachment-selector-label">Detachment</div>
@@ -1449,7 +1452,7 @@ function renderDetachmentSelector() {
                             onclick="selectDetachment('${id}')">${d.name}</button>
                 `).join('')}
             </div>
-            ${ruleData ? `<div class="detachment-rule-preview tappable" data-ab="${det.ruleId}">${ruleData.name}: ${ruleData.description}</div>` : ''}
+            <div class="detachment-rule-preview tappable" data-ab="${det.ruleId}">${det.name}: ${det.ruleDescription}</div>
         </div>
     `;
 }
@@ -2101,8 +2104,12 @@ function improveAP(apStr) {
 
 // Modal functions
 function showModal(id) {
-    // Check abilities first, then enhancements
-    const a = abilities[id] || enhancements[id];
+    // Check abilities, enhancements, then detachment rules embedded in DETACHMENTS
+    let a = abilities[id] || enhancements[id];
+    if (!a) {
+        const det = Object.values(DETACHMENTS).find(d => d.ruleId === id);
+        if (det) a = { name: det.name, type: det.ruleType, description: det.ruleDescription };
+    }
     if (!a) return;
     mtitle.textContent = a.name;
     mtype.textContent = a.type;
