@@ -65,5 +65,37 @@
     "detachment": "needgaard-oathband",
     "points": 15,
     "description": "Once per turn, when you target the bearer's unit with the <strong>Command Re-roll</strong> Stratagem, the bearer can use this Enhancement. If it does, spend <strong>1YP</strong> and reduce the CP cost of that use of that Stratagem by <strong>1CP</strong>."
+  },
+  "delvwerke-navigator": {
+    "name": "Dêlvwerke Navigator",
+    "type": "Enhancement (25 pts)",
+    "restriction": "LEAGUES OF VOTANN model only",
+    "detachment": "delve-assault-shift",
+    "points": 25,
+    "description": "In the Reinforcements step of your Movement phase, the bearer can use this Enhancement. If it does, select one friendly <strong>CTHONIAN BESERKS</strong> unit visible to the bearer and then spend any number of YP. Return one destroyed model to that unit and then, for every <strong>2YP</strong> you just spent, return up to one additional destroyed model to that unit."
+  },
+  "multiwave-system-jammer": {
+    "name": "Multiwave System Jammer",
+    "type": "Enhancement (10 pts)",
+    "restriction": "LEAGUES OF VOTANN model only",
+    "detachment": "delve-assault-shift",
+    "points": 10,
+    "description": "Once per battle, in your Movement phase, if the bearer is on the battlefield, it can use this Enhancement. If it does, select one friendly <strong>CTHONIAN</strong> unit that is in Reserves. Until the end of the phase, for the purposes of setting up that unit on the battlefield, treat the current battle round number as being <strong>one higher</strong> than it actually is."
+  },
+  "quake-supervisor": {
+    "name": "Quake Supervisor",
+    "type": "Enhancement (20 pts)",
+    "restriction": "LEAGUES OF VOTANN model only",
+    "detachment": "delve-assault-shift",
+    "points": 20,
+    "description": "While the bearer is within <strong>3\"</strong> of one or more friendly <strong>LEAGUES OF VOTANN ARTILLERY</strong> units, the bearer has the <strong>Lone Operative</strong> ability, and each time one of those <strong>ARTILLERY</strong> units makes a ranged attack that targets an enemy unit visible to the bearer, <strong>add 1 to the Hit roll</strong>."
+  },
+  "piledriver": {
+    "name": "Piledriver",
+    "type": "Enhancement (15 pts)",
+    "restriction": "LEAGUES OF VOTANN model only",
+    "detachment": "delve-assault-shift",
+    "points": 15,
+    "description": "Each time the bearer's unit is selected to fight, the bearer can use this Enhancement. If it does, spend up to <strong>2YP</strong> and, until the end of the phase, add the number of YP you just spent to the <strong>Damage</strong> characteristic of the bearer's melee weapons."
   }
 }

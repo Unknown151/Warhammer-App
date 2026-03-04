@@ -9,6 +9,11 @@
     "type": "Detachment Rule — Needgaârd Oathband",
     "description": "Each time an enemy unit is destroyed, you gain <strong>1YP</strong>."
   },
+  "delve-assault-shift-rule": {
+    "name": "Dêlve Assault Shift",
+    "type": "Detachment Rule — Dêlve Assault Shift",
+    "description": "<strong>CTHONIAN BESERKS</strong> units from your army have the <strong>Deep Strike</strong> ability.<br><br><strong>Keywords:</strong> <strong>CTHONIAN BESERKS</strong> units from your army gain the <strong>BATTLELINE</strong> keyword."
+  },
   "assault": {
     "name": "Assault",
     "type": "Weapon Ability",
