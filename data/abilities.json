@@ -417,5 +417,15 @@
     "name": "Re-roll Hit 1",
     "type": "Inherited (Panspectral Scanner)",
     "description": "Each time a model in the bearer's unit makes a ranged attack, re-roll a Hit roll of 1."
+  },
+  "break-the-foe": {
+    "name": "Break the Foe",
+    "type": "Leader — Berehk Stornbröw",
+    "description": "While this model is leading a unit, melee weapons equipped by models in that unit have the <strong>[SUSTAINED HITS 1]</strong> ability."
+  },
+  "relentless-avalanche": {
+    "name": "Relentless Avalanche",
+    "type": "Ability — Berehk Stornbröw",
+    "description": "You can target this model's unit with the <strong>Heroic Intervention</strong> Stratagem for <strong>0CP</strong>, and can do so even if you have already targeted a different unit with that Stratagem this phase."
   }
 }
