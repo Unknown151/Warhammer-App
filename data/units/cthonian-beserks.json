@@ -64,6 +64,7 @@
   },
   "abilities": ["cyberstimms", "subterranean-explosives"],
   "coreAbilities": ["feel-no-pain-4"],
+  "canBeLeadBy": ["berehk-stornbrow"],
   "wargear": [],
   "wargearOptions": [
     "All models in this unit can each have their heavy plasma axe replaced with 1 concussion maul.",
