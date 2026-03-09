@@ -485,11 +485,6 @@
                     <span class="buff-badge" id="buff-badge">0</span>
                 </div>
                 <div class="buff-dropdown-menu" id="buff-menu">
-                    <div class="buff-dropdown-item" data-strat="sub1k" onclick="toggleStratagemItem('sub1k', event)">
-                        <span class="buff-item-icon">1K</span>
-                        <div class="buff-item-label"><div class="buff-item-name">1000 pts list</div><div class="buff-item-desc">Remove Ironskein, Bastion Shield, Uthar</div></div>
-                        <div class="buff-item-switch"></div>
-                    </div>
                     <div class="buff-dropdown-item" data-strat="closest" data-hearthband="true" onclick="toggleStratagemItem('closest', event)">
                         <span class="buff-item-icon">🎯</span>
                         <div class="buff-item-label"><div class="buff-item-name">Targeting Closest</div><div class="buff-item-desc">AP+1, re-roll hit/wound 1s</div></div>
@@ -567,7 +562,7 @@ let army = {};
 let units = {};
 const characterState = {};
 const bodyguardState = {}; // Tracks if bodyguard unit is wiped (leader now solo)
-const stratagemState = { fury: false, closest: false, sub1k: false, firebase: false };
+const stratagemState = { fury: false, closest: false, firebase: false };
 let furyYP = false;
 let vp = 0;
 let cp = 0;
@@ -993,8 +988,7 @@ function renderSoloUnitCard(entry) {
 
     // Check if Ironskein enhancement is active (for solo leaders)
     const enhancementId = instance?.enhancementId;
-    const suppressEnhancement = stratagemState.sub1k && ['ironskein', 'bastion-shield'].includes(enhancementId);
-    const ironskeinActive = enhancementId === 'ironskein' && !suppressEnhancement;
+    const ironskeinActive = enhancementId === 'ironskein';
 
     // Apply Ironskein +2 wounds if active
     let displayUnit = unit;
@@ -1096,11 +1090,8 @@ function renderLedUnitCard(ledUnit) {
     const bodyguardModelCount = instance ? instance.modelCount : (bodyguard.models || 1);
     const bodyguardWeapons = instance ? getFilteredWeapons(bodyguard, instance.weapons) : bodyguard.weapons;
 
-    // In 1K mode, suppress specific enhancements
-    const sub1kRemovedEnhancements = ['ironskein', 'bastion-shield'];
     const enhancementId = ledUnit.enhancement;
-    const suppressEnhancement = stratagemState.sub1k && sub1kRemovedEnhancements.includes(enhancementId);
-    const enhancement = (enhancementId && !suppressEnhancement) ? enhancements[enhancementId] : null;
+    const enhancement = enhancementId ? enhancements[enhancementId] : null;
 
     // If Ironskein is active, add +2 wounds to leader stats
     let leaderStats = leader;
@@ -2161,9 +2152,6 @@ function toggleStratagemItem(stratId, e) {
 
     // Re-render units to apply effects
     renderUnits();
-    if (stratId === 'sub1k') {
-        renderCharacterToggles();
-    }
 }
 
 function toggleClosestFab() {

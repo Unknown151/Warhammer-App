@@ -66,7 +66,6 @@ data/
 stratagemState = {
   fury:     false,  // Fury of the Hearth — Hearthband only
   closest:  false,  // Targeting Closest — Hearthband only
-  sub1k:    false,  // 1000pts list mode — always visible
   firebase: false   // Firebase Control — Brandfast Oathband only
 }
 ```
@@ -317,7 +316,6 @@ Stratagems are toggled via the buff dropdown menu or FAB buttons. Each toggle:
 | `closest` | Hearthband | `#closest-fab` 🎯 | Re-roll Wound 1 for all; AP+1 for KÂHL/EINHYR HEARTHGUARD/ÛTHAR |
 | `fury` | Hearthband | none | +1 Strength ranged; Sustained Hits 1 ranged (only if `furyYP = true`) |
 | `firebase` | Brandfast Oathband | `#firebase-fab` 📡 | Sustained Hits 1 on ranged for INFANTRY units |
-| `sub1k` | any | none | Suppress ironskein & bastion-shield; remove Uthar display |
 
 **FAB visibility** is controlled by `updateStratagemVisibility()`, called every time `selectDetachment()` runs. FABs are hidden/reset when switching away from their owning detachment.
 
