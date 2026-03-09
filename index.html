@@ -759,10 +759,93 @@ function loadArmyList() {
 }
 
 // Encode army list into a shareable URL
-function shareArmyUrl() {
-    const data = JSON.stringify({ armyList, nextInstanceId, detachment: selectedDetachment });
-    const encoded = btoa(unescape(encodeURIComponent(data)));
-    const url = window.location.href.split('#')[0] + '#' + encoded;
+// --- URL sharing helpers ---
+
+// Deflate-compress a string and return URL-safe base64
+async function deflateToBase64(str) {
+    const stream = new CompressionStream('deflate-raw');
+    const writer = stream.writable.getWriter();
+    writer.write(new TextEncoder().encode(str));
+    writer.close();
+    const buf = await new Response(stream.readable).arrayBuffer();
+    const arr = new Uint8Array(buf);
+    let binary = '';
+    for (let i = 0; i < arr.length; i++) binary += String.fromCharCode(arr[i]);
+    return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+}
+
+// Decompress URL-safe base64 deflate back to string
+async function inflateFromBase64(b64) {
+    const binary = atob(b64.replace(/-/g, '+').replace(/_/g, '/'));
+    const arr = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) arr[i] = binary.charCodeAt(i);
+    const stream = new DecompressionStream('deflate-raw');
+    const writer = stream.writable.getWriter();
+    writer.write(arr);
+    writer.close();
+    return new TextDecoder().decode(await new Response(stream.readable).arrayBuffer());
+}
+
+// Pack armyList into a compact form — only non-default values, short keys
+function packArmy() {
+    return {
+        d: selectedDetachment,
+        l: armyList.map(inst => {
+            const unit = units[inst.unitId];
+            const defaultCount = unit?.baseModels || unit?.models || 1;
+            const p = { u: inst.unitId };
+            if (inst.modelCount !== defaultCount) p.m = inst.modelCount;
+            if (inst.leaderId) p.l = inst.leaderId;
+            if (inst.enhancementId) p.e = inst.enhancementId;
+            if (inst.selectedWargear?.length) p.g = inst.selectedWargear;
+            // Only store weapon states that differ from the unit default
+            const defWeapons = {};
+            if (unit?.weapons) {
+                [...(unit.weapons.ranged || []), ...(unit.weapons.melee || [])].forEach(w => {
+                    defWeapons[generateWeaponKey(w)] = { equipped: true, count: w.count || 1 };
+                });
+            }
+            const diffs = {};
+            for (const [key, val] of Object.entries(inst.weapons || {})) {
+                const def = defWeapons[key];
+                if (!def || val.equipped !== def.equipped || val.count !== def.count) {
+                    diffs[key] = val;
+                }
+            }
+            if (Object.keys(diffs).length) p.W = diffs;
+            return p;
+        })
+    };
+}
+
+// Expand compact army pack back into full armyList instances
+function unpackArmy(packed) {
+    nextInstanceId = 1;
+    return (packed.l || []).map(p => {
+        const unit = units[p.u];
+        const defaultCount = unit?.baseModels || unit?.models || 1;
+        const weapons = {};
+        if (unit?.weapons) {
+            [...(unit.weapons.ranged || []), ...(unit.weapons.melee || [])].forEach(w => {
+                weapons[generateWeaponKey(w)] = { equipped: true, count: w.count || 1 };
+            });
+        }
+        if (p.W) Object.assign(weapons, p.W);
+        return {
+            instanceId: `inst-${nextInstanceId++}`,
+            unitId: p.u,
+            modelCount: p.m ?? defaultCount,
+            weapons,
+            leaderId: p.l || null,
+            enhancementId: p.e || null,
+            selectedWargear: p.g || []
+        };
+    });
+}
+
+async function shareArmyUrl() {
+    const compressed = await deflateToBase64(JSON.stringify(packArmy()));
+    const url = window.location.href.split('#')[0] + '#2' + compressed;
     navigator.clipboard.writeText(url).then(() => {
         const btn = document.getElementById('share-btn');
         btn.textContent = 'Copied!';
@@ -772,10 +855,23 @@ function shareArmyUrl() {
 }
 
 // Load army list from URL hash (if present)
-function loadArmyFromUrl() {
+async function loadArmyFromUrl() {
     const hash = window.location.hash.slice(1);
     if (!hash) return false;
     try {
+        if (hash.startsWith('2')) {
+            // New format: version '2' + deflate-compressed compact army
+            const packed = JSON.parse(await inflateFromBase64(hash.slice(1)));
+            armyList = unpackArmy(packed);
+            if (packed.d && DETACHMENTS[packed.d]) {
+                selectedDetachment = packed.d;
+                saveDetachment();
+            }
+            saveArmyList();
+            history.replaceState(null, '', window.location.pathname);
+            return true;
+        }
+        // Legacy format: btoa(unescape(encodeURIComponent(JSON)))
         const parsed = JSON.parse(decodeURIComponent(escape(atob(hash))));
         if (parsed.armyList) {
             armyList = parsed.armyList;
@@ -784,8 +880,8 @@ function loadArmyFromUrl() {
                 selectedDetachment = parsed.detachment;
                 saveDetachment();
             }
-            saveArmyList(); // persist to localStorage on this device
-            history.replaceState(null, '', window.location.pathname); // clean up URL
+            saveArmyList();
+            history.replaceState(null, '', window.location.pathname);
             return true;
         }
     } catch (e) {
@@ -895,7 +991,7 @@ async function loadData() {
         await Promise.all(unitPromises);
 
         // Load army list: URL hash takes priority over localStorage
-        if (!loadArmyFromUrl()) {
+        if (!await loadArmyFromUrl()) {
             loadArmyList();
         }
 

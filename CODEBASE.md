@@ -435,13 +435,18 @@ Displays: `name` as title, `type` as subtitle, `description` as HTML body.
 
 ## URL Sharing
 
-`shareArmyUrl()`:
-1. Encodes `{ armyList, nextInstanceId, detachment }` → `btoa(encodeURIComponent(JSON.stringify(...)))`
-2. Sets `window.location.href = base + '#' + encoded`
-3. Copies to clipboard
-4. Button shows "Copied!" for 2 seconds
+### Encode (shareArmyUrl — async)
+1. `packArmy()` builds a compact object — short keys, only non-default values:
+   - `d` — detachment ID
+   - `l` — array of packed instances: `u` (unitId), `m` (modelCount, omitted if default), `l` (leaderId, omitted if null), `e` (enhancementId, omitted if null), `g` (selectedWargear, omitted if empty), `W` (weapon diffs vs. unit defaults, omitted if all-default)
+2. `deflateToBase64()` compresses with browser-native `CompressionStream('deflate-raw')` → URL-safe base64 (`+`→`-`, `/`→`_`, `=` stripped)
+3. URL hash = `'2' + compressed` (version prefix `'2'` distinguishes from legacy format)
+4. Copies to clipboard; button shows "Copied!" for 2 seconds
 
-On load, `loadArmyFromUrl()` checks `window.location.hash`, decodes, restores army state, saves to localStorage, clears hash.
+### Decode (loadArmyFromUrl — async)
+- Hash starts with `'2'` → new format: decompress via `DecompressionStream`, `unpackArmy()` rebuilds full instances (defaults filled in from unit JSON), `instanceId`s regenerated as `inst-1`, `inst-2`, etc.
+- Hash does NOT start with `'2'` → legacy format: `atob` + `escape`/`unescape` decode (backwards-compatible with old shared URLs)
+- Saves to localStorage, clears URL hash after load
 
 ---
 
