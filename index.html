@@ -79,6 +79,8 @@
         body.fancy-mode .enh{background:linear-gradient(90deg,rgba(212,168,75,.3),rgba(212,168,75,.1),rgba(212,168,75,.3));background-size:200% 100%;animation:shimmer 3s linear infinite}
         body.fancy-mode .closest-fab{animation:breathe 2s ease-in-out infinite}
         body.fancy-mode .closest-fab.active{animation:fancyPulse 1.5s ease-in-out infinite}
+        body.fancy-mode .firebase-fab{animation:breathe 2s ease-in-out infinite}
+        body.fancy-mode .firebase-fab.active{animation:fancyPulse 1.5s ease-in-out infinite}
         body.fancy-mode .buff-dropdown-btn.has-active{animation:fancyPulse 2s ease-in-out infinite}
         body.fancy-mode .modal-content{animation:slideIn .3s ease}
         body.fancy-mode .fury-prompt-box{animation:slideIn .3s ease,borderGlow 2s ease-in-out infinite}
@@ -330,6 +332,10 @@
         .closest-fab.active{border-color:rgba(74,142,212,.6);background:rgba(74,142,212,.2);color:var(--blue);box-shadow:0 4px 20px rgba(74,142,212,.3)}
         body.light-theme .closest-fab{box-shadow:0 4px 16px rgba(0,0,0,.15)}
         body.light-theme .closest-fab.active{background:rgba(74,142,212,.15);box-shadow:0 4px 20px rgba(74,142,212,.2)}
+        .firebase-fab{position:fixed;bottom:calc(48px + 1rem);right:1.2rem;width:52px;height:52px;border-radius:50%;border:2px solid var(--border);background:var(--bg2);color:var(--text3);font-size:1.4rem;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;z-index:100;box-shadow:0 4px 16px rgba(0,0,0,.5);transition:all .2s ease;line-height:1}
+        .firebase-fab.active{border-color:rgba(74,212,130,.6);background:rgba(74,212,130,.2);color:#4ad482;box-shadow:0 4px 20px rgba(74,212,130,.3)}
+        body.light-theme .firebase-fab{box-shadow:0 4px 16px rgba(0,0,0,.15)}
+        body.light-theme .firebase-fab.active{background:rgba(74,212,130,.15);box-shadow:0 4px 20px rgba(74,212,130,.2)}
         /* YP / CP point trackers */
         .cp-tracker{position:fixed;bottom:0;left:0;right:0;z-index:99;background:var(--bg2);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:.6rem;height:48px;padding:0 .75rem}
         .pt-divider{width:1px;height:24px;background:var(--border);margin:0 .4rem}
@@ -494,6 +500,11 @@
                         <div class="buff-item-label"><div class="buff-item-name">Fury of the Hearth</div><div class="buff-item-desc">+1 S, Sustained Hits 1 (ranged)</div></div>
                         <div class="buff-item-switch"></div>
                     </div>
+                    <div class="buff-dropdown-item" data-strat="firebase" data-brandfast="true" onclick="toggleStratagemItem('firebase', event)">
+                        <span class="buff-item-icon">📡</span>
+                        <div class="buff-item-label"><div class="buff-item-name">Firebase Control</div><div class="buff-item-desc">Infantry ranged: Sustained Hits 1</div></div>
+                        <div class="buff-item-switch"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -515,6 +526,7 @@
     </main>
 
     <button class="closest-fab" id="closest-fab" onclick="toggleClosestFab()" title="Targeting Closest">🎯</button>
+    <button class="firebase-fab" id="firebase-fab" onclick="toggleFirebaseFab()" title="Firebase Control">📡</button>
 
     <div class="unit-picker-overlay" id="unit-picker">
         <div class="unit-picker">
@@ -555,7 +567,7 @@ let army = {};
 let units = {};
 const characterState = {};
 const bodyguardState = {}; // Tracks if bodyguard unit is wiped (leader now solo)
-const stratagemState = { fury: false, closest: false, sub1k: false };
+const stratagemState = { fury: false, closest: false, sub1k: false, firebase: false };
 let furyYP = false;
 let vp = 0;
 let cp = 0;
@@ -588,6 +600,12 @@ const DETACHMENTS = {
         ruleId: 'delve-assault-shift-rule',
         ruleType: 'Detachment Rule — Dêlve Assault Shift',
         ruleDescription: '<strong>CTHONIAN BESERKS</strong> units from your army have the <strong>Deep Strike</strong> ability.<br><br><em>Keywords:</em> <strong>CTHONIAN BESERKS</strong> units from your army gain the <strong>BATTLELINE</strong> keyword.'
+    },
+    'brandfast-oathband': {
+        name: 'Brandfast Oathband',
+        ruleId: 'firebase-control',
+        ruleType: 'Detachment Rule — Brandfast Oathband',
+        ruleDescription: '<strong>LEAGUES OF VOTANN TRANSPORT</strong> units from your army have the following ability:<br><br><strong>Firebase Control (Aura):</strong> While a friendly <strong>LEAGUES OF VOTANN INFANTRY</strong> unit is wholly within 6" of this <strong>TRANSPORT</strong>, ranged weapons equipped by models in that <strong>INFANTRY</strong> unit have the <strong>[SUSTAINED HITS 1]</strong> ability.'
     }
 };
 let selectedDetachment = 'hearthband';
@@ -611,6 +629,15 @@ function updateStratagemVisibility() {
     const fab = document.getElementById('closest-fab');
     fab.style.display = isHearthband ? '' : 'none';
     if (!isHearthband) fab.classList.remove('active');
+
+    const isBrandfast = selectedDetachment === 'brandfast-oathband';
+    document.querySelectorAll('.buff-dropdown-item[data-brandfast]').forEach(el => {
+        el.style.display = isBrandfast ? '' : 'none';
+        if (!isBrandfast) el.classList.remove('active');
+    });
+    const firebaseFab = document.getElementById('firebase-fab');
+    firebaseFab.style.display = isBrandfast ? '' : 'none';
+    if (!isBrandfast) firebaseFab.classList.remove('active');
 }
 function selectDetachment(id) {
     if (selectedDetachment === id) return;
@@ -621,6 +648,10 @@ function selectDetachment(id) {
         stratagemState.closest = false;
         stratagemState.fury = false;
         furyYP = false;
+    }
+    // Reset Brandfast Oathband-only stratagems when leaving
+    if (id !== 'brandfast-oathband') {
+        stratagemState.firebase = false;
     }
     // Clear enhancements that don't belong to the new detachment
     armyList.forEach(inst => {
@@ -955,6 +986,9 @@ function renderSoloUnitCard(entry) {
 
     // Closest target bonuses for solo units
     const closestActive = stratagemState.closest;
+
+    // Firebase Control (Brandfast Oathband): Sustained Hits 1 on ranged for INFANTRY units
+    const firebaseActive = stratagemState.firebase && (unit.keywords || []).includes('INFANTRY');
     const closestBonuses = closestActive ? getClosestBonusesForUnit(entry.unit, null) : { apImprove: false, rerollHit: false };
 
     // Check if Ironskein enhancement is active (for solo leaders)
@@ -1015,7 +1049,7 @@ function renderSoloUnitCard(entry) {
                     ${renderUnitHeader(unit, modelCount)}
                     ${renderUnitStats(displayUnit)}
                     ${renderDefensiveRow(unit)}
-                    ${renderWeapons(filteredWeapons, wargearInheritedAbilities, wargearAppliesTo, furyActive, closestActive, closestBonuses)}
+                    ${renderWeapons(filteredWeapons, wargearInheritedAbilities, wargearAppliesTo, furyActive, closestActive, closestBonuses, firebaseActive)}
                     ${renderSoloAbilities(unit, extraWargear)}
                 </div>
                 <div class="keywords">${(unit.keywords || []).join(', ')}</div>
@@ -1089,6 +1123,10 @@ function renderLedUnitCard(ledUnit) {
     const closestActive = stratagemState.closest;
     const closestBonuses = closestActive ? getClosestBonuses(ledUnit) : { apImprove: false, rerollHit: false };
 
+    // Firebase Control (Brandfast Oathband): Sustained Hits 1 on ranged for INFANTRY units
+    // Applies to the whole led unit if the bodyguard is INFANTRY
+    const firebaseActive = stratagemState.firebase && (bodyguard.keywords || []).includes('INFANTRY');
+
     // Filter grantsAbilities to only weapon-applicable ones (exclude invuln, etc.)
     const nonWeaponAbilities = ['invuln-5'];
     const weaponGrantedAbilities = (leader.leaderBonus?.grantsAbilities || [])
@@ -1141,7 +1179,7 @@ function renderLedUnitCard(ledUnit) {
                     ${renderUnitHeader(leader)}
                     ${renderUnitStats(leaderStats)}
                     ${renderDefensiveRow(leader)}
-                    ${renderWeapons(leader.weapons, leaderInheritedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses)}
+                    ${renderWeapons(leader.weapons, leaderInheritedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses, firebaseActive)}
                     ${renderAbilities(leader, enhancement)}
                 </div>
                 <div class="card-section">
@@ -1149,7 +1187,7 @@ function renderLedUnitCard(ledUnit) {
                     ${renderUnitHeader(bodyguard, bodyguardModelCount)}
                     ${renderUnitStats(bodyguard)}
                     ${renderBodyguardInvuln(bodyguard, leader)}
-                    ${renderWeapons(bodyguardWeapons, bodyguardInheritedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses)}
+                    ${renderWeapons(bodyguardWeapons, bodyguardInheritedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses, firebaseActive)}
                     ${renderBodyguardAbilities(bodyguard, leader)}
                 </div>
                 <div class="keywords">${ledUnit.combinedKeywords.join(', ')}</div>
@@ -1282,15 +1320,15 @@ function renderBodyguardInvuln(bodyguard, leader) {
 }
 
 // Render weapons section
-function renderWeapons(weapons, inheritedAbilities = [], appliesTo = null, furyActive = false, closestActive = false, closestBonuses = {}) {
-    const rangedHtml = weapons.ranged?.length ? renderWeaponCategory('ranged', weapons.ranged, inheritedAbilities, appliesTo, furyActive, closestActive, closestBonuses) : '';
-    const meleeHtml = weapons.melee?.length ? renderWeaponCategory('melee', weapons.melee, inheritedAbilities, appliesTo, false, closestActive, closestBonuses) : ''; // Fury only affects ranged
+function renderWeapons(weapons, inheritedAbilities = [], appliesTo = null, furyActive = false, closestActive = false, closestBonuses = {}, firebaseActive = false) {
+    const rangedHtml = weapons.ranged?.length ? renderWeaponCategory('ranged', weapons.ranged, inheritedAbilities, appliesTo, furyActive, closestActive, closestBonuses, firebaseActive) : '';
+    const meleeHtml = weapons.melee?.length ? renderWeaponCategory('melee', weapons.melee, inheritedAbilities, appliesTo, false, closestActive, closestBonuses, false) : ''; // Fury and firebase only affect ranged
 
     return `<div class="weapons">${rangedHtml}${meleeHtml}</div>`;
 }
 
 // Render a weapon category (ranged or melee)
-function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo, furyActive = false, closestActive = false, closestBonuses = {}) {
+function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo, furyActive = false, closestActive = false, closestBonuses = {}, firebaseActive = false) {
     const label = type === 'ranged' ? 'Ranged Weapons' : 'Melee Weapons';
 
     // Group weapons by weaponGroup
@@ -1312,7 +1350,7 @@ function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo, f
 
     // Render ungrouped weapons
     ungrouped.forEach(weapon => {
-        contentHtml += renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive, closestActive, closestBonuses);
+        contentHtml += renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive, closestActive, closestBonuses, firebaseActive);
     });
 
     // Render grouped weapons
@@ -1320,7 +1358,7 @@ function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo, f
         contentHtml += `
             <div class="weapon-group">
                 <div class="weapon-group-label">${group.label}</div>
-                ${group.weapons.map(w => renderWeapon(w, type, inheritedAbilities, appliesTo, furyActive, closestActive, closestBonuses)).join('')}
+                ${group.weapons.map(w => renderWeapon(w, type, inheritedAbilities, appliesTo, furyActive, closestActive, closestBonuses, firebaseActive)).join('')}
             </div>
         `;
     });
@@ -1342,7 +1380,7 @@ function parseAbility(ab) {
 }
 
 // Render a single weapon
-function renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive = false, closestActive = false, closestBonuses = {}) {
+function renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive = false, closestActive = false, closestBonuses = {}, firebaseActive = false) {
     const countText = weapon.count > 1 ? ` (×${weapon.count})` : '';
     const modelText = weapon.model ? ` (${weapon.model})` : '';
     const nameDisplay = weapon.name + countText + modelText;
@@ -1400,6 +1438,11 @@ function renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive = 
     // Add Sustained Hits 1 from Fury of the Hearth (only for ranged weapons, only if YP was paid)
     if (furyActive && furyYP && type === 'ranged') {
         allAbilities.push({ id: 'sustained-hits', display: 'Sustained Hits 1', inherited: false, stratBuff: true, closestBuff: false });
+    }
+
+    // Add Sustained Hits 1 from Firebase Control (Brandfast Oathband, ranged only)
+    if (firebaseActive && type === 'ranged') {
+        allAbilities.push({ id: 'firebase-control', display: 'Sustained Hits 1', inherited: false, stratBuff: true, closestBuff: false });
     }
 
     // Add closest-target reminders
@@ -2099,6 +2142,10 @@ function toggleStratagemItem(stratId, e) {
     if (stratId === 'closest') {
         document.getElementById('closest-fab').classList.toggle('active', stratagemState.closest);
     }
+    // Sync FAB if firebase was toggled from dropdown
+    if (stratId === 'firebase') {
+        document.getElementById('firebase-fab').classList.toggle('active', stratagemState.firebase);
+    }
 
     // Update badge
     updateBuffButton();
@@ -2126,6 +2173,17 @@ function toggleClosestFab() {
     if (item) item.classList.toggle('active', stratagemState.closest);
     // Sync FAB visual
     document.getElementById('closest-fab').classList.toggle('active', stratagemState.closest);
+    updateBuffButton();
+    renderUnits();
+}
+
+function toggleFirebaseFab() {
+    stratagemState.firebase = !stratagemState.firebase;
+    // Sync dropdown item visual
+    const item = document.querySelector('.buff-dropdown-item[data-strat="firebase"]');
+    if (item) item.classList.toggle('active', stratagemState.firebase);
+    // Sync FAB visual
+    document.getElementById('firebase-fab').classList.toggle('active', stratagemState.firebase);
     updateBuffButton();
     renderUnits();
 }

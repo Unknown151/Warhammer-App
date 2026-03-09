@@ -14,6 +14,11 @@
     "type": "Detachment Rule — Dêlve Assault Shift",
     "description": "<strong>CTHONIAN BESERKS</strong> units from your army have the <strong>Deep Strike</strong> ability.<br><br><strong>Keywords:</strong> <strong>CTHONIAN BESERKS</strong> units from your army gain the <strong>BATTLELINE</strong> keyword."
   },
+  "firebase-control": {
+    "name": "Firebase Control",
+    "type": "Detachment Rule — Brandfast Oathband",
+    "description": "<strong>LEAGUES OF VOTANN TRANSPORT</strong> units from your army have the following ability:<br><br><strong>Firebase Control (Aura):</strong> While a friendly <strong>LEAGUES OF VOTANN INFANTRY</strong> unit is wholly within 6\" of this <strong>TRANSPORT</strong>, ranged weapons equipped by models in that <strong>INFANTRY</strong> unit have the <strong>[SUSTAINED HITS 1]</strong> ability."
+  },
   "assault": {
     "name": "Assault",
     "type": "Weapon Ability",
