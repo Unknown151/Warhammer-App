@@ -97,5 +97,40 @@
     "detachment": "delve-assault-shift",
     "points": 15,
     "description": "Each time the bearer's unit is selected to fight, the bearer can use this Enhancement. If it does, spend up to <strong>2YP</strong> and, until the end of the phase, add the number of YP you just spent to the <strong>Damage</strong> characteristic of the bearer's melee weapons."
+  },
+  "tactical-alchemy": {
+    "name": "Tactical Alchemy",
+    "type": "Enhancement (10 pts)",
+    "restriction": "Kâhl only",
+    "restrictedTo": ["kahl"],
+    "detachment": "brandfast-oathband",
+    "points": 10,
+    "description": "In your Command phase, if the bearer's unit is within range of one or more objective markers you control that are not within your deployment zone, you can spend <strong>1YP</strong>. If you do, roll one D6: on a <strong>4+</strong>, you gain <strong>1CP</strong>."
+  },
+  "trivarg-cyber-implant": {
+    "name": "Trivärg Cyber Implant",
+    "type": "Enhancement (40 pts)",
+    "restriction": "LEAGUES OF VOTANN model only",
+    "detachment": "brandfast-oathband",
+    "points": 40,
+    "description": "In your Shooting phase, each time the bearer's unit is selected to shoot, if it disembarked from a <strong>TRANSPORT</strong> this turn, or if you spend <strong>2YP</strong>, until the end of the phase, ranged weapons equipped by models in that unit have the <strong>[SUSTAINED HITS 2]</strong> ability."
+  },
+  "precursive-judgement": {
+    "name": "Precursive Judgement",
+    "type": "Enhancement (15 pts)",
+    "restriction": "Kâhl only",
+    "restrictedTo": ["kahl"],
+    "detachment": "brandfast-oathband",
+    "points": 15,
+    "description": "While the bearer's unit is wholly within 6\" of one or more friendly <strong>LEAGUES OF VOTANN TRANSPORT</strong> units, you can target the bearer's unit with the <strong>Fire Overwatch</strong> Stratagem for <strong>0CP</strong> and hits are scored on unmodified Hit rolls of <strong>5+</strong> while resolving that Stratagem."
+  },
+  "signature-restoration": {
+    "name": "Signature Restoration",
+    "type": "Enhancement (5 pts)",
+    "restriction": "Iron-Master only",
+    "restrictedTo": ["iron-master"],
+    "detachment": "brandfast-oathband",
+    "points": 5,
+    "description": "Each time a friendly <strong>LEAGUES OF VOTANN</strong> model is repaired using the bearer's <strong>Forgewrought Expertise</strong> ability, that model regains <strong>1 additional lost wound</strong>."
   }
 }
