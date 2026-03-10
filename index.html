@@ -1303,7 +1303,7 @@ function renderLedUnitCard(ledUnit) {
 
     // If Ironskein is active, add +2 wounds to leader stats
     let leaderStats = leader;
-    const ironskeinActive = enhancementId === 'ironskein' && !suppressEnhancement;
+    const ironskeinActive = enhancementId === 'ironskein';
     if (ironskeinActive) {
         if (leader.modelProfiles) {
             // For units with multiple profiles, add +2 to the main character profile (first one)
