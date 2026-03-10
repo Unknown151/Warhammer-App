@@ -154,6 +154,7 @@
         .tw-label{font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em}
         .tw-val{font-family:'Share Tech Mono',monospace;font-size:.95rem;color:var(--green);font-weight:600}
         .keywords{font-size:.6rem;color:var(--text3);padding:.625rem 1rem;background:var(--bg2);border-top:1px solid var(--border);line-height:1.5}
+        .ab.kw{background:rgba(74,201,120,.08);border-color:rgba(74,201,120,.35);color:var(--green);font-size:.6rem}
         #modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.9);z-index:9999;display:none;justify-content:center;align-items:flex-end;padding:1rem}
         #modal.show{display:flex}
         .modal-content{background:var(--bg3);border:1px solid var(--border-gold);border-radius:12px 12px 0 0;width:100%;max-width:500px;max-height:70vh;overflow-y:auto}
@@ -1192,6 +1193,11 @@ function renderSoloAbilities(unit, extraWargear = []) {
         html += `<span class="ab wg tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
     });
 
+    // Keyword badges (GRENADES)
+    if ((unit.keywords || []).includes('GRENADES')) {
+        html += `<span class="ab kw">Grenades</span>`;
+    }
+
     // Regular abilities
     (unit.abilities || []).forEach(ab => {
         const abData = abilities[ab];
@@ -1633,6 +1639,11 @@ function renderBodyguardAbilities(bodyguard, leader) {
         const abData = abilities[ab];
         html += `<span class="ab wg tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
     });
+
+    // Keyword badges (GRENADES)
+    if ((bodyguard.keywords || []).includes('GRENADES')) {
+        html += `<span class="ab kw">Grenades</span>`;
+    }
 
     // Regular abilities
     (bodyguard.abilities || []).forEach(ab => {
