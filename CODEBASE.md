@@ -55,6 +55,9 @@ data/
 | `armyList` | `Array<Instance>` | `[]` | Active army list — all added unit instances |
 | `nextInstanceId` | `Number` | `1` | Auto-increment ID for new instances |
 | `selectedDetachment` | `String` | `'hearthband'` | Currently active detachment ID |
+| `savedLists` | `Array<SavedList>` | `[]` | All saved list slots: `{ name, armyList, nextInstanceId, detachment, pointsLimit }` |
+| `currentListSlot` | `Number` | `0` | Index into `savedLists` for the active slot |
+| `pointsLimit` | `Number` | `0` | Points cap for the active list (0 = no limit) |
 
 ### Buff/Stratagem State
 | Variable | Type | Default | Purpose |
@@ -418,7 +421,13 @@ Displays: `name` as title, `type` as subtitle, `description` as HTML body.
 - Add: enhancement points (`enhancements[enhancementId].points`)
 - Add: leader points (if `leaderId` is set, add the leader unit's `points`)
 
-**`updateConfigPoints()`**: sums all instances and updates the `#config-points` display.
+**`updateConfigPoints()`**: sums all instances, updates `#config-points`, and (if `pointsLimit > 0`) colours the total green/amber/red, shows `/ XXXX` label, and fills the `#points-bar` progress bar.
+
+**`renderListSwitcher()`**: builds the list-tab row — inactive slots as buttons, active slot as an inline-rename input. Returns HTML prepended by `renderConfigurationTab()`.
+
+**List management:** `switchToList(slot)`, `addNewList()`, `deleteCurrentList()`, `renameCurrentList(name)`, `setPointsLimit(value)`.
+
+**Helpers:** `loadListState(list)` — sets `armyList`/`nextInstanceId`/`pointsLimit`/`selectedDetachment` from a slot object. `refreshUI()` — calls `updateDetachmentBanner`, `updateStratagemVisibility`, `updateBuffButton`, `renderConfigurationTab`, `renderUnits`.
 
 ---
 
@@ -429,7 +438,8 @@ Displays: `name` as title, `type` as subtitle, `description` as HTML body.
 | `votann-theme` | `'light'` \| `'dark'` | `'dark'` |
 | `votann-fancy` | `'on'` \| `'off'` | `'off'` |
 | `votann-detachment` | detachment ID string | `'hearthband'` |
-| `votann-army-list` | JSON `{ armyList, nextInstanceId }` | `[]` |
+| `votann-army-list` | JSON `{ armyList, nextInstanceId }` | *(legacy — migrated on first load)* |
+| `votann-saved-lists` | JSON `{ lists: SavedList[], slot: number }` | one empty "My Army" slot |
 
 ---
 
@@ -438,6 +448,7 @@ Displays: `name` as title, `type` as subtitle, `description` as HTML body.
 ### Encode (shareArmyUrl — async)
 1. `packArmy()` builds a compact object — short keys, only non-default values:
    - `d` — detachment ID
+   - `p` — pointsLimit (omitted if 0)
    - `l` — array of packed instances: `u` (unitId), `m` (modelCount, omitted if default), `l` (leaderId, omitted if null), `e` (enhancementId, omitted if null), `g` (selectedWargear, omitted if empty), `W` (weapon diffs vs. unit defaults, omitted if all-default)
 2. `deflateToBase64()` compresses with browser-native `CompressionStream('deflate-raw')` → URL-safe base64 (`+`→`-`, `/`→`_`, `=` stripped)
 3. URL hash = `'2' + compressed` (version prefix `'2'` distinguishes from legacy format)

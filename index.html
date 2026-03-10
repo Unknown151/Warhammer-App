@@ -412,6 +412,31 @@
         .config-share-btn{height:36px;padding:0 .75rem;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text2);font-size:.65rem;font-family:'Orbitron',sans-serif;cursor:pointer;touch-action:manipulation;transition:all .15s ease;white-space:nowrap}
         .config-share-btn:hover{border-color:var(--gold);color:var(--gold)}
         .config-share-btn.copied{border-color:var(--green);color:var(--green)}
+        /* List switcher */
+        .list-switcher{display:flex;gap:.35rem;align-items:center;flex-wrap:wrap;padding:.4rem 0 .6rem}
+        .list-slot{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:.3rem .65rem;font-family:'Rajdhani',sans-serif;font-size:.75rem;color:var(--text2);cursor:pointer;touch-action:manipulation;white-space:nowrap;transition:all .15s;line-height:1.4}
+        .list-slot:hover{border-color:var(--gold);color:var(--text)}
+        .list-slot.active{border-color:var(--gold);background:rgba(184,143,51,.12);color:var(--gold);display:flex;align-items:center;padding:.3rem .5rem .3rem .65rem}
+        .list-name-input{background:transparent;border:none;color:var(--gold);font-family:'Rajdhani',sans-serif;font-size:.75rem;width:80px;outline:none;padding:0;line-height:1.4}
+        .list-add-btn,.list-delete-btn{background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);font-size:.75rem;cursor:pointer;touch-action:manipulation;padding:.3rem .5rem;line-height:1;transition:all .15s}
+        .list-add-btn{border-style:dashed}
+        .list-add-btn:hover{border-color:var(--gold);color:var(--gold);border-style:solid}
+        .list-delete-btn{margin-left:auto}
+        .list-delete-btn:hover{border-color:var(--red);color:var(--red)}
+        /* Points limit */
+        .config-points-group{display:flex;align-items:baseline;gap:.15rem}
+        .config-points-limit-label{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--text3)}
+        .points-limit-input{background:transparent;border:none;border-bottom:1px dashed var(--border);color:var(--text3);font-family:'Share Tech Mono',monospace;font-size:.75rem;width:42px;text-align:center;outline:none;padding:0 0 1px;-moz-appearance:textfield}
+        .points-limit-input::-webkit-outer-spin-button,.points-limit-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+        .points-limit-input:focus{border-bottom-color:var(--gold);color:var(--gold-bright)}
+        .points-limit-input::placeholder{opacity:.4}
+        .config-total-value.pts-over{color:var(--red,#c04)}
+        .config-total-value.pts-near{color:var(--gold-bright)}
+        /* Progress bar */
+        .points-bar{height:2px;background:var(--bg3);border-radius:2px;margin:.3rem 0 .5rem;overflow:hidden}
+        .points-bar-fill{height:100%;background:var(--green,#4ad482);border-radius:2px;transition:width .4s ease,background .3s}
+        .points-bar-fill.near{background:var(--gold)}
+        .points-bar-fill.over{background:var(--red,#c04)}
         .army-list-empty{text-align:center;padding:2rem 1rem;color:var(--text3);font-size:.8rem}
         .detachment-selector{background:var(--bg2);border:1px solid var(--gold-dark);border-radius:8px;padding:.85rem 1rem;margin-bottom:.75rem}
         .detachment-selector-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:.5rem}
@@ -511,11 +536,16 @@
         </div>
         <div id="configuration-tab" class="tab-content">
             <div class="config-total">
-                <span class="config-total-label">Total Points</span>
-                <span class="config-total-value" id="config-points">0</span>
+                <span class="config-total-label">Points</span>
+                <div class="config-points-group">
+                    <span class="config-total-value" id="config-points">0</span>
+                    <span class="config-points-limit-label" id="config-points-limit-label"></span>
+                </div>
+                <input class="points-limit-input" id="points-limit-input" type="number" min="0" max="9999" placeholder="limit" title="Set points limit" onchange="setPointsLimit(this.value)" onblur="setPointsLimit(this.value)">
                 <button class="config-share-btn" id="share-btn" onclick="shareArmyUrl()">Share</button>
                 <button class="config-add-btn" onclick="openUnitPicker()">+</button>
             </div>
+            <div class="points-bar" id="points-bar" style="display:none"><div class="points-bar-fill" id="points-bar-fill"></div></div>
             <div id="army-list-container"></div>
         </div>
     </main>
@@ -699,15 +729,16 @@ function toggleFancyMode() {
 
 // Army list - array of configured unit instances
 let armyList = [];
-// Structure: [{
-//   instanceId: string,
-//   unitId: string,
-//   modelCount: number,
-//   weapons: { weaponKey: { equipped: bool, count: number } },
-//   leaderId: string | null,
-//   enhancementId: string | null
-// }]
 let nextInstanceId = 1;
+
+// Saved lists
+let savedLists = [];      // [{ name, armyList, nextInstanceId, detachment, pointsLimit }]
+let currentListSlot = 0;
+let pointsLimit = 0;      // 0 = no limit set
+
+function escHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 
 // All available unit IDs
 const ALL_UNIT_IDS = [
@@ -738,24 +769,106 @@ async function fetchJSON(path) {
     return response.json();
 }
 
-// Save army list to localStorage
-function saveArmyList() {
-    localStorage.setItem('votann-army-list', JSON.stringify({ armyList, nextInstanceId }));
+// Save current army state into the active slot and persist all slots
+function saveCurrentList() {
+    if (!savedLists[currentListSlot]) {
+        savedLists[currentListSlot] = { name: 'My Army' };
+    }
+    savedLists[currentListSlot].armyList = armyList;
+    savedLists[currentListSlot].nextInstanceId = nextInstanceId;
+    savedLists[currentListSlot].detachment = selectedDetachment;
+    savedLists[currentListSlot].pointsLimit = pointsLimit;
+    localStorage.setItem('votann-saved-lists', JSON.stringify({ lists: savedLists, slot: currentListSlot }));
 }
 
-// Load army list from localStorage
-function loadArmyList() {
-    const saved = localStorage.getItem('votann-army-list');
-    if (saved) {
+// Wrapper so all existing callers continue to work unchanged
+function saveArmyList() {
+    saveCurrentList();
+}
+
+// Load saved lists from localStorage, migrating old format if needed
+function loadSavedLists() {
+    const raw = localStorage.getItem('votann-saved-lists');
+    if (raw) {
         try {
-            const parsed = JSON.parse(saved);
-            armyList = parsed.armyList || [];
-            nextInstanceId = parsed.nextInstanceId || 1;
-        } catch (e) {
-            console.warn('Failed to parse saved army list:', e);
-            armyList = [];
-        }
+            const parsed = JSON.parse(raw);
+            savedLists = parsed.lists || [];
+            currentListSlot = Math.min(parsed.slot || 0, Math.max(0, savedLists.length - 1));
+        } catch (e) { savedLists = []; }
     }
+    // Migrate from old votann-army-list format
+    if (savedLists.length === 0) {
+        let al = [], ni = 1;
+        try {
+            const old = localStorage.getItem('votann-army-list');
+            if (old) { const p = JSON.parse(old); al = p.armyList || []; ni = p.nextInstanceId || 1; }
+        } catch (e) {}
+        savedLists = [{ name: 'My Army', armyList: al, nextInstanceId: ni, detachment: selectedDetachment, pointsLimit: 0 }];
+        currentListSlot = 0;
+    }
+    loadListState(savedLists[currentListSlot]);
+}
+
+// Load state globals from a saved list object
+function loadListState(list) {
+    armyList = list.armyList || [];
+    nextInstanceId = list.nextInstanceId || 1;
+    pointsLimit = list.pointsLimit || 0;
+    if (list.detachment && DETACHMENTS[list.detachment]) selectedDetachment = list.detachment;
+}
+
+// Re-render everything after a list switch or detachment change
+function refreshUI() {
+    updateDetachmentBanner();
+    updateStratagemVisibility();
+    updateBuffButton();
+    renderConfigurationTab();
+    renderUnits();
+}
+
+// Switch to a different saved list slot
+function switchToList(slot) {
+    if (slot === currentListSlot) return;
+    saveCurrentList();
+    currentListSlot = slot;
+    const list = savedLists[slot];
+    loadListState(list);
+    if (list.detachment && DETACHMENTS[list.detachment]) saveDetachment();
+    stratagemState.closest = false;
+    stratagemState.fury = false;
+    furyYP = false;
+    stratagemState.firebase = false;
+    refreshUI();
+}
+
+function addNewList() {
+    savedLists.push({ name: `List ${savedLists.length + 1}`, armyList: [], nextInstanceId: 1, detachment: selectedDetachment, pointsLimit: 0 });
+    switchToList(savedLists.length - 1);
+}
+
+function deleteCurrentList() {
+    if (savedLists.length <= 1) return;
+    savedLists.splice(currentListSlot, 1);
+    currentListSlot = Math.min(currentListSlot, savedLists.length - 1);
+    const list = savedLists[currentListSlot];
+    loadListState(list);
+    if (list.detachment && DETACHMENTS[list.detachment]) saveDetachment();
+    saveCurrentList();
+    refreshUI();
+}
+
+function renameCurrentList(name) {
+    savedLists[currentListSlot].name = name.trim() || `List ${currentListSlot + 1}`;
+    saveCurrentList();
+}
+
+function setPointsLimit(value) {
+    const v = parseInt(value) || 0;
+    pointsLimit = v > 0 ? v : 0;
+    const input = document.getElementById('points-limit-input');
+    if (input) input.value = pointsLimit || '';
+    saveCurrentList();
+    updateConfigPoints();
 }
 
 // Encode army list into a shareable URL
@@ -790,6 +903,7 @@ async function inflateFromBase64(b64) {
 function packArmy() {
     return {
         d: selectedDetachment,
+        p: pointsLimit || undefined,
         l: armyList.map(inst => {
             const unit = units[inst.unitId];
             const defaultCount = unit?.baseModels || unit?.models || 1;
@@ -821,6 +935,7 @@ function packArmy() {
 // Expand compact army pack back into full armyList instances
 function unpackArmy(packed) {
     nextInstanceId = 1;
+    pointsLimit = packed.p || 0;
     return (packed.l || []).map(p => {
         const unit = units[p.u];
         const defaultCount = unit?.baseModels || unit?.models || 1;
@@ -990,10 +1105,9 @@ async function loadData() {
         });
         await Promise.all(unitPromises);
 
-        // Load army list: URL hash takes priority over localStorage
-        if (!await loadArmyFromUrl()) {
-            loadArmyList();
-        }
+        // Load saved lists; URL hash overrides current slot if present
+        loadSavedLists();
+        await loadArmyFromUrl();
 
         // Render everything
         renderApp();
@@ -1006,8 +1120,6 @@ async function loadData() {
 
 // Render the entire app
 function renderApp() {
-    // Load and apply saved detachment
-    loadDetachment();
     updateDetachmentBanner();
     updateStratagemVisibility();
 
@@ -1636,10 +1748,22 @@ function renderDetachmentSelector() {
 }
 
 // Render configuration tab (army list)
+function renderListSwitcher() {
+    const slots = savedLists.map((list, i) => {
+        if (i === currentListSlot) {
+            return `<div class="list-slot active"><input class="list-name-input" value="${escHtml(list.name)}" onchange="renameCurrentList(this.value)" onclick="event.stopPropagation()"></div>`;
+        }
+        return `<button class="list-slot" onclick="switchToList(${i})">${escHtml(list.name)}</button>`;
+    }).join('');
+    const addBtn = savedLists.length < 10 ? `<button class="list-add-btn" onclick="addNewList()" title="New list">+</button>` : '';
+    const delBtn = savedLists.length > 1 ? `<button class="list-delete-btn" onclick="deleteCurrentList()" title="Delete this list">✕</button>` : '';
+    return `<div class="list-switcher">${slots}${addBtn}${delBtn}</div>`;
+}
+
 function renderConfigurationTab() {
     const container = document.getElementById('army-list-container');
 
-    let html = renderDetachmentSelector();
+    let html = renderListSwitcher() + renderDetachmentSelector();
     if (armyList.length === 0) {
         html += '<div class="army-list-empty">No units added. Tap + to add units.</div>';
     } else {
@@ -2033,7 +2157,36 @@ function updateConfigPoints() {
     armyList.forEach(instance => {
         total += calculateInstancePoints(instance);
     });
-    document.getElementById('config-points').textContent = total;
+
+    const el = document.getElementById('config-points');
+    const label = document.getElementById('config-points-limit-label');
+    const bar = document.getElementById('points-bar');
+    const fill = document.getElementById('points-bar-fill');
+    const input = document.getElementById('points-limit-input');
+
+    el.textContent = total;
+    if (input) input.value = pointsLimit || '';
+
+    if (pointsLimit > 0) {
+        const pct = Math.min(total / pointsLimit, 1);
+        const over = total > pointsLimit;
+        const near = !over && total >= pointsLimit * 0.9;
+
+        el.classList.toggle('pts-over', over);
+        el.classList.toggle('pts-near', near && !over);
+
+        if (label) label.textContent = ` / ${pointsLimit}`;
+        if (bar) bar.style.display = '';
+        if (fill) {
+            fill.style.width = (pct * 100) + '%';
+            fill.classList.toggle('over', over);
+            fill.classList.toggle('near', near && !over);
+        }
+    } else {
+        el.classList.remove('pts-over', 'pts-near');
+        if (label) label.textContent = '';
+        if (bar) bar.style.display = 'none';
+    }
 }
 
 // Unit picker functions
