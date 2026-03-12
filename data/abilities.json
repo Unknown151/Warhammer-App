@@ -1,4 +1,9 @@
 {
+  "grenades": {
+    "name": "Grenade",
+    "type": "Stratagem — 1CP",
+    "description": "<strong>WHEN:</strong> Your Shooting phase.<br><br><strong>TARGET:</strong> One <strong>GRENADES</strong> unit from your army (excluding units that Advanced, Fell Back or have shot this turn) that is not within <strong>Engagement Range</strong> of one or more enemy units.<br><br><strong>EFFECT:</strong> Select one <strong>GRENADES</strong> model in your unit and one enemy unit that is not within <strong>Engagement Range</strong> of any units from your army and is within <strong>8\"</strong> of and visible to your <strong>GRENADES</strong> model. Roll six D6: for each 4+, that enemy unit suffers 1 mortal wound."
+  },
   "prioritised-efficiency": {
     "name": "Prioritised Efficiency",
     "type": "Detachment Rule — Hearthband",

@@ -1195,7 +1195,7 @@ function renderSoloAbilities(unit, extraWargear = []) {
 
     // Keyword badges (GRENADES)
     if ((unit.keywords || []).includes('GRENADES')) {
-        html += `<span class="ab kw">Grenades</span>`;
+        html += `<span class="ab kw tappable" data-ab="grenades">Grenades</span>`;
     }
 
     // Regular abilities
@@ -1642,7 +1642,7 @@ function renderBodyguardAbilities(bodyguard, leader) {
 
     // Keyword badges (GRENADES)
     if ((bodyguard.keywords || []).includes('GRENADES')) {
-        html += `<span class="ab kw">Grenades</span>`;
+        html += `<span class="ab kw tappable" data-ab="grenades">Grenades</span>`;
     }
 
     // Regular abilities
