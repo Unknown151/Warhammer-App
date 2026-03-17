@@ -1,0 +1,142 @@
+{
+  "command-reroll": {
+    "name": "Command Re-roll",
+    "phases": ["command"],
+    "cpCost": 1,
+    "ypCost": 0,
+    "description": "Use this Stratagem after you have made a Hit roll, a Wound roll, a Damage roll, a saving throw, an Advance roll, a charge roll or a Desperate Escape test for a model in your army.",
+    "effect": "Re-roll that roll.",
+    "target": "Any unit",
+    "detachment": null
+  },
+  "insane-bravery": {
+    "name": "Insane Bravery",
+    "phases": ["command"],
+    "cpCost": 1,
+    "ypCost": 0,
+    "description": "Use this Stratagem at the start of the Battle-shock step of your Command phase.",
+    "effect": "Select one unit from your army that is below its Starting Strength. That unit automatically passes its Battle-shock test this turn.",
+    "target": "Any unit below half strength",
+    "detachment": null
+  },
+  "grenade": {
+    "name": "Grenade",
+    "phases": ["shooting"],
+    "cpCost": 1,
+    "ypCost": 0,
+    "description": "Use this Stratagem in your Shooting phase.",
+    "effect": "Select one GRENADES unit from your army that has not Advanced, Fallen Back, or shot this turn. Roll 6D6: for each 4+, one enemy unit within 8\" and visible to your unit suffers 1 mortal wound.",
+    "target": "GRENADES unit",
+    "detachment": null
+  },
+  "fire-overwatch": {
+    "name": "Fire Overwatch",
+    "phases": ["movement", "charge"],
+    "cpCost": 1,
+    "ypCost": 0,
+    "description": "Use this Stratagem when an enemy unit is set up or when an enemy unit ends a Normal, Advance, or Fall Back move.",
+    "effect": "One unit from your army that is within 24\" of and visible to that enemy unit can shoot at it. Hits scored only on unmodified 6s.",
+    "target": "Any unit with ranged weapons",
+    "detachment": null
+  },
+  "heroic-intervention": {
+    "name": "Heroic Intervention",
+    "phases": ["charge"],
+    "cpCost": 1,
+    "ypCost": 0,
+    "description": "Use this Stratagem at the end of the Charge phase.",
+    "effect": "Select one unit from your army that is not within Engagement Range of any enemy units. That unit can make a move of up to 3\" — it can move within Engagement Range of enemy units.",
+    "target": "Any unit not in Engagement Range",
+    "detachment": null
+  },
+  "counter-offensive": {
+    "name": "Counter-offensive",
+    "phases": ["fight"],
+    "cpCost": 2,
+    "ypCost": 0,
+    "description": "Use this Stratagem after an enemy unit has fought in the Fight phase.",
+    "effect": "Select one unit from your army that is within Engagement Range of that enemy unit and has not already fought this phase. That unit fights next.",
+    "target": "Unit in Engagement Range of enemy that just fought",
+    "detachment": null
+  },
+  "go-to-ground": {
+    "name": "Go to Ground",
+    "phases": ["shooting"],
+    "cpCost": 1,
+    "ypCost": 0,
+    "description": "Use this Stratagem when an enemy unit targets an INFANTRY unit from your army.",
+    "effect": "Until the end of the phase, all models in your unit have a 6+ invulnerable save. If they already have an invulnerable save, add 1 to it instead (max 3+).",
+    "target": "INFANTRY unit being targeted",
+    "detachment": null
+  },
+  "smokescreen": {
+    "name": "Smokescreen",
+    "phases": ["shooting"],
+    "cpCost": 1,
+    "ypCost": 0,
+    "description": "Use this Stratagem at the end of your Movement phase.",
+    "effect": "Select one SMOKE unit from your army. Until the start of your next turn, ranged attacks against that unit's model have a -1 to Hit roll.",
+    "target": "SMOKE unit",
+    "detachment": null
+  },
+  "rapid-ingress": {
+    "name": "Rapid Ingress",
+    "phases": ["movement"],
+    "cpCost": 1,
+    "ypCost": 0,
+    "description": "Use this Stratagem at the end of your opponent's Movement phase.",
+    "effect": "Select one unit from your army that is in Reserves. That unit can arrive on the battlefield as if it were the Reinforcements step of your Movement phase.",
+    "target": "Unit in Reserves",
+    "detachment": null
+  },
+  "fury-of-the-hearth": {
+    "name": "Fury of the Hearth",
+    "phases": ["shooting"],
+    "cpCost": 1,
+    "ypCost": 0,
+    "description": "Use this Stratagem in your Shooting phase, when a LEAGUES OF VOTANN unit from your army is selected to shoot.",
+    "effect": "Until the end of the phase, ranged weapons equipped by models in that unit have +1 to their Strength characteristic. If you spend 1YP, those weapons also have [SUSTAINED HITS 1].",
+    "target": "LEAGUES OF VOTANN unit",
+    "detachment": "hearthband"
+  },
+  "targeting-closest": {
+    "name": "Targeting Closest",
+    "phases": ["shooting"],
+    "cpCost": 1,
+    "ypCost": 0,
+    "description": "Use this Stratagem in your Shooting phase, when a LEAGUES OF VOTANN unit from your army is selected to shoot.",
+    "effect": "Until the end of the phase, if that unit targets the closest eligible target: re-roll wound rolls of 1. If the unit is KÂHL, EINHYR HEARTHGUARD, or ÛTHAR THE DESTINED, also improve AP by 1.",
+    "target": "LEAGUES OF VOTANN unit",
+    "detachment": "hearthband"
+  },
+  "grim-demeanour": {
+    "name": "Grim Demeanour",
+    "phases": ["fight"],
+    "cpCost": 1,
+    "ypCost": 0,
+    "description": "Use this Stratagem in the Fight phase, when a LEAGUES OF VOTANN unit from your army is selected to fight.",
+    "effect": "Until the end of the phase, each time a model in that unit makes a melee attack, add 1 to the Wound roll.",
+    "target": "LEAGUES OF VOTANN unit",
+    "detachment": "hearthband"
+  },
+  "oathmark-acquisitors": {
+    "name": "Oathmark Acquisitors",
+    "phases": ["command"],
+    "cpCost": 1,
+    "ypCost": 0,
+    "description": "Use this Stratagem at the start of your Command phase.",
+    "effect": "Select one LEAGUES OF VOTANN unit from your army that is within range of an objective marker. You gain 1 additional YP.",
+    "target": "LEAGUES OF VOTANN unit on objective",
+    "detachment": "hearthband"
+  },
+  "hammer-of-votann": {
+    "name": "Hammer of Votann",
+    "phases": ["shooting", "fight"],
+    "cpCost": 1,
+    "ypCost": 1,
+    "description": "Use this Stratagem in your Shooting or Fight phase, when a LEAGUES OF VOTANN unit from your army is selected to shoot or fight. Costs 1CP and 1YP.",
+    "effect": "Until the end of the phase, each time a model in that unit makes an attack, a Critical Hit is scored on an unmodified Hit roll of 5+.",
+    "target": "LEAGUES OF VOTANN unit",
+    "detachment": "hearthband"
+  }
+}

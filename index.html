@@ -423,6 +423,59 @@
         .unit-picker-item:hover{background:rgba(212,168,75,.1)}
         .unit-picker-item-name{font-size:.75rem;color:var(--text)}
         .unit-picker-item-pts{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--gold)}
+
+        /* Game Day Tab */
+        .gd-trackers{background:var(--bg2);border:1px solid var(--border-gold);border-radius:6px;padding:.75rem 1rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
+        .gd-tracker-group{display:flex;align-items:center;gap:.5rem}
+        .gd-tracker-label{font-family:'Orbitron',sans-serif;font-size:.65rem;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.1em}
+        .gd-tracker-val{font-family:'Share Tech Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--gold-bright);min-width:2ch;text-align:center}
+        .gd-tracker-btn{width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--bg3);color:var(--text2);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;touch-action:manipulation;transition:all .15s ease}
+        .gd-tracker-btn:hover{border-color:var(--gold-dark);background:rgba(212,168,75,.15);color:var(--gold)}
+        .gd-turn-group{display:flex;align-items:center;gap:.5rem}
+        .gd-turn-label{font-family:'Orbitron',sans-serif;font-size:.65rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.1em}
+        .gd-turn-val{font-family:'Share Tech Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--text);min-width:1.5ch;text-align:center}
+        .gd-new-turn-btn{padding:.35rem .75rem;font-family:'Orbitron',sans-serif;font-size:.6rem;font-weight:600;color:var(--bg);background:var(--gold);border:none;border-radius:4px;cursor:pointer;touch-action:manipulation;letter-spacing:.05em;text-transform:uppercase;transition:all .15s ease;white-space:nowrap}
+        .gd-new-turn-btn:hover{background:var(--gold-bright)}
+        .gd-new-turn-btn:disabled{opacity:.4;cursor:not-allowed}
+        .gd-divider{width:1px;height:28px;background:var(--border);flex-shrink:0}
+        .gd-phase-nav{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:1rem;overflow-x:auto;-webkit-overflow-scrolling:touch}
+        .gd-phase-tab{padding:.5rem .75rem;font-family:'Orbitron',sans-serif;font-size:.65rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;cursor:pointer;border:none;background:transparent;transition:all .2s ease;touch-action:manipulation;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px}
+        .gd-phase-tab:hover{color:var(--text2)}
+        .gd-phase-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+        .gd-phase-content{display:none}
+        .gd-phase-content.active{display:block}
+        .gd-section{margin-bottom:1.25rem}
+        .gd-section-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+        .gd-section-icon{width:5px;height:5px;background:var(--gold);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);flex-shrink:0}
+        .gd-section-title{font-family:'Orbitron',sans-serif;font-size:.7rem;font-weight:500;color:var(--gold);letter-spacing:.12em;text-transform:uppercase}
+        .gd-reminder{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:.625rem .875rem;font-size:.85rem;color:var(--text2);line-height:1.5}
+        .gd-reminder strong{color:var(--text)}
+        .gd-reminder.warn{border-color:rgba(212,168,75,.3);background:rgba(212,168,75,.06)}
+        .gd-reminder.info{border-color:rgba(74,142,212,.3);background:rgba(74,142,212,.06)}
+        .gd-ability-card{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:.625rem .875rem;margin-bottom:.5rem}
+        .gd-ability-header{display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;margin-bottom:.3rem}
+        .gd-ability-name{font-size:.85rem;font-weight:600;color:var(--text)}
+        .gd-ability-unit{font-size:.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+        .gd-ability-desc{font-size:.8rem;color:var(--text2);line-height:1.45}
+        .gd-strat-card{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:.75rem 1rem;margin-bottom:.625rem;position:relative;overflow:hidden;transition:border-color .15s ease}
+        .gd-strat-card.det-specific{border-color:var(--border-gold)}
+        .gd-strat-card.det-specific::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold-dark),transparent)}
+        .gd-strat-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;margin-bottom:.35rem}
+        .gd-strat-name{font-size:.9rem;font-weight:700;color:var(--text)}
+        .gd-strat-costs{display:flex;gap:.35rem;align-items:center;flex-shrink:0}
+        .gd-strat-cost{font-family:'Share Tech Mono',monospace;font-size:.75rem;padding:.15rem .4rem;border-radius:3px;font-weight:700}
+        .gd-strat-cost.cp{background:rgba(74,142,212,.15);color:var(--blue);border:1px solid rgba(74,142,212,.3)}
+        .gd-strat-cost.yp{background:rgba(212,168,75,.15);color:var(--gold);border:1px solid var(--border-gold)}
+        .gd-strat-effect{font-size:.8rem;color:var(--text2);line-height:1.45;margin-bottom:.5rem}
+        .gd-strat-target{font-size:.7rem;color:var(--text3);margin-bottom:.5rem}
+        .gd-strat-footer{display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+        .gd-use-btn{padding:.3rem .75rem;font-family:'Orbitron',sans-serif;font-size:.6rem;font-weight:600;border:1px solid var(--gold-dark);border-radius:3px;background:rgba(212,168,75,.1);color:var(--gold);cursor:pointer;touch-action:manipulation;letter-spacing:.08em;text-transform:uppercase;transition:all .15s ease}
+        .gd-use-btn:hover{background:rgba(212,168,75,.25);color:var(--gold-bright)}
+        .gd-used-flash{font-family:'Orbitron',sans-serif;font-size:.65rem;color:var(--green);letter-spacing:.05em;opacity:0;transition:opacity .3s ease}
+        .gd-used-flash.show{opacity:1}
+        .gd-warn-msg{font-size:.75rem;color:var(--red);display:none}
+        .gd-warn-msg.show{display:block}
+        .gd-empty{font-size:.85rem;color:var(--text3);text-align:center;padding:1.5rem 0;font-style:italic}
     </style>
 </head>
 <body>
@@ -430,6 +483,7 @@
         <nav class="tabs-compact">
             <button class="tab-compact active" data-tab="units">Army</button>
             <button class="tab-compact" data-tab="configuration">Builder</button>
+            <button class="tab-compact" data-tab="game-day">Game Day</button>
         </nav>
         <div class="header-actions">
             <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark theme">&#9788;</button>
@@ -464,6 +518,44 @@
             <div id="units-container"><div class="loading">Loading units...</div></div>
             <div id="led-units-count" style="display:none">-</div>
         </div>
+        <div id="game-day-tab" class="tab-content">
+            <!-- Persistent Trackers -->
+            <div class="gd-trackers">
+                <div class="gd-turn-group">
+                    <span class="gd-turn-label">Turn</span>
+                    <button class="gd-tracker-btn" onclick="gdChangeTurn(-1)">−</button>
+                    <span class="gd-turn-val" id="gd-turn-val">1</span>
+                    <button class="gd-tracker-btn" onclick="gdChangeTurn(1)">+</button>
+                </div>
+                <div class="gd-divider"></div>
+                <div class="gd-tracker-group">
+                    <span class="gd-tracker-label">CP</span>
+                    <button class="gd-tracker-btn" onclick="changeCP(-1);gdSyncTrackers()">−</button>
+                    <span class="gd-tracker-val" id="gd-cp-val">0</span>
+                    <button class="gd-tracker-btn" onclick="changeCP(1);gdSyncTrackers()">+</button>
+                </div>
+                <div class="gd-divider"></div>
+                <div class="gd-tracker-group">
+                    <span class="gd-tracker-label">YP</span>
+                    <button class="gd-tracker-btn" onclick="changeVP(-1);gdSyncTrackers()">−</button>
+                    <span class="gd-tracker-val" id="gd-vp-val">0</span>
+                    <button class="gd-tracker-btn" onclick="changeVP(1);gdSyncTrackers()">+</button>
+                </div>
+                <div class="gd-divider"></div>
+                <button class="gd-new-turn-btn" id="gd-new-turn-btn" onclick="gdNewTurn()">New Turn</button>
+            </div>
+            <!-- Phase Navigation -->
+            <div class="gd-phase-nav" id="gd-phase-nav">
+                <button class="gd-phase-tab active" data-phase="command" onclick="gdSelectPhase('command')">Command</button>
+                <button class="gd-phase-tab" data-phase="movement" onclick="gdSelectPhase('movement')">Movement</button>
+                <button class="gd-phase-tab" data-phase="shooting" onclick="gdSelectPhase('shooting')">Shooting</button>
+                <button class="gd-phase-tab" data-phase="charge" onclick="gdSelectPhase('charge')">Charge</button>
+                <button class="gd-phase-tab" data-phase="fight" onclick="gdSelectPhase('fight')">Fight</button>
+            </div>
+            <!-- Phase Content -->
+            <div id="gd-content"></div>
+        </div>
+
         <div id="configuration-tab" class="tab-content">
             <div class="config-total">
                 <span class="config-total-label">Points</span>
@@ -534,6 +626,193 @@ function changeVP(delta) {
 function changeCP(delta) {
     cp = Math.max(0, cp + delta);
     document.getElementById('cp-val').textContent = cp;
+}
+
+// Game Day state
+let stratagems = {};
+let gameDayTurn = 1;
+let gameDayPhase = 'command';
+
+function gdSyncTrackers() {
+    const cpEl = document.getElementById('gd-cp-val');
+    const vpEl = document.getElementById('gd-vp-val');
+    if (cpEl) cpEl.textContent = cp;
+    if (vpEl) vpEl.textContent = vp;
+}
+
+function gdChangeTurn(delta) {
+    gameDayTurn = Math.max(1, Math.min(5, gameDayTurn + delta));
+    document.getElementById('gd-turn-val').textContent = gameDayTurn;
+    renderGameDayTab();
+}
+
+function gdNewTurn() {
+    if (gameDayTurn >= 5) return;
+    gameDayTurn++;
+    document.getElementById('gd-turn-val').textContent = gameDayTurn;
+    changeCP(1);
+    gdSyncTrackers();
+    gdSelectPhase('command');
+    renderGameDayTab();
+}
+
+function gdSelectPhase(phase) {
+    gameDayPhase = phase;
+    document.querySelectorAll('.gd-phase-tab').forEach(t => {
+        t.classList.toggle('active', t.getAttribute('data-phase') === phase);
+    });
+    renderGameDayTab();
+}
+
+function gdUseStratagem(id) {
+    const strat = stratagems[id];
+    if (!strat) return;
+    const warnEl = document.getElementById('gd-warn-' + id);
+    const flashEl = document.getElementById('gd-flash-' + id);
+    if (strat.cpCost > cp) {
+        if (warnEl) { warnEl.textContent = 'Not enough CP!'; warnEl.classList.add('show'); setTimeout(() => warnEl.classList.remove('show'), 2000); }
+        return;
+    }
+    if (strat.ypCost > vp) {
+        if (warnEl) { warnEl.textContent = 'Not enough YP!'; warnEl.classList.add('show'); setTimeout(() => warnEl.classList.remove('show'), 2000); }
+        return;
+    }
+    if (strat.cpCost > 0) { changeCP(-strat.cpCost); gdSyncTrackers(); }
+    if (strat.ypCost > 0) { changeVP(-strat.ypCost); gdSyncTrackers(); }
+    if (warnEl) warnEl.classList.remove('show');
+    if (flashEl) { flashEl.classList.add('show'); setTimeout(() => flashEl.classList.remove('show'), 1500); }
+}
+
+function gdGetArmyAbilitiesForPhase(phase) {
+    const results = [];
+    armyList.forEach(instance => {
+        const unit = units[instance.unitId];
+        if (!unit) return;
+        const unitName = unit.name;
+        const allAbilityIds = [
+            ...(unit.abilities || []),
+            ...(unit.coreAbilities || []),
+            ...(unit.wargear || []),
+        ];
+        allAbilityIds.forEach(abId => {
+            const ab = abilities[abId];
+            if (ab && ab.phases && ab.phases.includes(phase)) {
+                results.push({ abilityId: abId, ability: ab, unitName });
+            }
+        });
+    });
+    return results;
+}
+
+function gdGetDeepStrikeUnits() {
+    return armyList.filter(instance => {
+        const unit = units[instance.unitId];
+        if (!unit) return false;
+        if (unit.keywords && unit.keywords.some(k => k.toUpperCase() === 'DEEP STRIKE')) return true;
+        const allAbilityIds = [...(unit.abilities || []), ...(unit.coreAbilities || [])];
+        return allAbilityIds.includes('deep-strike');
+    }).map(instance => units[instance.unitId]?.name).filter(Boolean);
+}
+
+function gdRenderStratCard(id, strat) {
+    const isDetSpecific = !!strat.detachment;
+    return `<div class="gd-strat-card${isDetSpecific ? ' det-specific' : ''}">
+        <div class="gd-strat-top">
+            <span class="gd-strat-name">${strat.name}</span>
+            <span class="gd-strat-costs">
+                ${strat.cpCost > 0 ? `<span class="gd-strat-cost cp">${strat.cpCost}CP</span>` : ''}
+                ${strat.ypCost > 0 ? `<span class="gd-strat-cost yp">${strat.ypCost}YP</span>` : ''}
+                ${strat.cpCost === 0 && strat.ypCost === 0 ? `<span class="gd-strat-cost cp">0CP</span>` : ''}
+            </span>
+        </div>
+        <div class="gd-strat-effect">${strat.effect || strat.description}</div>
+        ${strat.target ? `<div class="gd-strat-target">Target: ${strat.target}</div>` : ''}
+        <div class="gd-strat-footer">
+            <button class="gd-use-btn" onclick="gdUseStratagem('${id}')">Use</button>
+            <span class="gd-used-flash" id="gd-flash-${id}">✓ Used</span>
+            <span class="gd-warn-msg" id="gd-warn-${id}"></span>
+        </div>
+    </div>`;
+}
+
+function gdRenderPhaseContent(phase) {
+    const phaseStrats = Object.entries(stratagems).filter(([id, s]) => {
+        if (!s.phases || !s.phases.includes(phase)) return false;
+        if (s.detachment && s.detachment !== selectedDetachment) return false;
+        return true;
+    });
+    const phaseAbilities = gdGetArmyAbilitiesForPhase(phase);
+
+    let html = '';
+
+    if (phase === 'command') {
+        html += `<div class="gd-section">
+            <div class="gd-section-header"><div class="gd-section-icon"></div><span class="gd-section-title">Start of Turn</span></div>
+            <div class="gd-reminder">
+                <strong>Turn ${gameDayTurn}</strong> — CP +1 auto-incremented. ${gameDayTurn === 1 ? 'No reinforcements this turn (Deep Strike available Turn 2+).' : 'Reinforcements (Deep Strike) available.'}
+            </div>
+        </div>
+        <div class="gd-section">
+            <div class="gd-section-header"><div class="gd-section-icon"></div><span class="gd-section-title">Battleshock</span></div>
+            <div class="gd-reminder warn">Test Battleshock for any unit <strong>below half strength</strong>. Roll <strong>2D6 vs Leadership</strong> — the unit is Battle-shocked if the roll is <strong>greater than</strong> its Leadership characteristic.</div>
+        </div>`;
+    }
+
+    if (phase === 'movement') {
+        const deepStrikeUnits = gdGetDeepStrikeUnits();
+        html += `<div class="gd-section">
+            <div class="gd-section-header"><div class="gd-section-icon"></div><span class="gd-section-title">Deep Strike</span></div>`;
+        if (gameDayTurn >= 2) {
+            html += `<div class="gd-reminder info">Reinforcements can arrive this turn — deploy <strong>9\"+ from enemies</strong>.`;
+            if (deepStrikeUnits.length > 0) {
+                html += `<br><br><strong>Units with Deep Strike:</strong> ${deepStrikeUnits.join(', ')}`;
+            }
+            html += `</div>`;
+        } else {
+            html += `<div class="gd-reminder">No reinforcements allowed <strong>Turn 1</strong>.</div>`;
+        }
+        html += `</div>`;
+    }
+
+    if (phaseAbilities.length > 0) {
+        html += `<div class="gd-section">
+            <div class="gd-section-header"><div class="gd-section-icon"></div><span class="gd-section-title">Abilities</span></div>`;
+        phaseAbilities.forEach(({ ability, unitName }) => {
+            html += `<div class="gd-ability-card">
+                <div class="gd-ability-header">
+                    <span class="gd-ability-name">${ability.name}</span>
+                    <span class="gd-ability-unit">${unitName}</span>
+                </div>
+                <div class="gd-ability-desc">${ability.description}</div>
+            </div>`;
+        });
+        html += `</div>`;
+    }
+
+    if (phaseStrats.length > 0) {
+        html += `<div class="gd-section">
+            <div class="gd-section-header"><div class="gd-section-icon"></div><span class="gd-section-title">Stratagems</span></div>`;
+        phaseStrats.forEach(([id, strat]) => {
+            html += gdRenderStratCard(id, strat);
+        });
+        html += `</div>`;
+    }
+
+    if (html === '') {
+        html = `<div class="gd-empty">No abilities or stratagems for this phase.</div>`;
+    }
+
+    return html;
+}
+
+function renderGameDayTab() {
+    const contentEl = document.getElementById('gd-content');
+    if (!contentEl) return;
+    document.getElementById('gd-turn-val').textContent = gameDayTurn;
+    gdSyncTrackers();
+    const newTurnBtn = document.getElementById('gd-new-turn-btn');
+    if (newTurnBtn) newTurnBtn.disabled = gameDayTurn >= 5;
+    contentEl.innerHTML = `<div class="gd-phase-content active">${gdRenderPhaseContent(gameDayPhase)}</div>`;
 }
 
 // Detachment definitions (rule text is embedded here so it never depends on abilities.json cache)
@@ -1003,10 +1282,11 @@ function removeUnitFromArmy(instanceId) {
 async function loadData() {
     try {
         // Load core data files
-        [abilities, enhancements, army] = await Promise.all([
+        [abilities, enhancements, army, stratagems] = await Promise.all([
             fetchJSON('data/abilities.json'),
             fetchJSON('data/enhancements.json'),
-            fetchJSON('data/army.json')
+            fetchJSON('data/army.json'),
+            fetchJSON('data/stratagems.json')
         ]);
 
         // Load ALL unit files (not just ledUnits)
@@ -2440,6 +2720,7 @@ document.querySelectorAll('.tab-compact').forEach(tab => {
         this.classList.add('active');
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.getElementById(tabId + '-tab').classList.add('active');
+        if (tabId === 'game-day') renderGameDayTab();
     });
 });
 
