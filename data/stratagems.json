@@ -118,25 +118,5 @@
     "effect": "Until the end of the phase, each time a model in that unit makes a melee attack, add 1 to the Wound roll.",
     "target": "LEAGUES OF VOTANN unit",
     "detachment": "hearthband"
-  },
-  "oathmark-acquisitors": {
-    "name": "Oathmark Acquisitors",
-    "phases": ["command"],
-    "cpCost": 1,
-    "ypCost": 0,
-    "description": "Use this Stratagem at the start of your Command phase.",
-    "effect": "Select one LEAGUES OF VOTANN unit from your army that is within range of an objective marker. You gain 1 additional YP.",
-    "target": "LEAGUES OF VOTANN unit on objective",
-    "detachment": "hearthband"
-  },
-  "hammer-of-votann": {
-    "name": "Hammer of Votann",
-    "phases": ["shooting", "fight"],
-    "cpCost": 1,
-    "ypCost": 1,
-    "description": "Use this Stratagem in your Shooting or Fight phase, when a LEAGUES OF VOTANN unit from your army is selected to shoot or fight. Costs 1CP and 1YP.",
-    "effect": "Until the end of the phase, each time a model in that unit makes an attack, a Critical Hit is scored on an unmodified Hit roll of 5+.",
-    "target": "LEAGUES OF VOTANN unit",
-    "detachment": "hearthband"
   }
 }

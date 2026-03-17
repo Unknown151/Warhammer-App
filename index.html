@@ -746,10 +746,41 @@ function gdRenderPhaseContent(phase) {
     let html = '';
 
     if (phase === 'command') {
+        // Pre-game scout abilities (only Turn 1)
+        const scoutAbilities = gdGetArmyAbilitiesForPhase('pre-game');
+        if (gameDayTurn === 1 && scoutAbilities.length > 0) {
+            html += `<div class="gd-section">
+                <div class="gd-section-header"><div class="gd-section-icon"></div><span class="gd-section-title">Before Round 1 — At the Start of the Battle</span></div>`;
+            scoutAbilities.forEach(({ ability, unitName }) => {
+                html += `<div class="gd-ability-card">
+                    <div class="gd-ability-header">
+                        <span class="gd-ability-name">${ability.name}</span>
+                        <span class="gd-ability-unit">${unitName}</span>
+                    </div>
+                    <div class="gd-ability-desc">${ability.description}</div>
+                </div>`;
+            });
+            html += `</div>`;
+        }
+
         html += `<div class="gd-section">
             <div class="gd-section-header"><div class="gd-section-icon"></div><span class="gd-section-title">Start of Turn</span></div>
             <div class="gd-reminder">
-                <strong>Turn ${gameDayTurn}</strong> — CP +1 auto-incremented. ${gameDayTurn === 1 ? 'No reinforcements this turn (Deep Strike available Turn 2+).' : 'Reinforcements (Deep Strike) available.'}
+                <strong>Turn ${gameDayTurn}</strong> — CP +1 auto-incremented. ${gameDayTurn === 1 ? 'No reinforcements this turn (Reinforcements available Turn 2+).' : 'Reinforcements available this turn.'}
+            </div>
+        </div>
+        <div class="gd-section">
+            <div class="gd-section-header"><div class="gd-section-icon"></div><span class="gd-section-title">Yield Points</span></div>
+            <div class="gd-reminder info">
+                At the end of each player's Command phase, gain <strong>1YP</strong> if you control one or more objective markers within your deployment zone.<br><br>
+                ${gameDayTurn >= 2 ? `<strong>Turn ${gameDayTurn} — additional YP for each condition met:</strong><br>
+                <ul style="margin:.4rem 0 0 1rem;line-height:1.8">
+                    <li>You control one or more objectives <strong>outside</strong> your deployment zone</li>
+                    <li>You control <strong>two or more</strong> objectives outside your deployment zone</li>
+                    <li>You control <strong>more objectives</strong> than your opponent</li>
+                </ul><br>
+                YP gained this way is always gained <strong>before</strong> checking which ability LEAGUES OF VOTANN units from your army have.`
+                : `From the <strong>second battle round</strong> onwards, gain 1 additional YP for each of these conditions you satisfy.`}
             </div>
         </div>
         <div class="gd-section">
@@ -761,15 +792,23 @@ function gdRenderPhaseContent(phase) {
     if (phase === 'movement') {
         const deepStrikeUnits = gdGetDeepStrikeUnits();
         html += `<div class="gd-section">
-            <div class="gd-section-header"><div class="gd-section-icon"></div><span class="gd-section-title">Deep Strike</span></div>`;
-        if (gameDayTurn >= 2) {
-            html += `<div class="gd-reminder info">Reinforcements can arrive this turn — deploy <strong>9\"+ from enemies</strong>.`;
-            if (deepStrikeUnits.length > 0) {
-                html += `<br><br><strong>Units with Deep Strike:</strong> ${deepStrikeUnits.join(', ')}`;
-            }
-            html += `</div>`;
-        } else {
+            <div class="gd-section-header"><div class="gd-section-icon"></div><span class="gd-section-title">Reinforcements</span></div>`;
+        if (gameDayTurn === 1) {
             html += `<div class="gd-reminder">No reinforcements allowed <strong>Turn 1</strong>.</div>`;
+        } else if (gameDayTurn === 2) {
+            html += `<div class="gd-reminder info">
+                <strong>Turn 2 — Reinforcements can arrive.</strong><br><br>
+                Set up <strong>wholly within 6\"</strong> of any battlefield edge (not in the enemy deployment zone).<br>
+                Cannot be set up within <strong>9\" of any enemy models</strong>.
+                ${deepStrikeUnits.length > 0 ? `<br><br><strong>Units with Deep Strike:</strong> ${deepStrikeUnits.join(', ')}` : ''}
+            </div>`;
+        } else {
+            html += `<div class="gd-reminder info">
+                <strong>Turn ${gameDayTurn} — Reinforcements can arrive.</strong><br><br>
+                Set up <strong>wholly within 6\"</strong> of any battlefield edge.<br>
+                Cannot be set up within <strong>9\" of any enemy models</strong>.
+                ${deepStrikeUnits.length > 0 ? `<br><br><strong>Units with Deep Strike:</strong> ${deepStrikeUnits.join(', ')}` : ''}
+            </div>`;
         }
         html += `</div>`;
     }

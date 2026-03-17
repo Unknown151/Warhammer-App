@@ -267,7 +267,7 @@
   "scouts-9": {
     "name": "Scouts 9\"",
     "type": "Core Ability",
-    "phases": ["movement"],
+    "phases": ["pre-game"],
     "description": "At the start of the first battle round, before the first turn begins, this unit can make a <strong>Normal move of up to 9\"</strong>."
   },
   "firing-deck-5": {
