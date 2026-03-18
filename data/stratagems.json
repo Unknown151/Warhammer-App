@@ -99,16 +99,6 @@
     "target": "LEAGUES OF VOTANN unit",
     "detachment": "hearthband"
   },
-  "targeting-closest": {
-    "name": "Targeting Closest",
-    "phases": ["shooting"],
-    "cpCost": 1,
-    "ypCost": 0,
-    "description": "Use this Stratagem in your Shooting phase, when a LEAGUES OF VOTANN unit from your army is selected to shoot.",
-    "effect": "Until the end of the phase, if that unit targets the closest eligible target: re-roll wound rolls of 1. If the unit is KÂHL, EINHYR HEARTHGUARD, or ÛTHAR THE DESTINED, also improve AP by 1.",
-    "target": "LEAGUES OF VOTANN unit",
-    "detachment": "hearthband"
-  },
   "secure-positions": {
     "name": "Secure Positions",
     "phases": ["command", "movement", "shooting", "charge", "fight"],
