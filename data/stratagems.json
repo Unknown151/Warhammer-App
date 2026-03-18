@@ -108,5 +108,65 @@
     "effect": "Until the end of the phase, if that unit targets the closest eligible target: re-roll wound rolls of 1. If the unit is KÂHL, EINHYR HEARTHGUARD, or ÛTHAR THE DESTINED, also improve AP by 1.",
     "target": "LEAGUES OF VOTANN unit",
     "detachment": "hearthband"
+  },
+  "secure-positions": {
+    "name": "Secure Positions",
+    "phases": ["command", "movement", "shooting", "charge", "fight"],
+    "cpCost": 1,
+    "ypCost": 0,
+    "description": "End of any of your phases.",
+    "effect": "One LEAGUES OF VOTANN unit embarked within your TRANSPORT can disembark. Models can be set up anywhere wholly within 6\" of the TRANSPORT. That unit cannot declare a charge this turn but can otherwise act normally.",
+    "target": "LEAGUES OF VOTANN TRANSPORT unit",
+    "detachment": "brandfast-oathband"
+  },
+  "bastion-running": {
+    "name": "Bastion Running",
+    "phases": ["movement"],
+    "cpCost": 1,
+    "ypCost": 0,
+    "description": "Your Movement phase, before the unit moves.",
+    "effect": "Until the end of the phase, each time your unit makes a Normal or Advance move, it can move horizontally through terrain features.",
+    "target": "HEKATON LAND FORTRESS unit that has not moved this phase",
+    "detachment": "brandfast-oathband"
+  },
+  "illuminated-priority": {
+    "name": "Illuminated Priority",
+    "phases": ["shooting"],
+    "cpCost": 1,
+    "ypCost": 0,
+    "description": "Your Shooting phase, just after a LEAGUES OF VOTANN VEHICLE unit from your army has shot.",
+    "effect": "Select one enemy unit hit by those attacks. Until the end of the phase, each time a LEAGUES OF VOTANN INFANTRY model makes an attack targeting that enemy unit, re-roll a Hit roll of 1.",
+    "target": "LEAGUES OF VOTANN VEHICLE unit that just shot",
+    "detachment": "brandfast-oathband"
+  },
+  "inexorable-efficiency": {
+    "name": "Inexorable Efficiency",
+    "phases": ["shooting"],
+    "cpCost": 1,
+    "ypCost": 0,
+    "description": "Your Shooting phase.",
+    "effect": "Until the end of the phase, your unit is eligible to shoot even if it Fell Back this turn.",
+    "target": "LEAGUES OF VOTANN unit",
+    "detachment": "brandfast-oathband"
+  },
+  "opportunistic-escalation": {
+    "name": "Opportunistic Escalation",
+    "phases": ["shooting"],
+    "cpCost": 1,
+    "ypCost": 0,
+    "description": "Your opponent's Shooting phase, just after an enemy unit has shot (requires Hostile Acquisition).",
+    "effect": "Your unit can make a Normal move of up to D6\".",
+    "target": "LEAGUES OF VOTANN VEHICLE unit (not HEKATON) that was hit by those attacks",
+    "detachment": "brandfast-oathband"
+  },
+  "vengeance-flare": {
+    "name": "Vengeance Flare",
+    "phases": ["shooting"],
+    "cpCost": 2,
+    "ypCost": 0,
+    "description": "Your opponent's Shooting phase, just after an enemy unit has shot.",
+    "effect": "Select one friendly KAPRICUS or SAGITAUR within 6\" of your INFANTRY unit — it can shoot as if it were your Shooting phase, targeting only that enemy unit. Optionally spend 2YP to select a HEKATON LAND FORTRESS instead.",
+    "target": "LEAGUES OF VOTANN INFANTRY unit that was hit by those attacks",
+    "detachment": "brandfast-oathband"
   }
 }
