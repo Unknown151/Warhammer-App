@@ -476,6 +476,35 @@
         .gd-warn-msg{font-size:.75rem;color:var(--red);display:none}
         .gd-warn-msg.show{display:block}
         .gd-empty{font-size:.85rem;color:var(--text3);text-align:center;padding:1.5rem 0;font-style:italic}
+
+        /* YP Dialog */
+        .yp-dialog-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;display:none;align-items:flex-end;justify-content:center}
+        .yp-dialog-overlay.open{display:flex}
+        .yp-dialog{background:var(--bg2);border:1px solid var(--border-gold);border-radius:10px 10px 0 0;width:100%;max-width:480px;padding:1.25rem 1rem 2rem;display:flex;flex-direction:column;gap:1rem}
+        .yp-dialog-title{font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:700;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+        .yp-dialog-close{width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--bg3);color:var(--text2);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
+        .yp-check-list{display:flex;flex-direction:column;gap:.5rem}
+        .yp-check-item{display:flex;align-items:flex-start;gap:.75rem;padding:.625rem .75rem;background:var(--bg3);border:1px solid var(--border);border-radius:6px;cursor:pointer;touch-action:manipulation;transition:border-color .15s ease}
+        .yp-check-item.checked{border-color:var(--gold-dark);background:rgba(212,168,75,.08)}
+        .yp-check-item.disabled{opacity:.4;cursor:not-allowed}
+        .yp-checkbox{width:20px;height:20px;border:2px solid var(--border);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:.1rem;transition:all .15s ease}
+        .yp-check-item.checked .yp-checkbox{border-color:var(--gold);background:var(--gold)}
+        .yp-checkbox-tick{font-size:.75rem;color:var(--bg);display:none}
+        .yp-check-item.checked .yp-checkbox-tick{display:block}
+        .yp-check-label{font-size:.85rem;color:var(--text);line-height:1.4;flex:1}
+        .yp-check-label small{display:block;font-size:.7rem;color:var(--text3);margin-top:.15rem}
+        .yp-check-cost{font-family:'Share Tech Mono',monospace;font-size:.85rem;font-weight:700;color:var(--gold);flex-shrink:0;margin-top:.1rem}
+        .yp-total-row{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:rgba(212,168,75,.08);border:1px solid var(--border-gold);border-radius:6px}
+        .yp-total-label{font-family:'Orbitron',sans-serif;font-size:.75rem;color:var(--text2);letter-spacing:.08em}
+        .yp-total-val{font-family:'Share Tech Mono',monospace;font-size:1.6rem;font-weight:700;color:var(--gold-bright)}
+        .yp-gain-btn{width:100%;padding:.65rem;font-family:'Orbitron',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:none;border-radius:6px;background:var(--gold);color:var(--bg);cursor:pointer;touch-action:manipulation;transition:background .15s ease}
+        .yp-gain-btn:hover{background:var(--gold-bright)}
+        .yp-gain-btn:disabled{opacity:.4;cursor:not-allowed}
+        .yp-open-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:.625rem .875rem;background:var(--bg3);border:1px solid var(--border-gold);border-radius:6px;cursor:pointer;touch-action:manipulation;transition:all .15s ease}
+        .yp-open-btn:hover{background:rgba(212,168,75,.1)}
+        .yp-open-btn-label{font-size:.85rem;color:var(--text);font-weight:600}
+        .yp-open-btn-sub{font-size:.7rem;color:var(--text3);margin-top:.1rem}
+        .yp-open-btn-arrow{font-size:1rem;color:var(--gold)}
     </style>
 </head>
 <body>
@@ -664,6 +693,52 @@ function gdSelectPhase(phase) {
     renderGameDayTab();
 }
 
+// YP Dialog
+function gdOpenYPDialog() {
+    const isT2plus = gameDayTurn >= 2;
+    const checks = [
+        { id: 'yp-deploy', label: 'Control an objective marker in your deployment zone', sub: 'Always applies', yp: 1, alwaysEnabled: true },
+        { id: 'yp-nml-1', label: 'Control one or more objectives outside your deployment zone', sub: 'Turn 2+ only', yp: 1, alwaysEnabled: isT2plus },
+        { id: 'yp-nml-2', label: 'Control two or more objectives outside your deployment zone', sub: 'Turn 2+ only', yp: 1, alwaysEnabled: isT2plus },
+        { id: 'yp-more', label: 'Control more objectives than your opponent', sub: 'Turn 2+ only', yp: 1, alwaysEnabled: isT2plus },
+    ];
+
+    const list = document.getElementById('yp-check-list');
+    list.innerHTML = checks.map(c => `
+        <div class="yp-check-item${c.alwaysEnabled ? '' : ' disabled'}" id="${c.id}" ${c.alwaysEnabled ? `onclick="gdToggleYPCheck('${c.id}')"` : ''} data-yp="${c.yp}">
+            <div class="yp-checkbox"><span class="yp-checkbox-tick">✓</span></div>
+            <div class="yp-check-label">${c.label}<small>${c.sub}</small></div>
+            <span class="yp-check-cost">+${c.yp}YP</span>
+        </div>`).join('');
+
+    gdUpdateYPTotal();
+    document.getElementById('yp-dialog-overlay').classList.add('open');
+}
+
+function gdToggleYPCheck(id) {
+    const el = document.getElementById(id);
+    if (!el || el.classList.contains('disabled')) return;
+    el.classList.toggle('checked');
+    gdUpdateYPTotal();
+}
+
+function gdUpdateYPTotal() {
+    const total = [...document.querySelectorAll('.yp-check-item.checked')].reduce((sum, el) => sum + Number(el.dataset.yp), 0);
+    document.getElementById('yp-total').textContent = total;
+    document.getElementById('yp-gain-btn').disabled = total === 0;
+}
+
+function gdConfirmYP() {
+    const total = Number(document.getElementById('yp-total').textContent);
+    if (total > 0) { changeVP(total); gdSyncTrackers(); }
+    gdCloseYPDialog();
+}
+
+function gdCloseYPDialog(e) {
+    if (e && e.target !== document.getElementById('yp-dialog-overlay')) return;
+    document.getElementById('yp-dialog-overlay').classList.remove('open');
+}
+
 function gdUseStratagem(id) {
     const strat = stratagems[id];
     if (!strat) return;
@@ -771,17 +846,13 @@ function gdRenderPhaseContent(phase) {
         </div>
         <div class="gd-section">
             <div class="gd-section-header"><div class="gd-section-icon"></div><span class="gd-section-title">Yield Points</span></div>
-            <div class="gd-reminder info">
-                At the end of each player's Command phase, gain <strong>1YP</strong> if you control one or more objective markers within your deployment zone.<br><br>
-                ${gameDayTurn >= 2 ? `<strong>Turn ${gameDayTurn} — additional YP for each condition met:</strong><br>
-                <ul style="margin:.4rem 0 0 1rem;line-height:1.8">
-                    <li>You control one or more objectives <strong>outside</strong> your deployment zone</li>
-                    <li>You control <strong>two or more</strong> objectives outside your deployment zone</li>
-                    <li>You control <strong>more objectives</strong> than your opponent</li>
-                </ul><br>
-                YP gained this way is always gained <strong>before</strong> checking which ability LEAGUES OF VOTANN units from your army have.`
-                : `From the <strong>second battle round</strong> onwards, gain 1 additional YP for each of these conditions you satisfy.`}
-            </div>
+            <button class="yp-open-btn" onclick="gdOpenYPDialog()">
+                <div>
+                    <div class="yp-open-btn-label">Calculate &amp; Gain YP</div>
+                    <div class="yp-open-btn-sub">${gameDayTurn >= 2 ? 'Up to 4 conditions available this turn' : '1 condition available (deployment zone only)'}</div>
+                </div>
+                <span class="yp-open-btn-arrow">▲</span>
+            </button>
         </div>
         <div class="gd-section">
             <div class="gd-section-header"><div class="gd-section-icon"></div><span class="gd-section-title">Battleshock</span></div>
@@ -2766,5 +2837,21 @@ document.querySelectorAll('.tab-compact').forEach(tab => {
 // Initialize app
 loadData();
     </script>
+
+    <!-- YP Calculator Dialog -->
+    <div class="yp-dialog-overlay" id="yp-dialog-overlay" onclick="gdCloseYPDialog(event)">
+        <div class="yp-dialog" id="yp-dialog">
+            <div class="yp-dialog-title">
+                Yield Points
+                <button class="yp-dialog-close" onclick="gdCloseYPDialog()">×</button>
+            </div>
+            <div class="yp-check-list" id="yp-check-list"></div>
+            <div class="yp-total-row">
+                <span class="yp-total-label">Total YP to gain</span>
+                <span class="yp-total-val" id="yp-total">0</span>
+            </div>
+            <button class="yp-gain-btn" id="yp-gain-btn" onclick="gdConfirmYP()">Gain YP</button>
+        </div>
+    </div>
 </body>
 </html>
