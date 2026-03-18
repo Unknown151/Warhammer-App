@@ -108,15 +108,5 @@
     "effect": "Until the end of the phase, if that unit targets the closest eligible target: re-roll wound rolls of 1. If the unit is KÂHL, EINHYR HEARTHGUARD, or ÛTHAR THE DESTINED, also improve AP by 1.",
     "target": "LEAGUES OF VOTANN unit",
     "detachment": "hearthband"
-  },
-  "grim-demeanour": {
-    "name": "Grim Demeanour",
-    "phases": ["fight"],
-    "cpCost": 1,
-    "ypCost": 0,
-    "description": "Use this Stratagem in the Fight phase, when a LEAGUES OF VOTANN unit from your army is selected to fight.",
-    "effect": "Until the end of the phase, each time a model in that unit makes a melee attack, add 1 to the Wound roll.",
-    "target": "LEAGUES OF VOTANN unit",
-    "detachment": "hearthband"
   }
 }
