@@ -467,7 +467,7 @@
         .gd-strat-cost.cp{background:rgba(74,142,212,.15);color:var(--blue);border:1px solid rgba(74,142,212,.3)}
         .gd-strat-cost.yp{background:rgba(212,168,75,.15);color:var(--gold);border:1px solid var(--border-gold)}
         .gd-strat-effect{font-size:.8rem;color:var(--text2);line-height:1.45;margin-bottom:.5rem}
-        .gd-strat-target{font-size:.7rem;color:var(--text3);margin-bottom:.5rem}
+        .gd-strat-target{font-size:.75rem;color:var(--text2);margin-bottom:.5rem;font-weight:700}
         .gd-strat-footer{display:flex;justify-content:space-between;align-items:center;gap:.5rem}
         .gd-use-btn{padding:.3rem .75rem;font-family:'Orbitron',sans-serif;font-size:.6rem;font-weight:600;border:1px solid var(--gold-dark);border-radius:3px;background:rgba(212,168,75,.1);color:var(--gold);cursor:pointer;touch-action:manipulation;letter-spacing:.08em;text-transform:uppercase;transition:all .15s ease}
         .gd-use-btn:hover{background:rgba(212,168,75,.25);color:var(--gold-bright)}
@@ -800,8 +800,8 @@ function gdRenderStratCard(id, strat) {
                 ${strat.cpCost === 0 && strat.ypCost === 0 ? `<span class="gd-strat-cost cp">0CP</span>` : ''}
             </span>
         </div>
-        <div class="gd-strat-effect">${strat.effect || strat.description}</div>
         ${strat.target ? `<div class="gd-strat-target">Target: ${strat.target}</div>` : ''}
+        <div class="gd-strat-effect">${strat.effect || strat.description}</div>
         <div class="gd-strat-footer">
             <button class="gd-use-btn" onclick="gdUseStratagem('${id}')">Use</button>
             <span class="gd-used-flash" id="gd-flash-${id}">✓ Used</span>
