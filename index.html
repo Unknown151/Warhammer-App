@@ -198,6 +198,7 @@
         .card-collapse-info{display:flex;flex-direction:column;gap:.15rem}
         .card-collapse-title{font-family:'Orbitron',sans-serif;font-size:.9rem;font-weight:700;color:var(--gold);letter-spacing:.03em}
         .card-collapse-subtitle{font-size:.7rem;font-weight:500;color:var(--text2)}
+        .card-collapse-diff{font-size:.65rem;font-weight:500;color:var(--text3);font-style:italic;margin-top:.1rem}
         .card-collapse-right{display:flex;align-items:center;gap:.5rem}
         .leader-death-toggle{width:28px;height:28px;border-radius:50%;border:2px solid var(--text3);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;transition:all .2s ease;font-size:.7rem;color:var(--text3)}
         .leader-death-toggle:hover{border-color:var(--red);color:var(--red)}
@@ -1546,6 +1547,7 @@ function renderSoloUnitCard(entry) {
                 <div class="card-collapse-info">
                     <div class="card-collapse-title">${unit.name}</div>
                     <div class="card-collapse-subtitle">${modelCount} model${modelCount > 1 ? 's' : ''}</div>
+                    ${entry.diffLabel ? `<div class="card-collapse-diff">${entry.diffLabel}</div>` : ''}
                 </div>
                 <div class="card-collapse-right">
                     <div class="card-collapse-toggle"></div>
@@ -1666,6 +1668,7 @@ function renderLedUnitCard(ledUnit) {
                 <div class="card-collapse-info">
                     <div class="card-collapse-title">${leader.name} + ${bodyguard.name}</div>
                     <div class="card-collapse-subtitle">${ledUnit.attachedBannerText}</div>
+                    ${ledUnit.diffLabel ? `<div class="card-collapse-diff">${ledUnit.diffLabel}</div>` : ''}
                 </div>
                 <div class="card-collapse-right">
                     <button class="leader-death-toggle" onclick="toggleLeaderDeath('${ledUnit.leader}', event)" title="Mark leader as slain">☠</button>
@@ -2573,7 +2576,73 @@ function buildActiveArmy() {
         return (nameA || '').localeCompare(nameB || '');
     });
 
-    return activeUnits;
+    // Converge exact duplicates; label partial duplicates (same unit, different config)
+    const getFingerprint = inst => {
+        if (!inst) return 'default';
+        const wp = inst.weapons
+            ? Object.entries(inst.weapons).sort((a,b) => a[0].localeCompare(b[0])).map(([k,v]) => `${k}:${v.equipped}:${v.count}`).join('|')
+            : '';
+        const wg = Array.isArray(inst.selectedWargear) ? [...inst.selectedWargear].sort().join(',') : (inst.selectedWargear || '');
+        return `${inst.modelCount}|${inst.enhancementId || ''}|${wp}|${wg}`;
+    };
+
+    const groups = new Map();
+    activeUnits.forEach(entry => {
+        const key = entry.type === 'led' ? `led:${entry.leader}:${entry.bodyguard}` : `solo:${entry.unit}`;
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(entry);
+    });
+
+    const result = [];
+    groups.forEach(groupEntries => {
+        if (groupEntries.length === 1) { result.push(groupEntries[0]); return; }
+
+        const prints = groupEntries.map(e => getFingerprint(e.instance));
+        if (prints.every(p => p === prints[0])) {
+            // All identical — show only one
+            result.push(groupEntries[0]);
+        } else {
+            // Partially different — show all with a short diff label
+            groupEntries.forEach((entry, idx) => {
+                const inst = entry.instance;
+                const labelParts = [];
+
+                const counts = groupEntries.map(e => e.instance?.modelCount);
+                if (!counts.every(c => c === counts[0]))
+                    labelParts.push(`${inst?.modelCount} models`);
+
+                const enhs = groupEntries.map(e => e.instance?.enhancementId || null);
+                if (!enhs.every(e => e === enhs[0])) {
+                    if (inst?.enhancementId) labelParts.push(enhancements[inst.enhancementId]?.name || inst.enhancementId);
+                    else labelParts.push('No enhancement');
+                }
+
+                const wgSets = groupEntries.map(e => {
+                    const wg = Array.isArray(e.instance?.selectedWargear) ? e.instance.selectedWargear : (e.instance?.selectedWargear ? [e.instance.selectedWargear] : []);
+                    return [...wg].sort().join(',');
+                });
+                if (!wgSets.every(w => w === wgSets[0])) {
+                    const wg = Array.isArray(inst?.selectedWargear) ? inst.selectedWargear : (inst?.selectedWargear ? [inst.selectedWargear] : []);
+                    labelParts.push(wg.length ? wg.map(w => abilities[w]?.name || w).join(', ') : 'Default wargear');
+                }
+
+                const wpPrints = groupEntries.map(e => getFingerprint(e.instance).split('|').slice(2).join('|'));
+                if (!wpPrints.every(w => w === wpPrints[0]) && labelParts.length === 0)
+                    labelParts.push(`Variant ${idx + 1}`);
+
+                result.push(labelParts.length ? { ...entry, diffLabel: labelParts.join(' · ') } : entry);
+            });
+        }
+    });
+
+    // Re-sort to maintain alphabetical order after grouping
+    result.sort((a, b) => {
+        const nameA = a.type === 'led' ? units[a.leader]?.name : units[a.unit]?.name;
+        const nameB = b.type === 'led' ? units[b.leader]?.name : units[b.unit]?.name;
+        return (nameA || '').localeCompare(nameB || '');
+    });
+
+    return result;
 }
 
 // Update unit card when leader dies
