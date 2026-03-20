@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -501,6 +501,12 @@
         .yp-gain-btn{width:100%;padding:.65rem;font-family:'Orbitron',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:none;border-radius:6px;background:var(--gold);color:var(--bg);cursor:pointer;touch-action:manipulation;transition:background .15s ease}
         .yp-gain-btn:hover{background:var(--gold-bright)}
         .yp-gain-btn:disabled{opacity:.4;cursor:not-allowed}
+        /* Toast notifications */
+        .toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:.6rem 1rem;font-size:.8rem;color:var(--text);z-index:9999;opacity:0;transition:opacity .3s ease;pointer-events:none;max-width:90%;text-align:center}
+        .toast.show{opacity:1}
+        .toast.error{border-color:var(--red);color:var(--red)}
+        .toast.success{border-color:var(--green);color:var(--green)}
+        .toast.warn{border-color:var(--gold);color:var(--gold)}
         .yp-open-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:.625rem .875rem;background:var(--bg3);border:1px solid var(--border-gold);border-radius:6px;cursor:pointer;touch-action:manipulation;transition:all .15s ease}
         .yp-open-btn:hover{background:rgba(212,168,75,.1)}
         .yp-open-btn-label{font-size:.85rem;color:var(--text);font-weight:600}
@@ -509,11 +515,11 @@
     </style>
 </head>
 <body>
-    <header class="header-compact">
-        <nav class="tabs-compact">
-            <button class="tab-compact active" data-tab="units">Army</button>
-            <button class="tab-compact" data-tab="configuration">Builder</button>
-            <button class="tab-compact" data-tab="game-day">Game Day</button>
+    <header class="header-compact" role="banner">
+        <nav class="tabs-compact" role="tablist" aria-label="Main navigation">
+            <button class="tab-compact active" data-tab="units" role="tab" aria-selected="true" aria-controls="units-tab">Army</button>
+            <button class="tab-compact" data-tab="configuration" role="tab" aria-selected="false" aria-controls="configuration-tab">Builder</button>
+            <button class="tab-compact" data-tab="game-day" role="tab" aria-selected="false" aria-controls="game-day-tab">Game Day</button>
         </nav>
         <div class="header-actions">
             <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark theme">&#9788;</button>
@@ -544,11 +550,11 @@
         </div>
     </header>
     <main class="container">
-        <div id="units-tab" class="tab-content active">
+        <div id="units-tab" class="tab-content active" role="tabpanel" aria-label="Army view">
             <div id="units-container"><div class="loading">Loading units...</div></div>
             <div id="led-units-count" style="display:none">-</div>
         </div>
-        <div id="game-day-tab" class="tab-content">
+        <div id="game-day-tab" class="tab-content" role="tabpanel" aria-label="Game day view">
             <!-- Persistent Trackers -->
             <div class="gd-trackers">
                 <div class="gd-turn-group">
@@ -586,7 +592,7 @@
             <div id="gd-content"></div>
         </div>
 
-        <div id="configuration-tab" class="tab-content">
+        <div id="configuration-tab" class="tab-content" role="tabpanel" aria-label="Army builder">
             <div class="config-total">
                 <span class="config-total-label">Points</span>
                 <div class="config-points-group">
@@ -594,8 +600,8 @@
                     <span class="config-points-limit-label" id="config-points-limit-label"></span>
                 </div>
                 <input class="points-limit-input" id="points-limit-input" type="number" min="0" max="9999" placeholder="limit" title="Set points limit" onchange="setPointsLimit(this.value)" onblur="setPointsLimit(this.value)">
-                <button class="config-share-btn" id="share-btn" onclick="shareArmyUrl()">Share</button>
-                <button class="config-add-btn" onclick="openUnitPicker()">+</button>
+                <button class="config-share-btn" id="share-btn" onclick="shareArmyUrl()" aria-label="Share army list URL">Share</button>
+                <button class="config-add-btn" onclick="openUnitPicker()" aria-label="Add unit to army">+</button>
             </div>
             <div class="points-bar" id="points-bar" style="display:none"><div class="points-bar-fill" id="points-bar-fill"></div></div>
             <div id="army-list-container"></div>
@@ -605,38 +611,45 @@
     <button class="closest-fab" id="closest-fab" onclick="toggleClosestFab()" title="Targeting Closest">🎯</button>
     <button class="firebase-fab" id="firebase-fab" onclick="toggleFirebaseFab()" title="Firebase Control">📡</button>
 
-    <div class="unit-picker-overlay" id="unit-picker">
+    <div class="unit-picker-overlay" id="unit-picker" role="dialog" aria-modal="true" aria-label="Add unit">
         <div class="unit-picker">
             <div class="unit-picker-header">
                 <span class="unit-picker-title">Add Unit</span>
-                <button class="unit-picker-close" onclick="closeUnitPicker()">×</button>
+                <button class="unit-picker-close" onclick="closeUnitPicker()" aria-label="Close">×</button>
             </div>
             <div id="unit-picker-content"></div>
         </div>
     </div>
 
-    <div class="cp-tracker">
+    <div class="cp-tracker" role="toolbar" aria-label="Point trackers">
         <span class="pt-label">YP</span>
-        <button class="pt-btn" onclick="changeVP(-1)">−</button>
-        <span class="pt-val" id="vp-val">0</span>
-        <button class="pt-btn" onclick="changeVP(1)">+</button>
+        <button class="pt-btn" onclick="changeVP(-1)" aria-label="Decrease Yield Points">−</button>
+        <span class="pt-val" id="vp-val" aria-live="polite">0</span>
+        <button class="pt-btn" onclick="changeVP(1)" aria-label="Increase Yield Points">+</button>
         <div class="pt-divider"></div>
         <span class="pt-label">CP</span>
-        <button class="pt-btn" onclick="changeCP(-1)">−</button>
-        <span class="pt-val" id="cp-val">0</span>
-        <button class="pt-btn" onclick="changeCP(1)">+</button>
+        <button class="pt-btn" onclick="changeCP(-1)" aria-label="Decrease Command Points">−</button>
+        <span class="pt-val" id="cp-val" aria-live="polite">0</span>
+        <button class="pt-btn" onclick="changeCP(1)" aria-label="Increase Command Points">+</button>
     </div>
 
     <footer>LEAGUES OF VOTANN — LED UNITS REFERENCE</footer>
 
-    <div id="modal">
+    <div id="modal" role="dialog" aria-modal="true" aria-labelledby="mtitle" aria-hidden="true">
         <div class="modal-content">
-            <div class="modal-header"><div class="modal-title" id="mtitle"></div><button class="modal-close" id="mclose">×</button></div>
+            <div class="modal-header"><div class="modal-title" id="mtitle"></div><button class="modal-close" id="mclose" aria-label="Close">×</button></div>
             <div class="modal-body"><div class="modal-type" id="mtype"></div><div class="modal-desc" id="mdesc"></div></div>
         </div>
     </div>
 
     <script>
+// Constants
+const MAX_ENHANCEMENTS = 3;
+const MAX_WARGEAR_CHOICES = 2;
+const MAX_SAVED_LISTS = 10;
+const MAX_GAME_TURNS = 5;
+const URL_FORMAT_VERSION = '2';
+
 // Global data stores
 let abilities = {};
 let enhancements = {};
@@ -671,13 +684,13 @@ function gdSyncTrackers() {
 }
 
 function gdChangeTurn(delta) {
-    gameDayTurn = Math.max(1, Math.min(5, gameDayTurn + delta));
+    gameDayTurn = Math.max(1, Math.min(MAX_GAME_TURNS, gameDayTurn + delta));
     document.getElementById('gd-turn-val').textContent = gameDayTurn;
     renderGameDayTab();
 }
 
 function gdNewTurn() {
-    if (gameDayTurn >= 5) return;
+    if (gameDayTurn >= MAX_GAME_TURNS) return;
     gameDayTurn++;
     document.getElementById('gd-turn-val').textContent = gameDayTurn;
     changeCP(1);
@@ -794,7 +807,7 @@ function gdRenderStratCard(id, strat) {
     const isDetSpecific = !!strat.detachment;
     return `<div class="gd-strat-card${isDetSpecific ? ' det-specific' : ''}">
         <div class="gd-strat-top">
-            <span class="gd-strat-name">${strat.name}</span>
+            <span class="gd-strat-name">${escHtml(strat.name)}</span>
             <span class="gd-strat-costs">
                 ${strat.cpCost > 0 ? `<span class="gd-strat-cost cp">${strat.cpCost}CP</span>` : ''}
                 ${strat.ypCost > 0 ? `<span class="gd-strat-cost yp">${strat.ypCost}YP</span>` : ''}
@@ -922,7 +935,7 @@ function renderGameDayTab() {
     document.getElementById('gd-turn-val').textContent = gameDayTurn;
     gdSyncTrackers();
     const newTurnBtn = document.getElementById('gd-new-turn-btn');
-    if (newTurnBtn) newTurnBtn.disabled = gameDayTurn >= 5;
+    if (newTurnBtn) newTurnBtn.disabled = gameDayTurn >= MAX_GAME_TURNS;
     contentEl.innerHTML = `<div class="gd-phase-content active">${gdRenderPhaseContent(gameDayPhase)}</div>`;
 }
 
@@ -1045,6 +1058,19 @@ function escHtml(s) {
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+// Show a toast notification to the user
+function showToast(message, type = 'error', duration = 3000) {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('show'));
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+}
+
 // All available unit IDs
 const ALL_UNIT_IDS = [
     'kahl', 'einhyr-champion', 'uthar', 'iron-master', 'grimnyr', 'memnyr-strategist', 'arkanyst-evaluator', 'buri-aegnirssen', 'berehk-stornbrow',
@@ -1083,13 +1109,20 @@ function saveCurrentList() {
     savedLists[currentListSlot].nextInstanceId = nextInstanceId;
     savedLists[currentListSlot].detachment = selectedDetachment;
     savedLists[currentListSlot].pointsLimit = pointsLimit;
-    localStorage.setItem('votann-saved-lists', JSON.stringify({ lists: savedLists, slot: currentListSlot }));
+    try {
+        localStorage.setItem('votann-saved-lists', JSON.stringify({ lists: savedLists, slot: currentListSlot }));
+    } catch (e) {
+        if (e.name === 'QuotaExceededError' || e.code === 22) {
+            showToast('Storage full — could not save army list', 'error');
+        } else {
+            showToast('Failed to save army list', 'error');
+        }
+        console.error('localStorage save failed:', e);
+    }
 }
 
-// Wrapper so all existing callers continue to work unchanged
-function saveArmyList() {
-    saveCurrentList();
-}
+// Alias for backwards compatibility with existing callers
+const saveArmyList = saveCurrentList;
 
 // Load saved lists from localStorage, migrating old format if needed
 function loadSavedLists() {
@@ -1099,7 +1132,7 @@ function loadSavedLists() {
             const parsed = JSON.parse(raw);
             savedLists = parsed.lists || [];
             currentListSlot = Math.min(parsed.slot || 0, Math.max(0, savedLists.length - 1));
-        } catch (e) { savedLists = []; }
+        } catch (e) { savedLists = []; showToast('Saved data was corrupted — starting fresh', 'warn'); }
     }
     // Migrate from old votann-army-list format
     if (savedLists.length === 0) {
@@ -1116,10 +1149,19 @@ function loadSavedLists() {
 
 // Load state globals from a saved list object
 function loadListState(list) {
-    armyList = list.armyList || [];
+    armyList = (list.armyList || []).map(normalizeInstance);
     nextInstanceId = list.nextInstanceId || 1;
     pointsLimit = list.pointsLimit || 0;
     if (list.detachment && DETACHMENTS[list.detachment]) selectedDetachment = list.detachment;
+}
+
+// Normalize an army instance to fix legacy data shapes
+function normalizeInstance(inst) {
+    // Ensure selectedWargear is always an array
+    if (!Array.isArray(inst.selectedWargear)) {
+        inst.selectedWargear = inst.selectedWargear ? [inst.selectedWargear] : [];
+    }
+    return inst;
 }
 
 // Re-render everything after a list switch or detachment change
@@ -1265,7 +1307,7 @@ function unpackArmy(packed) {
 
 async function shareArmyUrl() {
     const compressed = await deflateToBase64(JSON.stringify(packArmy()));
-    const url = window.location.href.split('#')[0] + '#2' + compressed;
+    const url = window.location.href.split('#')[0] + '#' + URL_FORMAT_VERSION + compressed;
     navigator.clipboard.writeText(url).then(() => {
         const btn = document.getElementById('share-btn');
         btn.textContent = 'Copied!';
@@ -1279,8 +1321,8 @@ async function loadArmyFromUrl() {
     const hash = window.location.hash.slice(1);
     if (!hash) return false;
     try {
-        if (hash.startsWith('2')) {
-            // New format: version '2' + deflate-compressed compact army
+        if (hash.startsWith(URL_FORMAT_VERSION)) {
+            // New format: version prefix + deflate-compressed compact army
             const packed = JSON.parse(await inflateFromBase64(hash.slice(1)));
             armyList = unpackArmy(packed);
             if (packed.d && DETACHMENTS[packed.d]) {
@@ -1306,6 +1348,7 @@ async function loadArmyFromUrl() {
         }
     } catch (e) {
         console.warn('Failed to load army from URL:', e);
+        showToast('Could not load shared army list — link may be invalid', 'error');
     }
     return false;
 }
@@ -1407,6 +1450,7 @@ async function loadData() {
                 units[id] = unit;
             } catch (e) {
                 console.warn(`Failed to load unit ${id}:`, e);
+                showToast(`Failed to load unit: ${id}`, 'error');
             }
         });
         await Promise.all(unitPromises);
@@ -1420,7 +1464,7 @@ async function loadData() {
     } catch (error) {
         console.error('Failed to load data:', error);
         document.getElementById('units-container').innerHTML =
-            `<div class="loading" style="color:var(--red)">Error loading data: ${error.message}</div>`;
+            `<div class="loading" style="color:var(--red)">Error loading data: ${escHtml(error.message)}</div>`;
     }
 }
 
@@ -1509,15 +1553,15 @@ function renderSoloUnitCard(entry) {
     if (ironskeinActive) {
         if (unit.modelProfiles) {
             displayUnit = { ...unit, modelProfiles: unit.modelProfiles.map((p, i) =>
-                i === 0 ? { ...p, stats: { ...p.stats, w: (parseInt(p.stats.w) || 0) + 2 + '+' } } : p
+                i === 0 ? { ...p, stats: { ...p.stats, w: (parseInt(p.stats.w) || 0) + 2 } } : p
             )};
         } else if (unit.stats) {
-            displayUnit = { ...unit, stats: { ...unit.stats, w: (parseInt(unit.stats.w) || 0) + 2 + '+' } };
+            displayUnit = { ...unit, stats: { ...unit.stats, w: (parseInt(unit.stats.w) || 0) + 2 } };
         }
     }
 
     // Apply selected wargear effects (supports multiple selections)
-    const selectedWargear = Array.isArray(instance?.selectedWargear) ? instance.selectedWargear : (instance?.selectedWargear ? [instance.selectedWargear] : []);
+    const selectedWargear = instance?.selectedWargear || [];
     let wargearInheritedAbilities = [];
     let wargearAppliesTo = null;
     let extraWargear = [];
@@ -1545,9 +1589,9 @@ function renderSoloUnitCard(entry) {
         <div class="unit-card collapsed" data-unit="${entry.id}" data-card-id="${entry.id}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
                 <div class="card-collapse-info">
-                    <div class="card-collapse-title">${unit.name}</div>
+                    <div class="card-collapse-title">${escHtml(unit.name)}</div>
                     <div class="card-collapse-subtitle">${modelCount} model${modelCount > 1 ? 's' : ''}</div>
-                    ${entry.diffLabel ? `<div class="card-collapse-diff">${entry.diffLabel}</div>` : ''}
+                    ${entry.diffLabel ? `<div class="card-collapse-diff">${escHtml(entry.diffLabel)}</div>` : ''}
                 </div>
                 <div class="card-collapse-right">
                     <div class="card-collapse-toggle"></div>
@@ -1561,7 +1605,7 @@ function renderSoloUnitCard(entry) {
                     ${renderWeapons(filteredWeapons, wargearInheritedAbilities, wargearAppliesTo, furyActive, closestActive, closestBonuses, firebaseActive)}
                     ${renderSoloAbilities(unit, extraWargear)}
                 </div>
-                <div class="keywords">${(unit.keywords || []).join(', ')}</div>
+                <div class="keywords">${(unit.keywords || []).map(k => escHtml(k)).join(', ')}</div>
             </div>
         </div>
     `;
@@ -1620,10 +1664,10 @@ function renderLedUnitCard(ledUnit) {
         if (leader.modelProfiles) {
             // For units with multiple profiles, add +2 to the main character profile (first one)
             leaderStats = { ...leader, modelProfiles: leader.modelProfiles.map((p, i) =>
-                i === 0 ? { ...p, stats: { ...p.stats, w: (parseInt(p.stats.w) || 0) + 2 + '+' } } : p
+                i === 0 ? { ...p, stats: { ...p.stats, w: (parseInt(p.stats.w) || 0) + 2 } } : p
             )};
         } else if (leader.stats) {
-            leaderStats = { ...leader, stats: { ...leader.stats, w: (parseInt(leader.stats.w) || 0) + 2 + '+' } };
+            leaderStats = { ...leader, stats: { ...leader.stats, w: (parseInt(leader.stats.w) || 0) + 2 } };
         }
     }
 
@@ -1666,9 +1710,9 @@ function renderLedUnitCard(ledUnit) {
         <div class="unit-card attached collapsed" data-leader="${ledUnit.leader}" data-card-id="${ledUnit.id}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
                 <div class="card-collapse-info">
-                    <div class="card-collapse-title">${leader.name} + ${bodyguard.name}</div>
-                    <div class="card-collapse-subtitle">${ledUnit.attachedBannerText}</div>
-                    ${ledUnit.diffLabel ? `<div class="card-collapse-diff">${ledUnit.diffLabel}</div>` : ''}
+                    <div class="card-collapse-title">${escHtml(leader.name)} + ${escHtml(bodyguard.name)}</div>
+                    <div class="card-collapse-subtitle">${escHtml(ledUnit.attachedBannerText)}</div>
+                    ${ledUnit.diffLabel ? `<div class="card-collapse-diff">${escHtml(ledUnit.diffLabel)}</div>` : ''}
                 </div>
                 <div class="card-collapse-right">
                     <button class="leader-death-toggle" onclick="toggleLeaderDeath('${ledUnit.leader}', event)" title="Mark leader as slain">☠</button>
@@ -1702,7 +1746,7 @@ function renderLedUnitCard(ledUnit) {
                     ${renderWeapons(bodyguardWeapons, bodyguardInheritedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses, firebaseActive)}
                     ${renderBodyguardAbilities(bodyguard, leader)}
                 </div>
-                <div class="keywords">${ledUnit.combinedKeywords.join(', ')}</div>
+                <div class="keywords">${ledUnit.combinedKeywords.map(k => escHtml(k)).join(', ')}</div>
             </div>
         </div>
     `;
@@ -1717,10 +1761,10 @@ function renderUnitHeader(unit, modelCountOverride = null) {
 
     return `
         <div style="margin-bottom:.5rem">
-            <div class="unit-name">${unit.name}</div>
-            <div class="unit-type">${unit.type.join(' • ')}</div>
+            <div class="unit-name">${escHtml(unit.name)}</div>
+            <div class="unit-type">${unit.type.map(t => escHtml(t)).join(' • ')}</div>
         </div>
-        <div class="model-count">Models: <span>${modelText}</span></div>
+        <div class="model-count">Models: <span>${escHtml(String(modelText))}</span></div>
     `;
 }
 
@@ -1894,8 +1938,8 @@ function parseAbility(ab) {
 // Render a single weapon
 function renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive = false, closestActive = false, closestBonuses = {}, firebaseActive = false) {
     const countText = weapon.count > 1 ? ` (×${weapon.count})` : '';
-    const modelText = weapon.model ? ` (${weapon.model})` : '';
-    const nameDisplay = weapon.name + countText + modelText;
+    const modelText = weapon.model ? ` (${escHtml(weapon.model)})` : '';
+    const nameDisplay = escHtml(weapon.name) + countText + modelText;
 
     // Determine which inherited abilities apply
     // weapon.inheritedAbilities are always included (weapon-specific)
@@ -2073,7 +2117,7 @@ function renderListSwitcher() {
         }
         return `<button class="list-slot" onclick="switchToList(${i})">${escHtml(list.name)}</button>`;
     }).join('');
-    const addBtn = savedLists.length < 10 ? `<button class="list-add-btn" onclick="addNewList()" title="New list">+</button>` : '';
+    const addBtn = savedLists.length < MAX_SAVED_LISTS ? `<button class="list-add-btn" onclick="addNewList()" title="New list">+</button>` : '';
     const delBtn = savedLists.length > 1 ? `<button class="list-delete-btn" onclick="deleteCurrentList()" title="Delete this list">✕</button>` : '';
     return `<div class="list-switcher">${slots}${addBtn}${delBtn}</div>`;
 }
@@ -2150,8 +2194,8 @@ function renderArmyInstance(instance) {
         <div class="army-instance ${isExpanded ? 'expanded' : ''}" data-instance="${instance.instanceId}">
             <div class="army-instance-header" onclick="toggleInstanceCard('${instance.instanceId}')">
                 <div class="army-instance-info">
-                    <div class="army-instance-name">${unit.name}</div>
-                    <div class="army-instance-details">${instance.modelCount}x ${unit.name} • ${weaponDetails}</div>
+                    <div class="army-instance-name">${escHtml(unit.name)}</div>
+                    <div class="army-instance-details">${instance.modelCount}x ${escHtml(unit.name)} • ${escHtml(weaponDetails)}</div>
                 </div>
                 <div class="army-instance-points">${instancePoints} pts</div>
                 <button class="army-instance-delete" onclick="removeUnitFromArmy('${instance.instanceId}'); event.stopPropagation();">✕</button>
@@ -2215,7 +2259,7 @@ function renderInstanceLeaderSelector(instance, canBeLeadBy) {
     canBeLeadBy.forEach(leaderId => {
         const leader = units[leaderId];
         if (!leader) return;
-        options += `<option value="${leaderId}" ${currentLeader === leaderId ? 'selected' : ''}>${leader.name} (+${leader.points} pts)</option>`;
+        options += `<option value="${escHtml(leaderId)}" ${currentLeader === leaderId ? 'selected' : ''}>${escHtml(leader.name)} (+${leader.points} pts)</option>`;
     });
 
     let preview = '';
@@ -2257,8 +2301,8 @@ function renderInstanceEnhancementSelector(instance, characterId) {
 
     const usedEnhancements = getUsedEnhancements(instance.instanceId);
     const totalUsed = usedEnhancements.length + (currentEnh ? 1 : 0);
-    const maxReached = totalUsed >= 3 && !currentEnh;
-    const countLabel = maxReached ? ' (Max 3 reached)' : ` (${totalUsed}/3 used)`;
+    const maxReached = totalUsed >= MAX_ENHANCEMENTS && !currentEnh;
+    const countLabel = maxReached ? ` (Max ${MAX_ENHANCEMENTS} reached)` : ` (${totalUsed}/${MAX_ENHANCEMENTS} used)`;
 
     // Filter available enhancements (same rules as before)
     const available = Object.entries(enhancements).filter(([enhId, enh]) => {
@@ -2297,12 +2341,12 @@ function renderInstanceEnhancementSelector(instance, characterId) {
 
 // Render optional wargear choice selector (checkboxes, max 2)
 function renderInstanceWargearChoiceSelector(instance, wargearChoices) {
-    const selected = Array.isArray(instance.selectedWargear) ? instance.selectedWargear : (instance.selectedWargear ? [instance.selectedWargear] : []);
-    let html = '<div class="config-label">Wargear (up to 2)</div><div class="wargear-checkboxes">';
+    const selected = instance.selectedWargear || [];
+    let html = `<div class="config-label">Wargear (up to ${MAX_WARGEAR_CHOICES})</div><div class="wargear-checkboxes">`;
     wargearChoices.forEach(id => {
         const ab = abilities[id];
         const isChecked = selected.includes(id);
-        const isDisabled = !isChecked && selected.length >= 2;
+        const isDisabled = !isChecked && selected.length >= MAX_WARGEAR_CHOICES;
         html += `
             <label class="wargear-checkbox ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}">
                 <input type="checkbox" ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}
@@ -2328,7 +2372,7 @@ function renderInstanceWeaponSelector(instance) {
         return `
             <label class="weapon-checkbox">
                 <input type="checkbox" ${config.equipped ? 'checked' : ''} onchange="setInstanceWeaponEquipped('${instance.instanceId}', '${key}', this.checked)">
-                <span class="weapon-checkbox-name">${w.name}</span>
+                <span class="weapon-checkbox-name">${escHtml(w.name)}</span>
                 <button class="weapon-count-btn" onclick="event.preventDefault();event.stopPropagation();adjustWeaponCount('${instance.instanceId}','${key}',-1)">−</button>
                 <span class="weapon-count-display">${config.count}</span>
                 <button class="weapon-count-btn" onclick="event.preventDefault();event.stopPropagation();adjustWeaponCount('${instance.instanceId}','${key}',1)">+</button>
@@ -2456,8 +2500,8 @@ function toggleInstanceWargear(instanceId, wargearId, isChecked) {
     const instance = armyList.find(i => i.instanceId === instanceId);
     if (instance) {
         // Ensure it's an array
-        let selected = Array.isArray(instance.selectedWargear) ? [...instance.selectedWargear] : (instance.selectedWargear ? [instance.selectedWargear] : []);
-        if (isChecked && !selected.includes(wargearId) && selected.length < 2) {
+        let selected = [...(instance.selectedWargear || [])];
+        if (isChecked && !selected.includes(wargearId) && selected.length < MAX_WARGEAR_CHOICES) {
             selected.push(wargearId);
         } else if (!isChecked) {
             selected = selected.filter(id => id !== wargearId);
@@ -2521,8 +2565,8 @@ function openUnitPicker() {
             <div class="unit-picker-section-title">${groupName}</div>
             ${validUnits.map(id => {
                 const unit = units[id];
-                return `<div class="unit-picker-item" onclick="addUnitToArmy('${id}')">
-                    <span class="unit-picker-item-name">${unit.name}</span>
+                return `<div class="unit-picker-item" onclick="addUnitToArmy('${escHtml(id)}')">
+                    <span class="unit-picker-item-name">${escHtml(unit.name)}</span>
                     <span class="unit-picker-item-pts">${unit.points} pts</span>
                 </div>`;
             }).join('')}
@@ -2582,7 +2626,7 @@ function buildActiveArmy() {
         const wp = inst.weapons
             ? Object.entries(inst.weapons).sort((a,b) => a[0].localeCompare(b[0])).map(([k,v]) => `${k}:${v.equipped}:${v.count}`).join('|')
             : '';
-        const wg = Array.isArray(inst.selectedWargear) ? [...inst.selectedWargear].sort().join(',') : (inst.selectedWargear || '');
+        const wg = [...(inst.selectedWargear || [])].sort().join(',');
         return `${inst.modelCount}|${inst.enhancementId || ''}|${wp}|${wg}`;
     };
 
@@ -2618,11 +2662,10 @@ function buildActiveArmy() {
                 }
 
                 const wgSets = groupEntries.map(e => {
-                    const wg = Array.isArray(e.instance?.selectedWargear) ? e.instance.selectedWargear : (e.instance?.selectedWargear ? [e.instance.selectedWargear] : []);
-                    return [...wg].sort().join(',');
+                    return [...(e.instance?.selectedWargear || [])].sort().join(',');
                 });
                 if (!wgSets.every(w => w === wgSets[0])) {
-                    const wg = Array.isArray(inst?.selectedWargear) ? inst.selectedWargear : (inst?.selectedWargear ? [inst.selectedWargear] : []);
+                    const wg = inst?.selectedWargear || [];
                     labelParts.push(wg.length ? wg.map(w => abilities[w]?.name || w).join(', ') : 'Default wargear');
                 }
 
@@ -2863,13 +2906,19 @@ function showModal(id) {
     if (!a) return;
     mtitle.textContent = a.name;
     mtype.textContent = a.type;
+    // Descriptions contain intentional HTML formatting (bold, line breaks) from our own
+    // data files — this is safe because we control all JSON sources. If data ever comes
+    // from user input, switch to a sanitizer library.
     mdesc.innerHTML = a.description;
     modal.classList.add('show');
+    modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    mclose.focus();
 }
 
 function hideModal() {
     modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
 }
 
@@ -2895,8 +2944,12 @@ document.addEventListener('keydown', function(e) {
 document.querySelectorAll('.tab-compact').forEach(tab => {
     tab.addEventListener('click', function() {
         const tabId = this.getAttribute('data-tab');
-        document.querySelectorAll('.tab-compact').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-compact').forEach(t => {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+        });
         this.classList.add('active');
+        this.setAttribute('aria-selected', 'true');
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.getElementById(tabId + '-tab').classList.add('active');
         if (tabId === 'game-day') renderGameDayTab();
