@@ -379,8 +379,8 @@
         .detachment-option.active{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700}
         .detachment-rule-preview{font-size:.72rem;color:var(--text2);line-height:1.4;border-top:1px solid var(--border);padding-top:.5rem;cursor:pointer}
         .detachment-rule-preview strong{color:var(--gold-bright)}
-        .army-instance{background:var(--bg3);border:1px solid var(--border);border-radius:6px;margin-bottom:.5rem;overflow:hidden}
-        .army-instance-header{display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;cursor:pointer;touch-action:manipulation;background:linear-gradient(90deg,rgba(212,168,75,.05),transparent)}
+        .army-instance{background:var(--bg3);border:1px solid var(--border);border-radius:6px;margin-bottom:.5rem;overflow:visible}
+        .army-instance-header{display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;cursor:pointer;touch-action:manipulation;background:linear-gradient(90deg,rgba(212,168,75,.05),transparent);border-radius:6px 6px 0 0}
         .army-instance-header:hover{background:linear-gradient(90deg,rgba(212,168,75,.1),transparent)}
         .army-instance-info{flex:1;min-width:0}
         .army-instance-name{font-family:'Orbitron',sans-serif;font-size:.8rem;font-weight:700;color:var(--gold);letter-spacing:.02em}
@@ -402,7 +402,7 @@
         .army-instance-expand{width:20px;height:20px;display:flex;align-items:center;justify-content:center;color:var(--text3)}
         .army-instance-expand::after{content:'';border:solid var(--text2);border-width:0 2px 2px 0;padding:3px;transform:rotate(45deg);transition:transform .2s ease}
         .army-instance.expanded .army-instance-expand::after{transform:rotate(-135deg)}
-        .army-instance-body{display:none;padding:.75rem;border-top:1px solid var(--border);background:var(--bg2)}
+        .army-instance-body{display:none;padding:.75rem;border-top:1px solid var(--border);background:var(--bg2);border-radius:0 0 6px 6px;overflow:hidden}
         .army-instance.expanded .army-instance-body{display:block}
         .config-label{font-size:.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin:.5rem 0 .3rem}
         .config-label:first-child{margin-top:0}
