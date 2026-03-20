@@ -15,6 +15,7 @@
         body.light-theme #modal{background:rgba(0,0,0,.5)}
         body.light-theme .fury-prompt{background:rgba(0,0,0,.5)}
         body.light-theme .buff-dropdown-menu{box-shadow:0 8px 24px rgba(0,0,0,.2)}
+        body.light-theme .inst-actions-menu{box-shadow:0 6px 20px rgba(0,0,0,.15)}
         body.light-theme .wab{background:rgba(139,92,246,.15);color:var(--text)}
         body.light-theme .ab{background:rgba(139,92,246,.12);border-color:rgba(139,92,246,.25)}
         body.light-theme .ab.core{background:rgba(74,142,212,.12);border-color:rgba(74,142,212,.25)}
@@ -387,6 +388,17 @@
         .army-instance-points{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--gold);background:rgba(212,168,75,.15);padding:.2rem .5rem;border-radius:3px}
         .army-instance-delete{width:28px;height:28px;background:transparent;border:1px solid var(--text3);border-radius:4px;color:var(--text3);font-size:.8rem;cursor:pointer;touch-action:manipulation;display:flex;align-items:center;justify-content:center;transition:all .15s ease}
         .army-instance-delete:hover{border-color:var(--red);color:var(--red);background:rgba(201,68,68,.1)}
+        /* Instance action menu (kebab) */
+        .inst-actions{position:relative}
+        .inst-actions-btn{width:28px;height:28px;background:transparent;border:1px solid var(--text3);border-radius:4px;color:var(--text3);font-size:1rem;cursor:pointer;touch-action:manipulation;display:flex;align-items:center;justify-content:center;transition:all .15s ease;line-height:1;letter-spacing:1px}
+        .inst-actions-btn:hover{border-color:var(--gold-dark);color:var(--text2)}
+        .inst-actions-menu{display:none;position:absolute;top:calc(100% + .35rem);right:0;background:var(--bg2);border:1px solid var(--border-gold);border-radius:6px;min-width:140px;z-index:150;box-shadow:0 6px 20px rgba(0,0,0,.5);overflow:hidden}
+        .inst-actions-menu.open{display:block}
+        .inst-action{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;cursor:pointer;touch-action:manipulation;font-size:.75rem;color:var(--text);transition:background .15s;border:none;background:none;width:100%;font-family:inherit;text-align:left}
+        .inst-action:hover{background:rgba(212,168,75,.08)}
+        .inst-action.danger{color:var(--red)}
+        .inst-action.danger:hover{background:rgba(201,68,68,.1)}
+        .inst-action-icon{width:18px;text-align:center;font-size:.8rem;flex-shrink:0}
         .army-instance-expand{width:20px;height:20px;display:flex;align-items:center;justify-content:center;color:var(--text3)}
         .army-instance-expand::after{content:'';border:solid var(--text2);border-width:0 2px 2px 0;padding:3px;transform:rotate(45deg);transition:transform .2s ease}
         .army-instance.expanded .army-instance-expand::after{transform:rotate(-135deg)}
@@ -1432,6 +1444,42 @@ function removeUnitFromArmy(instanceId) {
     renderUnits();
 }
 
+// Duplicate a unit instance with all its current configuration
+function duplicateUnit(instanceId) {
+    const source = armyList.find(i => i.instanceId === instanceId);
+    if (!source) return;
+    const clone = {
+        instanceId: `inst-${nextInstanceId++}`,
+        unitId: source.unitId,
+        modelCount: source.modelCount,
+        weapons: JSON.parse(JSON.stringify(source.weapons)),
+        leaderId: source.leaderId,
+        enhancementId: null, // enhancements are unique per army — don't copy
+        selectedWargear: [...source.selectedWargear]
+    };
+    // Insert clone right after the source
+    const idx = armyList.indexOf(source);
+    armyList.splice(idx + 1, 0, clone);
+    saveArmyList();
+    renderConfigurationTab();
+    renderUnits();
+    closeAllInstanceMenus();
+}
+
+// Toggle the action menu for an army instance
+function toggleInstanceMenu(instanceId, e) {
+    e.stopPropagation();
+    const menu = document.getElementById('inst-menu-' + instanceId);
+    const wasOpen = menu.classList.contains('open');
+    closeAllInstanceMenus();
+    if (!wasOpen) menu.classList.add('open');
+}
+
+// Close all open instance action menus
+function closeAllInstanceMenus() {
+    document.querySelectorAll('.inst-actions-menu.open').forEach(m => m.classList.remove('open'));
+}
+
 // Load all data
 async function loadData() {
     try {
@@ -2198,7 +2246,13 @@ function renderArmyInstance(instance) {
                     <div class="army-instance-details">${instance.modelCount}x ${escHtml(unit.name)} • ${escHtml(weaponDetails)}</div>
                 </div>
                 <div class="army-instance-points">${instancePoints} pts</div>
-                <button class="army-instance-delete" onclick="removeUnitFromArmy('${instance.instanceId}'); event.stopPropagation();">✕</button>
+                <div class="inst-actions">
+                    <button class="inst-actions-btn" onclick="toggleInstanceMenu('${instance.instanceId}', event)" aria-label="Unit actions">⋮</button>
+                    <div class="inst-actions-menu" id="inst-menu-${instance.instanceId}">
+                        <button class="inst-action" onclick="duplicateUnit('${instance.instanceId}'); event.stopPropagation();"><span class="inst-action-icon">⧉</span>Duplicate</button>
+                        <button class="inst-action danger" onclick="removeUnitFromArmy('${instance.instanceId}'); event.stopPropagation();"><span class="inst-action-icon">✕</span>Delete</button>
+                    </div>
+                </div>
                 <div class="army-instance-expand"></div>
             </div>
             <div class="army-instance-body">
@@ -2852,10 +2906,13 @@ function toggleFirebaseFab() {
     renderUnits();
 }
 
-// Close dropdown when clicking outside
+// Close dropdowns when clicking outside
 document.addEventListener('click', function(e) {
     if (!e.target.closest('.buff-dropdown')) {
         closeBuffDropdown();
+    }
+    if (!e.target.closest('.inst-actions')) {
+        closeAllInstanceMenus();
     }
 });
 
