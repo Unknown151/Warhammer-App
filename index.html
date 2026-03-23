@@ -1704,21 +1704,6 @@ function renderSoloAbilities(unit, extraWargear = []) {
         html += `<span class="ab tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
     });
 
-    // Weapon abilities (unique across all weapons)
-    const allWeapons = [...(unit.weapons?.ranged || []), ...(unit.weapons?.melee || [])];
-    const seenWeaponAbIds = new Set();
-    allWeapons.forEach(weapon => {
-        (weapon.abilities || []).forEach(ab => {
-            const parsed = parseAbility(ab);
-            if (!seenWeaponAbIds.has(parsed.id)) {
-                seenWeaponAbIds.add(parsed.id);
-                const abData = abilities[parsed.id];
-                const displayName = parsed.display || abData?.name || parsed.id;
-                html += `<button class="wab tappable" data-ab="${escHtml(parsed.id)}">${escHtml(displayName)}</button>`;
-            }
-        });
-    });
-
     html += '</div>';
     return html;
 }
@@ -2275,29 +2260,16 @@ function renderArmyInstance(instance) {
     // Weapons section
     bodyContent += renderInstanceWeaponSelector(instance);
 
-    // Abilities section (unit abilities + weapon abilities)
+    // Abilities section (unit abilities only)
     const unitAbilities = unit.abilities || [];
     const unitCoreAbilities = unit.coreAbilities || [];
     const unitWargear = unit.wargear || [];
     const allWeaponsForAbil = [...(unit.weapons?.ranged || []), ...(unit.weapons?.melee || [])];
-    const seenWpnAbIds = new Set();
-    const weaponAbBadges = [];
-    allWeaponsForAbil.forEach(weapon => {
-        (weapon.abilities || []).forEach(ab => {
-            const parsed = parseAbility(ab);
-            if (!seenWpnAbIds.has(parsed.id)) {
-                seenWpnAbIds.add(parsed.id);
-                const abData = abilities[parsed.id];
-                const displayName = parsed.display || abData?.name || parsed.id;
-                weaponAbBadges.push(`<button class="wab tappable" data-ab="${escHtml(parsed.id)}">${escHtml(displayName)}</button>`);
-            }
-        });
-    });
     // Collect abilities already shown inline with a weapon
     const builderWeaponLinkedAbilities = new Set(allWeaponsForAbil.map(w => w.unitAbility).filter(Boolean));
-
     const filteredUnitAbilities = unitAbilities.filter(ab => !builderWeaponLinkedAbilities.has(ab));
-    const hasAbilities = unitCoreAbilities.length || unitWargear.length || filteredUnitAbilities.length || weaponAbBadges.length;
+
+    const hasAbilities = unitCoreAbilities.length || unitWargear.length || filteredUnitAbilities.length;
     if (hasAbilities) {
         let abHtml = '<div class="config-label">Abilities</div><div class="abilities">';
         unitCoreAbilities.forEach(ab => {
@@ -2312,7 +2284,6 @@ function renderArmyInstance(instance) {
             const abData = abilities[ab];
             abHtml += `<span class="ab tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
         });
-        abHtml += weaponAbBadges.join('');
         abHtml += '</div>';
         bodyContent += abHtml;
     }
