@@ -276,7 +276,7 @@
         .pt-val{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text);min-width:2.2rem;text-align:center}
         .pt-btn{width:30px;height:30px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;line-height:1;flex-shrink:0;transition:background .1s}
         .pt-btn:active{background:var(--border-gold);border-color:var(--gold-dark)}
-        @media(min-width:768px){.container{max-width:800px;margin:0 auto;padding:1.5rem}#modal{align-items:center}.modal-content{border-radius:12px;max-height:60vh}}
+        @media(min-width:768px){.container{max-width:800px;margin:0 auto;padding:1.5rem}.modal-content{border-radius:12px;max-height:60vh}}
         /* Configuration Tab Styles */
         .config-section{margin-bottom:1.5rem}
         .config-section-header{display:flex;align-items:center;gap:.5rem;padding:.75rem 0;border-bottom:1px solid var(--border);cursor:pointer;touch-action:manipulation}
@@ -300,7 +300,7 @@
         .config-unit-card.expanded .config-unit-body{display:block}
         .config-label{font-size:.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin:.5rem 0 .3rem}
         .config-label:first-child{margin-top:0}
-        .weapon-checkbox{display:flex;align-items:center;gap:.5rem;padding:.35rem .5rem;background:var(--bg3);border-radius:3px;margin-bottom:.25rem;cursor:pointer;touch-action:manipulation;transition:background .15s ease}
+        .weapon-checkbox{display:flex;align-items:center;gap:.5rem;padding:.35rem .5rem;background:var(--bg3);border-radius:3px;cursor:pointer;touch-action:manipulation;transition:background .15s ease}
         .weapon-checkbox:hover{background:rgba(212,168,75,.1)}
         .weapon-checkbox input[type="checkbox"]{accent-color:var(--gold);width:14px;height:14px;cursor:pointer}
         .weapon-checkbox-name{flex:1;font-size:.7rem;color:var(--text)}
@@ -308,6 +308,15 @@
         .weapon-count-btn{width:28px;height:28px;background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--text);font-size:.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;padding:0;line-height:1}
         .weapon-count-btn:active{background:var(--gold);color:var(--bg)}
         .weapon-count-display{width:32px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:.2rem 0}
+        .weapon-checkbox-row{margin-bottom:.25rem}
+        .weapon-stats-toggle{width:26px;height:26px;flex-shrink:0;background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;padding:0;transition:all .2s ease}
+        .weapon-stats-toggle::after{content:'';border:solid currentColor;border-width:0 2px 2px 0;padding:3px;display:inline-block;transform:rotate(45deg);margin-top:-3px;transition:transform .2s ease}
+        .weapon-stats-toggle:hover{border-color:var(--gold-dark);color:var(--gold-dark)}
+        .weapon-stats-toggle.open{border-color:var(--gold);color:var(--gold)}
+        .weapon-stats-toggle.open::after{transform:rotate(-135deg);margin-top:3px}
+        .weapon-stats-panel{display:none;padding:.5rem .5rem .3rem;background:rgba(0,0,0,.25);border:1px solid var(--border);border-top:none;border-radius:0 0 3px 3px}
+        .weapon-stats-panel.open{display:block}
+        .weapon-stats-panel .wabs{margin-top:.4rem}
         .leader-select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:.5rem .6rem;font-family:'Rajdhani',sans-serif;font-size:.75rem;cursor:pointer}
         .leader-select:focus{border-color:var(--gold);outline:none}
         .leader-select option{background:var(--bg2);color:var(--text)}
@@ -409,7 +418,7 @@
         .model-count-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
         .model-count-label{font-size:.7rem;color:var(--text)}
         .model-count-input{width:50px;background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--text);padding:.3rem .4rem;font-family:'Share Tech Mono',monospace;font-size:.75rem;text-align:center}
-        .weapon-checkbox{display:flex;align-items:center;gap:.5rem;padding:.35rem .5rem;background:var(--bg3);border-radius:3px;margin-bottom:.25rem;cursor:pointer;touch-action:manipulation;transition:background .15s ease}
+        .weapon-checkbox{display:flex;align-items:center;gap:.5rem;padding:.35rem .5rem;background:var(--bg3);border-radius:3px;cursor:pointer;touch-action:manipulation;transition:background .15s ease}
         .weapon-checkbox:hover{background:rgba(212,168,75,.1)}
         .weapon-checkbox input[type="checkbox"]{accent-color:var(--gold);width:14px;height:14px;cursor:pointer}
         .weapon-checkbox-name{flex:1;font-size:.7rem;color:var(--text)}
@@ -2420,33 +2429,76 @@ function renderInstanceWeaponSelector(instance) {
 
     let html = '';
 
-    const renderWeaponRow = (w) => {
+    const renderWeaponRow = (w, weaponType) => {
         const key = generateWeaponKey(w);
         const config = instance.weapons[key] || { equipped: true, count: w.count || 1 };
+
+        // Stats grid
+        const statsGrid = weaponType === 'ranged'
+            ? `<div class="weapon-stats-grid ranged">
+                <div class="ws"><span class="ws-label">Rng</span><span class="ws-val">${escHtml(w.range||'—')}</span></div>
+                <div class="ws"><span class="ws-label">A</span><span class="ws-val">${escHtml(w.a||'—')}</span></div>
+                <div class="ws"><span class="ws-label">BS</span><span class="ws-val">${escHtml(w.bs||'—')}</span></div>
+                <div class="ws"><span class="ws-label">S</span><span class="ws-val">${escHtml(w.s||'—')}</span></div>
+                <div class="ws"><span class="ws-label">AP</span><span class="ws-val">${escHtml(w.ap||'—')}</span></div>
+                <div class="ws"><span class="ws-label">D</span><span class="ws-val">${escHtml(w.d||'—')}</span></div>
+               </div>`
+            : `<div class="weapon-stats-grid">
+                <div class="ws"><span class="ws-label">A</span><span class="ws-val">${escHtml(w.a||'—')}</span></div>
+                <div class="ws"><span class="ws-label">WS</span><span class="ws-val">${escHtml(w.ws||'—')}</span></div>
+                <div class="ws"><span class="ws-label">S</span><span class="ws-val">${escHtml(w.s||'—')}</span></div>
+                <div class="ws"><span class="ws-label">AP</span><span class="ws-val">${escHtml(w.ap||'—')}</span></div>
+                <div class="ws"><span class="ws-label">D</span><span class="ws-val">${escHtml(w.d||'—')}</span></div>
+               </div>`;
+
+        // Ability badges
+        const abBadges = (w.abilities || []).map(ab => {
+            const parsed = parseAbility(ab);
+            const abData = abilities[parsed.id];
+            const displayName = parsed.display || abData?.name || parsed.id;
+            return `<button class="wab tappable" data-ab="${parsed.id}">${escHtml(displayName)}</button>`;
+        }).join('');
+        const abilitiesHtml = abBadges ? `<div class="wabs">${abBadges}</div>` : '';
+
         return `
-            <label class="weapon-checkbox">
-                <input type="checkbox" ${config.equipped ? 'checked' : ''} onchange="setInstanceWeaponEquipped('${instance.instanceId}', '${key}', this.checked)">
-                <span class="weapon-checkbox-name">${escHtml(w.name)}</span>
-                <button class="weapon-count-btn" onclick="event.preventDefault();event.stopPropagation();adjustWeaponCount('${instance.instanceId}','${key}',-1)">−</button>
-                <span class="weapon-count-display">${config.count}</span>
-                <button class="weapon-count-btn" onclick="event.preventDefault();event.stopPropagation();adjustWeaponCount('${instance.instanceId}','${key}',1)">+</button>
-            </label>
+            <div class="weapon-checkbox-row">
+                <label class="weapon-checkbox">
+                    <input type="checkbox" ${config.equipped ? 'checked' : ''} onchange="setInstanceWeaponEquipped('${instance.instanceId}', '${key}', this.checked)">
+                    <span class="weapon-checkbox-name">${escHtml(w.name)}</span>
+                    <button class="weapon-count-btn" onclick="event.preventDefault();event.stopPropagation();adjustWeaponCount('${instance.instanceId}','${key}',-1)">−</button>
+                    <span class="weapon-count-display">${config.count}</span>
+                    <button class="weapon-count-btn" onclick="event.preventDefault();event.stopPropagation();adjustWeaponCount('${instance.instanceId}','${key}',1)">+</button>
+                    <button class="weapon-stats-toggle" onclick="event.preventDefault();event.stopPropagation();toggleWeaponStats(this)" aria-label="Show weapon stats"></button>
+                </label>
+                <div class="weapon-stats-panel">
+                    ${statsGrid}
+                    ${abilitiesHtml}
+                </div>
+            </div>
         `;
     };
 
     // Ranged weapons
     if (unit.weapons.ranged?.length > 0) {
         html += '<div class="config-label">Ranged Weapons</div>';
-        unit.weapons.ranged.forEach(w => { html += renderWeaponRow(w); });
+        unit.weapons.ranged.forEach(w => { html += renderWeaponRow(w, 'ranged'); });
     }
 
     // Melee weapons
     if (unit.weapons.melee?.length > 0) {
         html += '<div class="config-label">Melee Weapons</div>';
-        unit.weapons.melee.forEach(w => { html += renderWeaponRow(w); });
+        unit.weapons.melee.forEach(w => { html += renderWeaponRow(w, 'melee'); });
     }
 
     return html;
+}
+
+// Toggle weapon stats panel in builder
+function toggleWeaponStats(btn) {
+    const row = btn.closest('.weapon-checkbox-row');
+    const panel = row.querySelector('.weapon-stats-panel');
+    const isOpen = panel.classList.toggle('open');
+    btn.classList.toggle('open', isOpen);
 }
 
 // Toggle instance card expansion
