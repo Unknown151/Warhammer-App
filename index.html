@@ -1691,8 +1691,15 @@ function renderSoloAbilities(unit, extraWargear = []) {
         html += `<span class="ab kw tappable" data-ab="grenades">Grenades</span>`;
     }
 
-    // Regular abilities
+    // Collect abilities already shown inline with a weapon
+    const weaponLinkedAbilities = new Set(
+        [...(unit.weapons?.ranged || []), ...(unit.weapons?.melee || [])]
+            .map(w => w.unitAbility).filter(Boolean)
+    );
+
+    // Regular abilities (skip those shown inline with their weapon)
     (unit.abilities || []).forEach(ab => {
+        if (weaponLinkedAbilities.has(ab)) return;
         const abData = abilities[ab];
         html += `<span class="ab tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
     });
@@ -2083,7 +2090,12 @@ function renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive = 
         }
     }
 
-    const abilitiesHtml = allAbilities.length ? `
+    const unitAbilityHtml = weapon.unitAbility ? (() => {
+        const abData = abilities[weapon.unitAbility];
+        return `<button class="ab tappable" data-ab="${weapon.unitAbility}">${abData?.name || weapon.unitAbility}</button>`;
+    })() : '';
+
+    const abilitiesHtml = (allAbilities.length || unitAbilityHtml) ? `
         <div class="wabs">
             ${allAbilities.map(ab => {
                 const abData = abilities[ab.id];
@@ -2093,6 +2105,7 @@ function renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive = 
                 if (ab.closestBuff) classes = 'wab closest-buff tappable';
                 return `<button class="${classes}" data-ab="${ab.id}">${displayName}</button>`;
             }).join('')}
+            ${unitAbilityHtml}
         </div>
     ` : '';
 
@@ -2280,7 +2293,11 @@ function renderArmyInstance(instance) {
             }
         });
     });
-    const hasAbilities = unitCoreAbilities.length || unitWargear.length || unitAbilities.length || weaponAbBadges.length;
+    // Collect abilities already shown inline with a weapon
+    const builderWeaponLinkedAbilities = new Set(allWeaponsForAbil.map(w => w.unitAbility).filter(Boolean));
+
+    const filteredUnitAbilities = unitAbilities.filter(ab => !builderWeaponLinkedAbilities.has(ab));
+    const hasAbilities = unitCoreAbilities.length || unitWargear.length || filteredUnitAbilities.length || weaponAbBadges.length;
     if (hasAbilities) {
         let abHtml = '<div class="config-label">Abilities</div><div class="abilities">';
         unitCoreAbilities.forEach(ab => {
@@ -2291,7 +2308,7 @@ function renderArmyInstance(instance) {
             const abData = abilities[ab];
             abHtml += `<span class="ab wg tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
         });
-        unitAbilities.forEach(ab => {
+        filteredUnitAbilities.forEach(ab => {
             const abData = abilities[ab];
             abHtml += `<span class="ab tappable" data-ab="${ab}">${abData?.name || ab}</span>`;
         });
@@ -2511,7 +2528,11 @@ function renderInstanceWeaponSelector(instance) {
             const displayName = parsed.display || abData?.name || parsed.id;
             return `<button class="wab tappable" data-ab="${parsed.id}">${escHtml(displayName)}</button>`;
         }).join('');
-        const abilitiesHtml = abBadges ? `<div class="wabs">${abBadges}</div>` : '';
+        const unitAbBadge = w.unitAbility ? (() => {
+            const abData = abilities[w.unitAbility];
+            return `<button class="ab tappable" data-ab="${w.unitAbility}">${escHtml(abData?.name || w.unitAbility)}</button>`;
+        })() : '';
+        const abilitiesHtml = (abBadges || unitAbBadge) ? `<div class="wabs">${abBadges}${unitAbBadge}</div>` : '';
 
         return `
             <div class="weapon-checkbox-row">
