@@ -67,7 +67,7 @@
   "indirect-fire": {
     "name": "Indirect Fire",
     "type": "Weapon Ability",
-    "description": "Can target units that are <strong>not visible</strong> to the attacker with <strong>-1 to hit</strong> and the target gains the <strong>benefit of cover</strong>."
+    "description": "Can target and make attacks against units that are <strong>not visible</strong> to the attacking unit.<br><br>If no models are visible in a target unit when it is selected, then when making an attack against that target with an Indirect Fire weapon, <strong>subtract 1 from that attack's Hit roll</strong>, an unmodified Hit roll of <strong>1-3 always fails</strong>, and the target has the <strong>Benefit of Cover</strong> against that attack."
   },
   "precision": {
     "name": "Precision",
