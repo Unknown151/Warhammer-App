@@ -1921,6 +1921,14 @@ function renderDefensiveRow(unit, inherited = false, source = null, inlineEnhanc
     if (fnp) {
         return renderFnpRow(fnp);
     }
+    // No invuln/FNP but enhancement needs a row to appear in
+    if (inlineEnhancement) {
+        return `
+            <div class="invuln-row tappable" data-ab="${escHtml(inlineEnhancement.id)}">
+                <span class="invuln-enh" style="margin-left:0">★ ${escHtml(inlineEnhancement.name)}</span>
+            </div>
+        `;
+    }
     return '';
 }
 
