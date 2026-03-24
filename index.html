@@ -115,6 +115,7 @@
         .fnp-label{font-size:.6rem;color:var(--text);text-transform:uppercase;letter-spacing:.05em;cursor:pointer}
         .fnp-val{font-family:'Share Tech Mono',monospace;font-size:1rem;color:var(--text);font-weight:700;cursor:pointer}
         .invuln-core-ab{font-size:.58rem;font-weight:700;padding:.2rem .45rem;background:rgba(74,142,212,.25);border:1px solid rgba(74,142,212,.5);color:var(--text);border-radius:2px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;margin-left:.15rem}
+        .invuln-enh{font-size:.58rem;font-weight:700;padding:.2rem .45rem;background:rgba(212,168,75,.25);border:1px solid var(--gold-dark);color:var(--gold-bright);border-radius:2px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;margin-left:.15rem}
         .weapons{margin-bottom:.875rem}
         .weapon-category{background:var(--bg2);border-radius:4px;margin-bottom:.5rem;overflow:hidden}
         .weapon-category:last-child{margin-bottom:0}
@@ -1604,6 +1605,9 @@ function renderSoloUnitCard(entry) {
     // Check if Ironskein enhancement is active (for solo leaders)
     const enhancementId = instance?.enhancementId;
     const ironskeinActive = enhancementId === 'ironskein';
+    const soloInlineEnh = enhancementId === 'bastion-shield'
+        ? { id: 'bastion-shield', name: enhancements['bastion-shield']?.name || 'Bastion Shield' }
+        : null;
 
     // Apply Ironskein +2 wounds if active
     let displayUnit = unit;
@@ -1658,7 +1662,7 @@ function renderSoloUnitCard(entry) {
                 <div class="card-section">
                     ${renderUnitHeader(unit, modelCount)}
                     ${renderUnitStats(displayUnit)}
-                    ${renderDefensiveRow(unit)}
+                    ${renderDefensiveRow(unit, false, null, soloInlineEnh)}
                     ${renderWeapons(filteredWeapons, wargearInheritedAbilities, wargearAppliesTo, furyActive, closestActive, closestBonuses, firebaseActive)}
                     ${renderSoloAbilities(unit, extraWargear)}
                 </div>
@@ -1720,6 +1724,9 @@ function renderLedUnitCard(ledUnit) {
 
     const enhancementId = ledUnit.enhancement;
     const enhancement = enhancementId ? enhancements[enhancementId] : null;
+    const ledInlineEnh = enhancementId === 'bastion-shield'
+        ? { id: 'bastion-shield', name: enhancements['bastion-shield']?.name || 'Bastion Shield' }
+        : null;
 
     // If Ironskein is active, add +2 wounds to leader stats
     let leaderStats = leader;
@@ -1798,7 +1805,7 @@ function renderLedUnitCard(ledUnit) {
                     <div class="sec-label">Leader</div>
                     ${renderUnitHeader(leader)}
                     ${renderUnitStats(leaderStats)}
-                    ${renderDefensiveRow(leader)}
+                    ${renderDefensiveRow(leader, false, null, ledInlineEnh)}
                     ${renderWeapons(leader.weapons, leaderInheritedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses, firebaseActive)}
                     ${renderAbilities(leader, enhancement)}
                 </div>
@@ -1870,19 +1877,23 @@ function getUnitFnp(unit) {
 const INVULN_ROW_CORE_ABS = ['lone-operative', 'stealth'];
 
 // Render invulnerable save (and optional FNP)
-function renderInvuln(value, inherited, source = null, fnp = null, defensiveCoreAbs = []) {
+function renderInvuln(value, inherited, source = null, fnp = null, defensiveCoreAbs = [], enhancement = null) {
     const classes = inherited ? 'invuln-row inherited tappable' : 'invuln-row tappable';
     const dataAb = source ? `data-ab="${source}"` : '';
     const fnpHtml = fnp ? `<span class="fnp-sep">|</span><span class="fnp-label tappable" data-ab="${fnp.id}">FNP:</span><span class="fnp-val tappable" data-ab="${fnp.id}">${fnp.name.replace('Feel No Pain ', '')}</span>` : '';
     const coreAbHtml = defensiveCoreAbs.map(ab =>
         `<span class="invuln-core-ab tappable" data-ab="${ab.id}">${ab.name}</span>`
     ).join('');
+    const enhHtml = enhancement
+        ? `<span class="invuln-enh tappable" data-ab="${escHtml(enhancement.id)}">★ ${escHtml(enhancement.name)}</span>`
+        : '';
     return `
         <div class="${classes}" ${dataAb}>
             <span class="invuln-label">Invulnerable Save:</span>
             <span class="invuln-val">${value}</span>
             ${fnpHtml}
             ${coreAbHtml}
+            ${enhHtml}
         </div>
     `;
 }
@@ -1899,13 +1910,13 @@ function renderFnpRow(fnp) {
 }
 
 // Render defensive row (invuln + FNP combined)
-function renderDefensiveRow(unit, inherited = false, source = null) {
+function renderDefensiveRow(unit, inherited = false, source = null, inlineEnhancement = null) {
     const fnp = getUnitFnp(unit);
     const defensiveCoreAbs = (unit.coreAbilities || [])
         .filter(ab => INVULN_ROW_CORE_ABS.includes(ab))
         .map(ab => ({ id: ab, name: abilities[ab]?.name || ab }));
     if (unit.invulnerableSave) {
-        return renderInvuln(unit.invulnerableSave, inherited, source || unit.invulnerableSource, fnp, defensiveCoreAbs);
+        return renderInvuln(unit.invulnerableSave, inherited, source || unit.invulnerableSource, fnp, defensiveCoreAbs, inlineEnhancement);
     }
     if (fnp) {
         return renderFnpRow(fnp);
@@ -2121,10 +2132,12 @@ function renderAbilities(unit, enhancement) {
 
     html += '</div>';
 
-    // Enhancement
+    // Enhancement (skip bastion-shield — shown inline on the invuln row)
     if (enhancement) {
         const enhKey = Object.keys(enhancements).find(k => enhancements[k] === enhancement);
-        html += `<div class="enh tappable" data-ab="${enhKey}">${enhancement.name}</div>`;
+        if (enhKey !== 'bastion-shield') {
+            html += `<div class="enh tappable" data-ab="${enhKey}">${enhancement.name}</div>`;
+        }
     }
 
     return html;
