@@ -567,6 +567,11 @@
                         <div class="buff-item-label"><div class="buff-item-name">Firebase Control</div><div class="buff-item-desc">Infantry ranged: Sustained Hits 1</div></div>
                         <div class="buff-item-switch"></div>
                     </div>
+                    <div class="buff-dropdown-item" data-strat="optimalApp" data-hearthfyre="true" onclick="toggleStratagemItem('optimalApp', event)">
+                        <span class="buff-item-icon">⚙</span>
+                        <div class="buff-item-label"><div class="buff-item-name">Optimal Application</div><div class="buff-item-desc">Brôkhyr/Steeljacks/Evaluator: Re-roll Hit 1</div></div>
+                        <div class="buff-item-switch"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -679,7 +684,7 @@ let army = {};
 let units = {};
 const characterState = {};
 const bodyguardState = {}; // Tracks if bodyguard unit is wiped (leader now solo)
-const stratagemState = { fury: false, closest: false, firebase: false };
+const stratagemState = { fury: false, closest: false, firebase: false, optimalApp: false };
 let furyYP = false;
 let vp = 0;
 let cp = 0;
@@ -986,6 +991,12 @@ const DETACHMENTS = {
         ruleId: 'firebase-control',
         ruleType: 'Detachment Rule — Brandfast Oathband',
         ruleDescription: '<strong>LEAGUES OF VOTANN TRANSPORT</strong> units from your army have the following ability:<br><br><strong>Firebase Control (Aura):</strong> While a friendly <strong>LEAGUES OF VOTANN INFANTRY</strong> unit is wholly within 6" of this <strong>TRANSPORT</strong>, ranged weapons equipped by models in that <strong>INFANTRY</strong> unit have the <strong>[SUSTAINED HITS 1]</strong> ability.'
+    },
+    'hearthfyre-arsenal': {
+        name: 'Hearthfyre Arsenal',
+        ruleId: 'hearthfyre-arsenal-rule',
+        ruleType: 'Detachment Rule — Hearthfyre Arsenal',
+        ruleDescription: '<strong>Forge Masters:</strong> At the end of your Command phase, you gain <strong>1YP</strong> for each objective marker you control that is not within your deployment zone and has one or more <strong>IRON-MASTER</strong> and/or <strong>MEMNYR STRATEGIST</strong> models from your army within range of it (to a maximum of <strong>2YP</strong> gained from this Detachment rule per turn).<br><br><strong>Optimal Application:</strong> In your Shooting phase, each time a <strong>BRÔKHYR</strong>, <strong>IRONKIN STEELJACKS</strong> or <strong>ARKANYST EVALUATOR</strong> unit from your army is selected to shoot, you can spend <strong>1YP</strong>. If you do, until the end of the phase, each time a model in that unit makes an attack, <strong>re-roll a Hit roll of 1</strong>.'
     }
 };
 let selectedDetachment = 'hearthband';
@@ -1018,6 +1029,12 @@ function updateStratagemVisibility() {
     const firebaseFab = document.getElementById('firebase-fab');
     firebaseFab.style.display = isBrandfast ? '' : 'none';
     if (!isBrandfast) firebaseFab.classList.remove('active');
+
+    const isHearthfyre = selectedDetachment === 'hearthfyre-arsenal';
+    document.querySelectorAll('.buff-dropdown-item[data-hearthfyre]').forEach(el => {
+        el.style.display = isHearthfyre ? '' : 'none';
+        if (!isHearthfyre) el.classList.remove('active');
+    });
 }
 function selectDetachment(id) {
     if (selectedDetachment === id) return;
@@ -1032,6 +1049,10 @@ function selectDetachment(id) {
     // Reset Brandfast Oathband-only stratagems when leaving
     if (id !== 'brandfast-oathband') {
         stratagemState.firebase = false;
+    }
+    // Reset Hearthfyre Arsenal-only stratagems when leaving
+    if (id !== 'hearthfyre-arsenal') {
+        stratagemState.optimalApp = false;
     }
     // Clear enhancements that don't belong to the new detachment
     armyList.forEach(inst => {
@@ -1207,6 +1228,7 @@ function switchToList(slot) {
     stratagemState.fury = false;
     furyYP = false;
     stratagemState.firebase = false;
+    stratagemState.optimalApp = false;
     refreshUI();
 }
 
@@ -1600,6 +1622,9 @@ function renderSoloUnitCard(entry) {
 
     // Firebase Control (Brandfast Oathband): Sustained Hits 1 on ranged for INFANTRY units
     const firebaseActive = stratagemState.firebase && (unit.keywords || []).includes('INFANTRY');
+    // Optimal Application (Hearthfyre Arsenal): Re-roll Hit 1 on ranged for Brôkhyr/Ironkin Steeljacks/Arkanyst Evaluator
+    const optimalAppKws = ['BRÔKHYR', 'IRONKIN STEELJACKS', 'ARKANYST EVALUATOR'];
+    const optimalAppActive = stratagemState.optimalApp && (unit.keywords || []).some(k => optimalAppKws.includes(k));
     const closestBonuses = closestActive ? getClosestBonusesForUnit(entry.unit, null) : { apImprove: false, rerollHit: false };
 
     // Check if Ironskein enhancement is active (for solo leaders)
@@ -1663,7 +1688,7 @@ function renderSoloUnitCard(entry) {
                     ${renderUnitHeader(unit, modelCount)}
                     ${renderUnitStats(displayUnit)}
                     ${renderDefensiveRow(unit, false, null, soloInlineEnh)}
-                    ${renderWeapons(filteredWeapons, wargearInheritedAbilities, wargearAppliesTo, furyActive, closestActive, closestBonuses, firebaseActive)}
+                    ${renderWeapons(filteredWeapons, wargearInheritedAbilities, wargearAppliesTo, furyActive, closestActive, closestBonuses, firebaseActive, optimalAppActive)}
                     ${renderSoloAbilities(unit, extraWargear)}
                 </div>
                 <div class="keywords">${(unit.keywords || []).map(k => escHtml(k)).join(', ')}</div>
@@ -1752,6 +1777,10 @@ function renderLedUnitCard(ledUnit) {
     // Firebase Control (Brandfast Oathband): Sustained Hits 1 on ranged for INFANTRY units
     // Applies to the whole led unit if the bodyguard is INFANTRY
     const firebaseActive = stratagemState.firebase && (bodyguard.keywords || []).includes('INFANTRY');
+    // Optimal Application (Hearthfyre Arsenal): Re-roll Hit 1 for Brôkhyr/Ironkin Steeljacks/Arkanyst Evaluator
+    const optimalAppKws = ['BRÔKHYR', 'IRONKIN STEELJACKS', 'ARKANYST EVALUATOR'];
+    const optimalAppActiveLeader = stratagemState.optimalApp && (leader.keywords || []).some(k => optimalAppKws.includes(k));
+    const optimalAppActiveBodyguard = stratagemState.optimalApp && (bodyguard.keywords || []).some(k => optimalAppKws.includes(k));
 
     // Filter grantsAbilities to only weapon-applicable ones (exclude invuln, etc.)
     const nonWeaponAbilities = ['invuln-5'];
@@ -1806,7 +1835,7 @@ function renderLedUnitCard(ledUnit) {
                     ${renderUnitHeader(leader)}
                     ${renderUnitStats(leaderStats)}
                     ${renderDefensiveRow(leader, false, null, ledInlineEnh)}
-                    ${renderWeapons(leader.weapons, leaderInheritedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses, firebaseActive)}
+                    ${renderWeapons(leader.weapons, leaderInheritedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses, firebaseActive, optimalAppActiveLeader)}
                     ${renderAbilities(leader, enhancement)}
                 </div>
                 <div class="card-section">
@@ -1814,7 +1843,7 @@ function renderLedUnitCard(ledUnit) {
                     ${renderUnitHeader(bodyguard, bodyguardModelCount)}
                     ${renderUnitStats(bodyguard)}
                     ${renderBodyguardInvuln(bodyguard, leader)}
-                    ${renderWeapons(bodyguardWeapons, bodyguardInheritedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses, firebaseActive)}
+                    ${renderWeapons(bodyguardWeapons, bodyguardInheritedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses, firebaseActive, optimalAppActiveBodyguard)}
                     ${renderBodyguardAbilities(bodyguard, leader)}
                 </div>
                 <div class="keywords">${ledUnit.combinedKeywords.map(k => escHtml(k)).join(', ')}</div>
@@ -1959,15 +1988,15 @@ function renderBodyguardInvuln(bodyguard, leader) {
 }
 
 // Render weapons section
-function renderWeapons(weapons, inheritedAbilities = [], appliesTo = null, furyActive = false, closestActive = false, closestBonuses = {}, firebaseActive = false) {
-    const rangedHtml = weapons.ranged?.length ? renderWeaponCategory('ranged', weapons.ranged, inheritedAbilities, appliesTo, furyActive, closestActive, closestBonuses, firebaseActive) : '';
-    const meleeHtml = weapons.melee?.length ? renderWeaponCategory('melee', weapons.melee, inheritedAbilities, appliesTo, false, closestActive, closestBonuses, false) : ''; // Fury and firebase only affect ranged
+function renderWeapons(weapons, inheritedAbilities = [], appliesTo = null, furyActive = false, closestActive = false, closestBonuses = {}, firebaseActive = false, optimalAppActive = false) {
+    const rangedHtml = weapons.ranged?.length ? renderWeaponCategory('ranged', weapons.ranged, inheritedAbilities, appliesTo, furyActive, closestActive, closestBonuses, firebaseActive, optimalAppActive) : '';
+    const meleeHtml = weapons.melee?.length ? renderWeaponCategory('melee', weapons.melee, inheritedAbilities, appliesTo, false, closestActive, closestBonuses, false, false) : ''; // Fury, firebase and optimalApp only affect ranged
 
     return `<div class="weapons">${rangedHtml}${meleeHtml}</div>`;
 }
 
 // Render a weapon category (ranged or melee)
-function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo, furyActive = false, closestActive = false, closestBonuses = {}, firebaseActive = false) {
+function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo, furyActive = false, closestActive = false, closestBonuses = {}, firebaseActive = false, optimalAppActive = false) {
     const label = type === 'ranged' ? 'Ranged Weapons' : 'Melee Weapons';
 
     // Group weapons by weaponGroup
@@ -1989,7 +2018,7 @@ function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo, f
 
     // Render ungrouped weapons
     ungrouped.forEach(weapon => {
-        contentHtml += renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive, closestActive, closestBonuses, firebaseActive);
+        contentHtml += renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive, closestActive, closestBonuses, firebaseActive, optimalAppActive);
     });
 
     // Render grouped weapons
@@ -1997,7 +2026,7 @@ function renderWeaponCategory(type, weaponList, inheritedAbilities, appliesTo, f
         contentHtml += `
             <div class="weapon-group">
                 <div class="weapon-group-label">${group.label}</div>
-                ${group.weapons.map(w => renderWeapon(w, type, inheritedAbilities, appliesTo, furyActive, closestActive, closestBonuses, firebaseActive)).join('')}
+                ${group.weapons.map(w => renderWeapon(w, type, inheritedAbilities, appliesTo, furyActive, closestActive, closestBonuses, firebaseActive, optimalAppActive)).join('')}
             </div>
         `;
     });
@@ -2019,7 +2048,7 @@ function parseAbility(ab) {
 }
 
 // Render a single weapon
-function renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive = false, closestActive = false, closestBonuses = {}, firebaseActive = false) {
+function renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive = false, closestActive = false, closestBonuses = {}, firebaseActive = false, optimalAppActive = false) {
     const countText = weapon.count > 1 ? ` (×${weapon.count})` : '';
     const modelText = weapon.model ? ` (${escHtml(weapon.model)})` : '';
     const nameDisplay = escHtml(weapon.name) + countText + modelText;
@@ -2082,6 +2111,11 @@ function renderWeapon(weapon, type, inheritedAbilities, appliesTo, furyActive = 
     // Add Sustained Hits 1 from Firebase Control (Brandfast Oathband, ranged only)
     if (firebaseActive && type === 'ranged') {
         allAbilities.push({ id: 'firebase-control', display: 'Sustained Hits 1', inherited: false, stratBuff: true, closestBuff: false });
+    }
+
+    // Add Re-roll Hit 1 from Optimal Application (Hearthfyre Arsenal, ranged only)
+    if (optimalAppActive && type === 'ranged') {
+        allAbilities.push({ id: 'hearthfyre-arsenal-rule', display: 'Re-roll Hit 1', inherited: false, stratBuff: true, closestBuff: false });
     }
 
     // Add closest-target reminders

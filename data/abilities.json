@@ -24,6 +24,11 @@
     "type": "Detachment Rule — Brandfast Oathband",
     "description": "<strong>LEAGUES OF VOTANN TRANSPORT</strong> units from your army have the following ability:<br><br><strong>Firebase Control (Aura):</strong> While a friendly <strong>LEAGUES OF VOTANN INFANTRY</strong> unit is wholly within 6\" of this <strong>TRANSPORT</strong>, ranged weapons equipped by models in that <strong>INFANTRY</strong> unit have the <strong>[SUSTAINED HITS 1]</strong> ability."
   },
+  "hearthfyre-arsenal-rule": {
+    "name": "Hearthfyre Arsenal",
+    "type": "Detachment Rule — Hearthfyre Arsenal",
+    "description": "<strong>Forge Masters:</strong> At the end of your Command phase, you gain <strong>1YP</strong> for each objective marker you control that is not within your deployment zone and has one or more <strong>IRON-MASTER</strong> and/or <strong>MEMNYR STRATEGIST</strong> models from your army within range of it (to a maximum of <strong>2YP</strong> gained from this Detachment rule per turn).<br><br><strong>Optimal Application:</strong> In your Shooting phase, each time a <strong>BRÔKHYR</strong>, <strong>IRONKIN STEELJACKS</strong> or <strong>ARKANYST EVALUATOR</strong> unit from your army is selected to shoot, you can spend <strong>1YP</strong>. If you do, until the end of the phase, each time a model in that unit makes an attack, <strong>re-roll a Hit roll of 1</strong>."
+  },
   "assault": {
     "name": "Assault",
     "type": "Weapon Ability",

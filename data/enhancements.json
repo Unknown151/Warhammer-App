@@ -132,5 +132,39 @@
     "detachment": "brandfast-oathband",
     "points": 5,
     "description": "Each time a friendly <strong>LEAGUES OF VOTANN</strong> model is repaired using the bearer's <strong>Forgewrought Expertise</strong> ability, that model regains <strong>1 additional lost wound</strong>."
+  },
+  "farstrydr-node": {
+    "name": "Fârstrydr Node",
+    "type": "Enhancement (20 pts)",
+    "restriction": "IRON-MASTER or MEMNYR STRATEGIST model only",
+    "detachment": "hearthfyre-arsenal",
+    "points": 20,
+    "description": "Models in the bearer's unit have the <strong>Deep Strike</strong> ability."
+  },
+  "calculated-tenacity": {
+    "name": "Calculated Tenacity",
+    "type": "Enhancement (15 pts)",
+    "restriction": "IRON-MASTER or MEMNYR STRATEGIST model only",
+    "detachment": "hearthfyre-arsenal",
+    "points": 15,
+    "description": "While the bearer is leading a unit, add <strong>1</strong> to the Objective Control characteristic of models in that unit."
+  },
+  "mantle-of-elders": {
+    "name": "Mantle of Elders",
+    "type": "Enhancement (10 pts)",
+    "restriction": "MEMNYR STRATEGIST model only",
+    "restrictedTo": ["memnyr-strategist"],
+    "detachment": "hearthfyre-arsenal",
+    "points": 10,
+    "description": "Each time the bearer's unit is selected to shoot, if you spend YP using the <strong>Optimal Application</strong> Detachment rule when doing so, you can roll one D6: on a <strong>2+</strong>, you gain <strong>1YP</strong>."
+  },
+  "graviton-vault": {
+    "name": "Graviton Vault",
+    "type": "Enhancement (5 pts)",
+    "restriction": "IRON-MASTER model only",
+    "restrictedTo": ["iron-master"],
+    "detachment": "hearthfyre-arsenal",
+    "points": 5,
+    "description": "In your Shooting phase, after the bearer has shot, and in the Fight phase, after the bearer has fought, select one enemy <strong>MONSTER</strong> or <strong>VEHICLE</strong> unit hit by one or more of those attacks. Until the start of your next turn, that enemy unit is <strong>suppressed</strong>. While a unit is suppressed, each time a model in that unit makes an attack, <strong>subtract 1 from the Hit roll</strong>."
   }
 }
