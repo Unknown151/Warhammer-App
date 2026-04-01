@@ -283,11 +283,11 @@
         .pt-btn:active{background:var(--border-gold);border-color:var(--gold-dark)}
         @media(min-width:768px){.container{max-width:800px;margin:0 auto;padding:1.5rem}.modal-content{border-radius:12px;max-height:60vh}}
         /* Stratagems tab */
-        .strat-phase-nav{display:flex;align-items:center;justify-content:center;gap:.25rem;flex-wrap:wrap;margin-bottom:1.25rem;padding:.5rem 0;border-bottom:1px solid var(--border)}
-        .strat-phase-btn{padding:.35rem .7rem;font-family:'Orbitron',sans-serif;font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border:none;background:transparent;color:var(--text3);cursor:pointer;touch-action:manipulation;transition:color .15s,border-color .15s;border-bottom:2px solid transparent;white-space:nowrap}
+        .strat-phase-nav{display:flex;align-items:center;justify-content:space-between;gap:0;margin-bottom:1.25rem;padding:.4rem 0;border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch}
+        .strat-phase-btn{flex:1;padding:.35rem .2rem;font-family:'Orbitron',sans-serif;font-size:.55rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase;border:none;background:transparent;color:var(--text3);cursor:pointer;touch-action:manipulation;transition:color .15s,border-color .15s;border-bottom:2px solid transparent;white-space:nowrap;text-align:center}
         .strat-phase-btn:hover{color:var(--text2)}
         .strat-phase-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
-        .strat-phase-sep{color:var(--text3);font-size:.65rem;user-select:none}
+        .strat-phase-sep{color:var(--border);font-size:.55rem;user-select:none;flex-shrink:0}
         .strat-grid{display:grid;grid-template-columns:1fr 1fr;gap:.625rem}
         .strat-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:.75rem;display:flex;flex-direction:column;gap:.35rem;min-height:120px}
         .strat-card.det-card{border-color:var(--gold-dark);background:linear-gradient(160deg,rgba(212,168,75,.07),var(--bg2))}
