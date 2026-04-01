@@ -282,6 +282,28 @@
         .pt-btn{width:30px;height:30px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;line-height:1;flex-shrink:0;transition:background .1s}
         .pt-btn:active{background:var(--border-gold);border-color:var(--gold-dark)}
         @media(min-width:768px){.container{max-width:800px;margin:0 auto;padding:1.5rem}.modal-content{border-radius:12px;max-height:60vh}}
+        /* Stratagems tab */
+        .strat-phase-nav{display:flex;align-items:center;justify-content:center;gap:.25rem;flex-wrap:wrap;margin-bottom:1.25rem;padding:.5rem 0;border-bottom:1px solid var(--border)}
+        .strat-phase-btn{padding:.35rem .7rem;font-family:'Orbitron',sans-serif;font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border:none;background:transparent;color:var(--text3);cursor:pointer;touch-action:manipulation;transition:color .15s,border-color .15s;border-bottom:2px solid transparent;white-space:nowrap}
+        .strat-phase-btn:hover{color:var(--text2)}
+        .strat-phase-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+        .strat-phase-sep{color:var(--text3);font-size:.65rem;user-select:none}
+        .strat-grid{display:grid;grid-template-columns:1fr 1fr;gap:.625rem}
+        .strat-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:.75rem;display:flex;flex-direction:column;gap:.35rem;min-height:120px}
+        .strat-card.det-card{border-color:var(--gold-dark);background:linear-gradient(160deg,rgba(212,168,75,.07),var(--bg2))}
+        .strat-card.det-card::before{content:'';display:block;height:2px;background:linear-gradient(90deg,var(--gold-dark),transparent);margin:-0.75rem -0.75rem .5rem}
+        .strat-card-name{font-family:'Orbitron',sans-serif;font-size:.7rem;font-weight:700;color:var(--gold-bright);letter-spacing:.04em;line-height:1.3}
+        .strat-card-costs{display:flex;gap:.3rem;margin-top:.1rem}
+        .strat-card-cost{font-family:'Share Tech Mono',monospace;font-size:.6rem;font-weight:700;padding:.1rem .35rem;border-radius:2px}
+        .strat-card-cost.cp{background:rgba(74,142,212,.15);color:var(--blue);border:1px solid rgba(74,142,212,.3)}
+        .strat-card-cost.yp{background:rgba(212,168,75,.15);color:var(--gold);border:1px solid var(--border-gold)}
+        .strat-card-target{font-size:.62rem;color:var(--gold);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+        .strat-card-desc{font-size:.7rem;color:var(--text2);line-height:1.45;flex:1}
+        .strat-card-effect{font-size:.7rem;color:var(--text);line-height:1.45;border-top:1px solid var(--border);padding-top:.35rem;margin-top:.1rem}
+        .strat-card-effect strong{color:var(--gold-bright)}
+        .strat-empty{grid-column:1/-1;text-align:center;font-size:.85rem;color:var(--text3);padding:2rem 0;font-style:italic}
+        .strat-det-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin:1rem 0 .5rem;grid-column:1/-1;display:flex;align-items:center;gap:.5rem}
+        .strat-det-label::after{content:'';flex:1;height:1px;background:var(--border)}
         /* Configuration Tab Styles */
         .config-section{margin-bottom:1.5rem}
         .config-section-header{display:flex;align-items:center;gap:.5rem;padding:.75rem 0;border-bottom:1px solid var(--border);cursor:pointer;touch-action:manipulation}
@@ -469,6 +491,7 @@
         <nav class="tabs-compact" role="tablist" aria-label="Main navigation">
             <button class="tab-compact active" data-tab="units" role="tab" aria-selected="true" aria-controls="units-tab">Army</button>
             <button class="tab-compact" data-tab="configuration" role="tab" aria-selected="false" aria-controls="configuration-tab">Builder</button>
+            <button class="tab-compact" data-tab="stratagems" role="tab" aria-selected="false" aria-controls="stratagems-tab">Stratagems</button>
         </nav>
         <div class="header-actions">
             <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark theme">&#9788;</button>
@@ -507,6 +530,21 @@
         <div id="units-tab" class="tab-content active" role="tabpanel" aria-label="Army view">
             <div id="units-container"><div class="loading">Loading units...</div></div>
             <div id="led-units-count" style="display:none">-</div>
+        </div>
+
+        <div id="stratagems-tab" class="tab-content" role="tabpanel" aria-label="Stratagems">
+            <nav class="strat-phase-nav" aria-label="Phase">
+                <button class="strat-phase-btn active" onclick="selectStratPhase('command')">Command</button>
+                <span class="strat-phase-sep">–</span>
+                <button class="strat-phase-btn" onclick="selectStratPhase('movement')">Movement</button>
+                <span class="strat-phase-sep">–</span>
+                <button class="strat-phase-btn" onclick="selectStratPhase('shooting')">Shooting</button>
+                <span class="strat-phase-sep">–</span>
+                <button class="strat-phase-btn" onclick="selectStratPhase('charge')">Charge</button>
+                <span class="strat-phase-sep">–</span>
+                <button class="strat-phase-btn" onclick="selectStratPhase('fight')">Fight</button>
+            </nav>
+            <div class="strat-grid" id="strat-grid"></div>
         </div>
 
         <div id="configuration-tab" class="tab-content" role="tabpanel" aria-label="Army builder">
@@ -696,6 +734,7 @@ function selectDetachment(id) {
     updateBuffButton();
     renderConfigurationTab();
     renderUnits();
+    renderStratagemsTab();
 }
 const expandedCards = {};
 const configExpandedCards = {};
@@ -2792,6 +2831,66 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') hideModal();
 });
 
+// Stratagems tab
+let stratPhase = 'command';
+
+function selectStratPhase(phase) {
+    stratPhase = phase;
+    document.querySelectorAll('.strat-phase-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase() === phase);
+    });
+    renderStratagemsTab();
+}
+
+function renderStratCard(id, strat) {
+    const isDet = !!strat.detachment;
+    const costs = [];
+    if (strat.cpCost > 0 || strat.ypCost === 0) costs.push(`<span class="strat-card-cost cp">${strat.cpCost}CP</span>`);
+    if (strat.ypCost > 0) costs.push(`<span class="strat-card-cost yp">${strat.ypCost}YP</span>`);
+    return `
+        <div class="strat-card${isDet ? ' det-card' : ''}">
+            <div class="strat-card-name">${escHtml(strat.name)}</div>
+            <div class="strat-card-costs">${costs.join('')}</div>
+            ${strat.target ? `<div class="strat-card-target">${escHtml(strat.target)}</div>` : ''}
+            <div class="strat-card-desc">${escHtml(strat.description)}</div>
+            ${strat.effect ? `<div class="strat-card-effect">${escHtml(strat.effect)}</div>` : ''}
+        </div>
+    `;
+}
+
+function renderStratagemsTab() {
+    const grid = document.getElementById('strat-grid');
+    if (!grid) return;
+
+    const phase = stratPhase;
+    const coreCards = [];
+    const detCards = [];
+
+    Object.entries(stratagems).forEach(([id, strat]) => {
+        if (!strat.phases || !strat.phases.includes(phase)) return;
+        // Filter detachment-specific stratagems to only show for the active detachment
+        if (strat.detachment && strat.detachment !== selectedDetachment) return;
+        if (strat.detachment) {
+            detCards.push(renderStratCard(id, strat));
+        } else {
+            coreCards.push(renderStratCard(id, strat));
+        }
+    });
+
+    let html = '';
+    if (coreCards.length === 0 && detCards.length === 0) {
+        html = '<div class="strat-empty">No stratagems available in this phase.</div>';
+    } else {
+        html += coreCards.join('');
+        if (detCards.length > 0) {
+            const det = DETACHMENTS[selectedDetachment];
+            html += `<div class="strat-det-label">${escHtml(det?.name || selectedDetachment)}</div>`;
+            html += detCards.join('');
+        }
+    }
+    grid.innerHTML = html;
+}
+
 // Tab switching
 document.querySelectorAll('.tab-compact').forEach(tab => {
     tab.addEventListener('click', function() {
@@ -2804,6 +2903,7 @@ document.querySelectorAll('.tab-compact').forEach(tab => {
         this.setAttribute('aria-selected', 'true');
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.getElementById(tabId + '-tab').classList.add('active');
+        if (tabId === 'stratagems') renderStratagemsTab();
     });
 });
 
