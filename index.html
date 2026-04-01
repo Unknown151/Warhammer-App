@@ -297,10 +297,17 @@
         .strat-card-cost{font-family:'Share Tech Mono',monospace;font-size:.6rem;font-weight:700;padding:.1rem .35rem;border-radius:2px}
         .strat-card-cost.cp{background:rgba(74,142,212,.15);color:var(--blue);border:1px solid rgba(74,142,212,.3)}
         .strat-card-cost.yp{background:rgba(212,168,75,.15);color:var(--gold);border:1px solid var(--border-gold)}
+        .strat-card-turn{font-size:.58rem;font-weight:700;padding:.1rem .35rem;border-radius:2px;text-transform:uppercase;letter-spacing:.05em;align-self:flex-start}
+        .strat-card-turn.either{background:rgba(74,201,120,.15);color:#4ac978;border:1px solid rgba(74,201,120,.3)}
+        .strat-card-turn.your{background:rgba(74,142,212,.15);color:var(--blue);border:1px solid rgba(74,142,212,.3)}
+        .strat-card-turn.opponent{background:rgba(201,68,68,.15);color:var(--red);border:1px solid rgba(201,68,68,.3)}
+        .strat-card-type{font-size:.58rem;color:var(--text3);letter-spacing:.04em;margin-bottom:.1rem}
         .strat-card-target{font-size:.62rem;color:var(--gold);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
-        .strat-card-desc{font-size:.7rem;color:var(--text2);line-height:1.45;flex:1}
+        .strat-card-when{font-size:.7rem;color:var(--text2);line-height:1.45}
+        .strat-card-when strong{color:var(--text3);font-weight:700}
         .strat-card-effect{font-size:.7rem;color:var(--text);line-height:1.45;border-top:1px solid var(--border);padding-top:.35rem;margin-top:.1rem}
         .strat-card-effect strong{color:var(--gold-bright)}
+        .strat-card-restrictions{font-size:.65rem;color:var(--red);line-height:1.4;margin-top:.1rem;font-style:italic}
         .strat-empty{grid-column:1/-1;text-align:center;font-size:.85rem;color:var(--text3);padding:2rem 0;font-style:italic}
         .strat-det-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin:1rem 0 .5rem;grid-column:1/-1;display:flex;align-items:center;gap:.5rem}
         .strat-det-label::after{content:'';flex:1;height:1px;background:var(--border)}
@@ -2847,13 +2854,20 @@ function renderStratCard(id, strat) {
     const costs = [];
     if (strat.cpCost > 0 || strat.ypCost === 0) costs.push(`<span class="strat-card-cost cp">${strat.cpCost}CP</span>`);
     if (strat.ypCost > 0) costs.push(`<span class="strat-card-cost yp">${strat.ypCost}YP</span>`);
+    const turnLabel = { either: 'Either Player\'s Turn', your: 'Your Turn', opponent: 'Opponent\'s Turn' }[strat.turn] || '';
+    const turnClass = strat.turn || 'either';
     return `
         <div class="strat-card${isDet ? ' det-card' : ''}">
             <div class="strat-card-name">${escHtml(strat.name)}</div>
-            <div class="strat-card-costs">${costs.join('')}</div>
-            ${strat.target ? `<div class="strat-card-target">${escHtml(strat.target)}</div>` : ''}
-            <div class="strat-card-desc">${escHtml(strat.description)}</div>
-            ${strat.effect ? `<div class="strat-card-effect">${escHtml(strat.effect)}</div>` : ''}
+            <div class="strat-card-costs">
+                ${costs.join('')}
+                ${turnLabel ? `<span class="strat-card-turn ${turnClass}">${escHtml(turnLabel)}</span>` : ''}
+            </div>
+            ${strat.type ? `<div class="strat-card-type">${escHtml(strat.type)}</div>` : ''}
+            ${strat.when ? `<div class="strat-card-when"><strong>WHEN:</strong> ${escHtml(strat.when)}</div>` : ''}
+            ${strat.target ? `<div class="strat-card-target">TARGET: ${escHtml(strat.target)}</div>` : ''}
+            ${strat.effect ? `<div class="strat-card-effect"><strong>EFFECT:</strong> ${escHtml(strat.effect)}</div>` : ''}
+            ${strat.restrictions ? `<div class="strat-card-restrictions">RESTRICTIONS: ${escHtml(strat.restrictions)}</div>` : ''}
         </div>
     `;
 }
