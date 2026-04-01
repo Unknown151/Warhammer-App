@@ -270,6 +270,10 @@
         .firebase-fab.active{border-color:rgba(74,212,130,.6);background:rgba(74,212,130,.2);color:#4ad482;box-shadow:0 4px 20px rgba(74,212,130,.3)}
         body.light-theme .firebase-fab{box-shadow:0 4px 16px rgba(0,0,0,.15)}
         body.light-theme .firebase-fab.active{background:rgba(74,212,130,.15);box-shadow:0 4px 20px rgba(74,212,130,.2)}
+        .optimalapp-fab{position:fixed;bottom:calc(48px + 1rem);right:1.2rem;width:52px;height:52px;border-radius:50%;border:2px solid var(--border);background:var(--bg2);color:var(--text3);font-size:1.4rem;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;z-index:100;box-shadow:0 4px 16px rgba(0,0,0,.5);transition:all .2s ease;line-height:1}
+        .optimalapp-fab.active{border-color:rgba(212,168,75,.6);background:rgba(212,168,75,.2);color:var(--gold-bright);box-shadow:0 4px 20px rgba(212,168,75,.3)}
+        body.light-theme .optimalapp-fab{box-shadow:0 4px 16px rgba(0,0,0,.15)}
+        body.light-theme .optimalapp-fab.active{background:rgba(212,168,75,.15);box-shadow:0 4px 20px rgba(212,168,75,.2)}
         /* YP / CP point trackers */
         .cp-tracker{position:fixed;bottom:0;left:0;right:0;z-index:99;background:var(--bg2);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:.6rem;height:48px;padding:0 .75rem}
         .pt-divider{width:1px;height:24px;background:var(--border);margin:0 .4rem}
@@ -637,6 +641,7 @@
 
     <button class="closest-fab" id="closest-fab" onclick="toggleClosestFab()" title="Targeting Closest">🎯</button>
     <button class="firebase-fab" id="firebase-fab" onclick="toggleFirebaseFab()" title="Firebase Control">📡</button>
+    <button class="optimalapp-fab" id="optimalapp-fab" onclick="toggleOptimalAppFab()" title="Optimal Application">⚙</button>
 
     <div class="unit-picker-overlay" id="unit-picker" role="dialog" aria-modal="true" aria-label="Add unit">
         <div class="unit-picker">
@@ -1035,6 +1040,9 @@ function updateStratagemVisibility() {
         el.style.display = isHearthfyre ? '' : 'none';
         if (!isHearthfyre) el.classList.remove('active');
     });
+    const optimalAppFab = document.getElementById('optimalapp-fab');
+    optimalAppFab.style.display = isHearthfyre ? '' : 'none';
+    if (!isHearthfyre) optimalAppFab.classList.remove('active');
 }
 function selectDetachment(id) {
     if (selectedDetachment === id) return;
@@ -3019,6 +3027,10 @@ function toggleStratagemItem(stratId, e) {
     if (stratId === 'firebase') {
         document.getElementById('firebase-fab').classList.toggle('active', stratagemState.firebase);
     }
+    // Sync FAB if optimalApp was toggled from dropdown
+    if (stratId === 'optimalApp') {
+        document.getElementById('optimalapp-fab').classList.toggle('active', stratagemState.optimalApp);
+    }
 
     // Update badge
     updateBuffButton();
@@ -3054,6 +3066,17 @@ function toggleFirebaseFab() {
     if (item) item.classList.toggle('active', stratagemState.firebase);
     // Sync FAB visual
     document.getElementById('firebase-fab').classList.toggle('active', stratagemState.firebase);
+    updateBuffButton();
+    renderUnits();
+}
+
+function toggleOptimalAppFab() {
+    stratagemState.optimalApp = !stratagemState.optimalApp;
+    // Sync dropdown item visual
+    const item = document.querySelector('.buff-dropdown-item[data-strat="optimalApp"]');
+    if (item) item.classList.toggle('active', stratagemState.optimalApp);
+    // Sync FAB visual
+    document.getElementById('optimalapp-fab').classList.toggle('active', stratagemState.optimalApp);
     updateBuffButton();
     renderUnits();
 }
