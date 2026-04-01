@@ -3077,6 +3077,7 @@ function toggleOptimalAppFab() {
     if (item) item.classList.toggle('active', stratagemState.optimalApp);
     // Sync FAB visual
     document.getElementById('optimalapp-fab').classList.toggle('active', stratagemState.optimalApp);
+    if (stratagemState.optimalApp) showToast('Remember to spend 1YP per Brôkhyr / Ironkin Steeljacks / Arkanyst Evaluator unit shooting', 'warn', 4000);
     updateBuffButton();
     renderUnits();
 }
