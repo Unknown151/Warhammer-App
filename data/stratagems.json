@@ -190,7 +190,7 @@
   },
   "secure-positions": {
     "name": "Secure Positions",
-    "type": "Hearthband Stratagem",
+    "type": "Brandfast Oathband – Strategic Ploy Stratagem",
     "turn": "your",
     "phases": [
       "command",
@@ -201,15 +201,15 @@
     ],
     "cpCost": 1,
     "ypCost": 0,
-    "summary": "Disembark one unit from a TRANSPORT at the end of any of your phases.",
+    "summary": "Disembark one unit from a TRANSPORT at the end of any of your phases. Cannot charge this turn.",
     "when": "End of any of your phases.",
     "target": "One LEAGUES OF VOTANN TRANSPORT unit from your army.",
-    "effect": "One LEAGUES OF VOTANN unit embarked within that TRANSPORT can disembark. Models can be set up anywhere wholly within 6\" of the TRANSPORT. That unit cannot declare a charge this turn but can otherwise act normally.",
-    "detachment": "hearthband"
+    "effect": "One LEAGUES OF VOTANN unit embarked within your TRANSPORT can disembark. When doing so, models in that unit can be set up anywhere on the battlefield wholly within 6\" of your TRANSPORT. That unit cannot declare a charge in the same turn, but can otherwise act normally in the remainder of the turn.",
+    "detachment": "brandfast-oathband"
   },
   "bastion-running": {
     "name": "Bastion Running",
-    "type": "Hearthband Stratagem",
+    "type": "Brandfast Oathband – Battle Tactic Stratagem",
     "turn": "your",
     "phases": [
       "movement"
@@ -217,29 +217,29 @@
     "cpCost": 1,
     "ypCost": 0,
     "summary": "HEKATON LAND FORTRESS can move through terrain features this phase.",
-    "when": "Your Movement phase, before a HEKATON LAND FORTRESS unit from your army that has not yet moved this phase moves.",
-    "target": "That HEKATON LAND FORTRESS unit.",
-    "effect": "Until the end of the phase, each time that unit makes a Normal or Advance move, it can move horizontally through terrain features.",
-    "detachment": "hearthband"
+    "when": "Your Movement phase.",
+    "target": "One Hekaton Land Fortress unit from your army that has not been selected to move this phase.",
+    "effect": "Until the end of the phase, each time your unit makes a Normal or Advance move, it can move horizontally through terrain features.",
+    "detachment": "brandfast-oathband"
   },
   "illuminated-priority": {
     "name": "Illuminated Priority",
-    "type": "Hearthband Stratagem",
+    "type": "Brandfast Oathband – Wargear Stratagem",
     "turn": "your",
     "phases": [
       "shooting"
     ],
     "cpCost": 1,
     "ypCost": 0,
-    "summary": "After a friendly VEHICLE shoots, INFANTRY re-roll Hit rolls of 1 against that target.",
+    "summary": "After a friendly VEHICLE shoots, LEAGUES OF VOTANN INFANTRY re-roll Hit rolls of 1 against that target.",
     "when": "Your Shooting phase, just after a LEAGUES OF VOTANN VEHICLE unit from your army has shot.",
-    "target": "One enemy unit hit by those attacks.",
-    "effect": "Until the end of the phase, each time a LEAGUES OF VOTANN INFANTRY model makes an attack targeting that enemy unit, re-roll a Hit roll of 1.",
-    "detachment": "hearthband"
+    "target": "That LEAGUES OF VOTANN VEHICLE unit.",
+    "effect": "Select one enemy unit hit by one or more of those attacks. Until the end of the phase, each time a LEAGUES OF VOTANN INFANTRY model from your army makes an attack that targets that enemy unit, re-roll a Hit roll of 1.",
+    "detachment": "brandfast-oathband"
   },
   "inexorable-efficiency": {
     "name": "Inexorable Efficiency",
-    "type": "Hearthband Stratagem",
+    "type": "Brandfast Oathband – Strategic Ploy Stratagem",
     "turn": "your",
     "phases": [
       "shooting"
@@ -247,29 +247,29 @@
     "cpCost": 1,
     "ypCost": 0,
     "summary": "Unit can shoot this phase even though it Fell Back.",
-    "when": "Your Shooting phase, when a LEAGUES OF VOTANN unit from your army that Fell Back this turn is selected to shoot.",
-    "target": "That LEAGUES OF VOTANN unit.",
-    "effect": "Until the end of the phase, your unit is eligible to shoot even though it Fell Back this turn.",
-    "detachment": "hearthband"
+    "when": "Your Shooting phase.",
+    "target": "One LEAGUES OF VOTANN unit from your army.",
+    "effect": "Until the end of the phase, your unit is eligible to shoot in a turn in which it Fell Back.",
+    "detachment": "brandfast-oathband"
   },
   "opportunistic-escalation": {
     "name": "Opportunistic Escalation",
-    "type": "Hearthband Stratagem",
+    "type": "Brandfast Oathband – Strategic Ploy Stratagem",
     "turn": "opponent",
     "phases": [
       "shooting"
     ],
     "cpCost": 1,
     "ypCost": 0,
-    "summary": "A VEHICLE hit by enemy shooting makes a free Normal move of up to D6\".",
-    "when": "Your opponent's Shooting phase, just after an enemy unit has shot and one or more Hostile Acquisition units from your army were hit by those attacks.",
-    "target": "One LEAGUES OF VOTANN VEHICLE unit (excluding HEKATON LAND FORTRESS) from your army that was hit by those attacks.",
+    "summary": "A VEHICLE (not HEKATON) hit by enemy shooting makes a free Normal move of up to D6\".",
+    "when": "Your opponent's Shooting phase, just after an enemy unit has shot, if units from your army have Hostile Acquisition.",
+    "target": "One LEAGUES OF VOTANN VEHICLE unit from your army (excluding HEKATON LAND FORTRESS units) that was hit by one or more of those attacks.",
     "effect": "Your unit can make a Normal move of up to D6\".",
-    "detachment": "hearthband"
+    "detachment": "brandfast-oathband"
   },
   "vengeance-flare": {
     "name": "Vengeance Flare",
-    "type": "Hearthband Stratagem",
+    "type": "Brandfast Oathband – Strategic Ploy Stratagem",
     "turn": "opponent",
     "phases": [
       "shooting"
@@ -277,10 +277,10 @@
     "cpCost": 2,
     "ypCost": 0,
     "summary": "After being hit, a nearby KAPRICUS/SAGITAUR shoots back. Spend 2YP to use a HEKATON instead.",
-    "when": "Your opponent's Shooting phase, just after an enemy unit has shot and one or more units from your army were hit by those attacks.",
-    "target": "One LEAGUES OF VOTANN INFANTRY unit from your army that was hit by those attacks.",
-    "effect": "Select one friendly KAPRICUS DEFENDERS or SAGITAUR unit within 6\" of your unit — it can shoot as if it were your Shooting phase, targeting only that enemy unit. Alternatively, if you spend 2YP, you can instead select one friendly HEKATON LAND FORTRESS unit within 6\" of your unit.",
-    "detachment": "hearthband"
+    "when": "Your opponent's Shooting phase, just after an enemy unit has shot.",
+    "target": "One LEAGUES OF VOTANN INFANTRY unit from your army that was hit by one or more of those attacks.",
+    "effect": "Each time you use this Stratagem, you can spend 2YP. Select one friendly Kapricus or Sagitaur unit within 6\" of your INFANTRY unit. If you spent YP during this use of this Stratagem, you can select one friendly Hekaton Land Fortress unit within 6\" of your INFANTRY unit instead. The selected unit can shoot as if it were your Shooting phase. When doing so, models in the selected unit can only target that enemy unit (and only if it is an eligible target).",
+    "detachment": "brandfast-oathband"
   },
   "superior-craftsmanship": {
     "name": "Superior Craftsmanship",
