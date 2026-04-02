@@ -3,7 +3,13 @@
     "name": "Command Re-roll",
     "type": "Core – Battle Tactic Stratagem",
     "turn": "either",
-    "phases": ["command", "movement", "shooting", "charge", "fight"],
+    "phases": [
+      "command",
+      "movement",
+      "shooting",
+      "charge",
+      "fight"
+    ],
     "cpCost": 1,
     "ypCost": 0,
     "summary": "Re-roll one dice roll, test, or saving throw.",
@@ -16,7 +22,9 @@
     "name": "Counter-offensive",
     "type": "Core – Strategic Ploy Stratagem",
     "turn": "either",
-    "phases": ["fight"],
+    "phases": [
+      "fight"
+    ],
     "cpCost": 2,
     "ypCost": 0,
     "summary": "Fight next, immediately after an enemy unit has fought.",
@@ -29,7 +37,9 @@
     "name": "Epic Challenge",
     "type": "Core – Epic Deed Stratagem",
     "turn": "either",
-    "phases": ["fight"],
+    "phases": [
+      "fight"
+    ],
     "cpCost": 1,
     "ypCost": 0,
     "summary": "One CHARACTER model gains [PRECISION] on all its melee attacks this phase.",
@@ -42,7 +52,9 @@
     "name": "Insane Bravery",
     "type": "Core – Epic Deed Stratagem",
     "turn": "your",
-    "phases": ["command"],
+    "phases": [
+      "command"
+    ],
     "cpCost": 1,
     "ypCost": 0,
     "summary": "One unit automatically passes its Battle-shock test. Once per battle.",
@@ -56,7 +68,9 @@
     "name": "Grenade",
     "type": "Core – Wargear Stratagem",
     "turn": "your",
-    "phases": ["shooting"],
+    "phases": [
+      "shooting"
+    ],
     "cpCost": 1,
     "ypCost": 0,
     "summary": "Roll 6D6 with a GRENADES unit — each 4+ inflicts 1 mortal wound on a visible enemy within 8\".",
@@ -69,7 +83,9 @@
     "name": "Tank Shock",
     "type": "Core – Strategic Ploy Stratagem",
     "turn": "your",
-    "phases": ["charge"],
+    "phases": [
+      "charge"
+    ],
     "cpCost": 1,
     "ypCost": 0,
     "summary": "After a VEHICLE charges, roll D6s equal to its Toughness — each 5+ deals 1 mortal wound (max 6).",
@@ -82,7 +98,9 @@
     "name": "Rapid Ingress",
     "type": "Core – Strategic Ploy Stratagem",
     "turn": "opponent",
-    "phases": ["movement"],
+    "phases": [
+      "movement"
+    ],
     "cpCost": 1,
     "ypCost": 0,
     "summary": "Deploy one unit from Reserves at the end of your opponent's Movement phase.",
@@ -96,7 +114,10 @@
     "name": "Fire Overwatch",
     "type": "Core – Strategic Ploy Stratagem",
     "turn": "opponent",
-    "phases": ["movement", "charge"],
+    "phases": [
+      "movement",
+      "charge"
+    ],
     "cpCost": 1,
     "ypCost": 0,
     "summary": "Shoot at an enemy unit that moves or charges. Hits only on unmodified 6s. Once per turn.",
@@ -110,7 +131,9 @@
     "name": "Go to Ground",
     "type": "Core – Battle Tactic Stratagem",
     "turn": "opponent",
-    "phases": ["shooting"],
+    "phases": [
+      "shooting"
+    ],
     "cpCost": 1,
     "ypCost": 0,
     "summary": "Targeted INFANTRY gains a 6+ invulnerable save and Benefit of Cover until end of phase.",
@@ -123,7 +146,9 @@
     "name": "Smokescreen",
     "type": "Core – Wargear Stratagem",
     "turn": "opponent",
-    "phases": ["shooting"],
+    "phases": [
+      "shooting"
+    ],
     "cpCost": 1,
     "ypCost": 0,
     "summary": "Targeted SMOKE unit gains Benefit of Cover and Stealth until end of phase.",
@@ -136,7 +161,9 @@
     "name": "Heroic Intervention",
     "type": "Core – Strategic Ploy Stratagem",
     "turn": "opponent",
-    "phases": ["charge"],
+    "phases": [
+      "charge"
+    ],
     "cpCost": 1,
     "ypCost": 0,
     "summary": "Declare a charge against an enemy that just charged you. No Charge bonus applies.",
@@ -148,22 +175,30 @@
   },
   "fury-of-the-hearth": {
     "name": "Fury of the Hearth",
-    "type": "Hearthband Stratagem",
+    "type": "Hearthband – Battle Tactic Stratagem",
     "turn": "your",
-    "phases": ["shooting"],
+    "phases": [
+      "shooting"
+    ],
     "cpCost": 1,
     "ypCost": 0,
-    "summary": "Ranged weapons get +1S. Spend 1YP to also gain Sustained Hits 1.",
-    "when": "Your Shooting phase, when a LEAGUES OF VOTANN unit from your army is selected to shoot.",
-    "target": "That LEAGUES OF VOTANN unit.",
-    "effect": "Until the end of the phase, ranged weapons equipped by models in that unit have +1 to their Strength characteristic. If you spend 1YP, those weapons also have [SUSTAINED HITS 1].",
+    "summary": "Einhyr Hearthguard ranged weapons get +1S. Spend 1YP to also gain Sustained Hits 1.",
+    "when": "Your Shooting phase.",
+    "target": "One Einhyr Hearthguard unit from your army that has not been selected to shoot this phase.",
+    "effect": "Until the end of the phase, improve the Strength characteristic of ranged weapons equipped by models in your unit by 1. If you spend 1YP, until the end of the phase, ranged weapons equipped by models in that unit have the [SUSTAINED HITS 1] ability as well.",
     "detachment": "hearthband"
   },
   "secure-positions": {
     "name": "Secure Positions",
     "type": "Hearthband Stratagem",
     "turn": "your",
-    "phases": ["command", "movement", "shooting", "charge", "fight"],
+    "phases": [
+      "command",
+      "movement",
+      "shooting",
+      "charge",
+      "fight"
+    ],
     "cpCost": 1,
     "ypCost": 0,
     "summary": "Disembark one unit from a TRANSPORT at the end of any of your phases.",
@@ -176,7 +211,9 @@
     "name": "Bastion Running",
     "type": "Hearthband Stratagem",
     "turn": "your",
-    "phases": ["movement"],
+    "phases": [
+      "movement"
+    ],
     "cpCost": 1,
     "ypCost": 0,
     "summary": "HEKATON LAND FORTRESS can move through terrain features this phase.",
@@ -189,7 +226,9 @@
     "name": "Illuminated Priority",
     "type": "Hearthband Stratagem",
     "turn": "your",
-    "phases": ["shooting"],
+    "phases": [
+      "shooting"
+    ],
     "cpCost": 1,
     "ypCost": 0,
     "summary": "After a friendly VEHICLE shoots, INFANTRY re-roll Hit rolls of 1 against that target.",
@@ -202,7 +241,9 @@
     "name": "Inexorable Efficiency",
     "type": "Hearthband Stratagem",
     "turn": "your",
-    "phases": ["shooting"],
+    "phases": [
+      "shooting"
+    ],
     "cpCost": 1,
     "ypCost": 0,
     "summary": "Unit can shoot this phase even though it Fell Back.",
@@ -215,7 +256,9 @@
     "name": "Opportunistic Escalation",
     "type": "Hearthband Stratagem",
     "turn": "opponent",
-    "phases": ["shooting"],
+    "phases": [
+      "shooting"
+    ],
     "cpCost": 1,
     "ypCost": 0,
     "summary": "A VEHICLE hit by enemy shooting makes a free Normal move of up to D6\".",
@@ -228,13 +271,92 @@
     "name": "Vengeance Flare",
     "type": "Hearthband Stratagem",
     "turn": "opponent",
-    "phases": ["shooting"],
+    "phases": [
+      "shooting"
+    ],
     "cpCost": 2,
     "ypCost": 0,
     "summary": "After being hit, a nearby KAPRICUS/SAGITAUR shoots back. Spend 2YP to use a HEKATON instead.",
     "when": "Your opponent's Shooting phase, just after an enemy unit has shot and one or more units from your army were hit by those attacks.",
     "target": "One LEAGUES OF VOTANN INFANTRY unit from your army that was hit by those attacks.",
     "effect": "Select one friendly KAPRICUS DEFENDERS or SAGITAUR unit within 6\" of your unit — it can shoot as if it were your Shooting phase, targeting only that enemy unit. Alternatively, if you spend 2YP, you can instead select one friendly HEKATON LAND FORTRESS unit within 6\" of your unit.",
+    "detachment": "hearthband"
+  },
+  "superior-craftsmanship": {
+    "name": "Superior Craftsmanship",
+    "type": "Hearthband – Battle Tactic Stratagem",
+    "turn": "either",
+    "phases": [
+      "fight"
+    ],
+    "cpCost": 2,
+    "ypCost": 0,
+    "summary": "+1 Damage on all attacks targeting a MONSTER or VEHICLE this Fight phase.",
+    "when": "Fight phase.",
+    "target": "One LEAGUES OF VOTANN unit from your army that has not been selected to fight this phase.",
+    "effect": "Until the end of the phase, each time a model in your unit makes an attack that targets a MONSTER or VEHICLE unit, add 1 to the Damage characteristic of that attack.",
+    "detachment": "hearthband"
+  },
+  "brekkeknots": {
+    "name": "Brëkkeknots",
+    "type": "Hearthband – Battle Tactic Stratagem",
+    "turn": "either",
+    "phases": [
+      "shooting",
+      "fight"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "Kâhl, Ûthar or Einhyr Hearthguard unit gains a 4+ invulnerable save until end of phase.",
+    "when": "Your opponent's Shooting phase or the Fight phase, just after an enemy unit has selected its targets.",
+    "target": "One Kâhl, Ûthar the Destined or Einhyr Hearthguard unit from your army that was selected as the target of one or more of the attacking unit's attacks.",
+    "effect": "Until the end of the phase, models in your unit have a 4+ invulnerable save.",
+    "detachment": "hearthband"
+  },
+  "materialisation-matrices": {
+    "name": "Materialisation Matrices",
+    "type": "Hearthband – Strategic Ploy Stratagem",
+    "turn": "your",
+    "phases": [
+      "movement"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "Deep Strike unit deploys anywhere >6\" from enemies. Cannot charge this turn.",
+    "when": "The Reinforcements step of your Movement phase.",
+    "target": "One LEAGUES OF VOTANN unit from your army that is in Reserves and has the Deep Strike ability.",
+    "effect": "Until the end of the phase, when your unit is set up on the battlefield using the Deep Strike ability, it can be set up anywhere on the battlefield that is more than 6\" horizontally away from all enemy units.",
+    "restrictions": "Until the end of the turn, your unit is not eligible to declare a charge.",
+    "detachment": "hearthband"
+  },
+  "unyielding-aggression": {
+    "name": "Unyielding Aggression",
+    "type": "Hearthband – Strategic Ploy Stratagem",
+    "turn": "your",
+    "phases": [
+      "movement"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "INFANTRY unit that Fell Back can still shoot and declare a charge this turn.",
+    "when": "Your Movement phase, just after a LEAGUES OF VOTANN INFANTRY unit from your army Falls Back.",
+    "target": "That LEAGUES OF VOTANN INFANTRY unit.",
+    "effect": "Until the end of the turn, your unit is eligible to shoot and declare a charge in a turn in which it Fell Back.",
+    "detachment": "hearthband"
+  },
+  "sure-of-purpose": {
+    "name": "Sure of Purpose",
+    "type": "Hearthband – Strategic Ploy Stratagem",
+    "turn": "either",
+    "phases": [
+      "fight"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "Pile-in and Consolidation moves are increased to 6\" this Fight phase.",
+    "when": "Fight phase.",
+    "target": "One LEAGUES OF VOTANN unit from your army that has not been selected to fight this phase.",
+    "effect": "Until the end of the phase, each time a model in your unit makes a Pile-in or Consolidation move, it can move up to 6\" instead of up to 3\".",
     "detachment": "hearthband"
   }
 }
