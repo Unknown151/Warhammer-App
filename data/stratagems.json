@@ -358,5 +358,95 @@
     "target": "One LEAGUES OF VOTANN unit from your army that has not been selected to fight this phase.",
     "effect": "Until the end of the phase, each time a model in your unit makes a Pile-in or Consolidation move, it can move up to 6\" instead of up to 3\".",
     "detachment": "hearthband"
+  },
+  "cyberstimm-infusion": {
+    "name": "Cyberstimm Infusion",
+    "type": "Dêlve Assault Shift – Battle Tactic Stratagem",
+    "turn": "either",
+    "phases": [
+      "fight"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "Re-roll Wound rolls of 1. Spend 2YP to re-roll all Wound rolls instead.",
+    "when": "Fight phase.",
+    "target": "One Cthonian Beserks unit from your army that has not been selected to fight this phase.",
+    "effect": "Each time you use this Stratagem, you can spend 2YP. Until the end of the phase, each time a model in your unit makes an attack, re-roll a Wound roll of 1. If you spent YP during this use of this Stratagem, you can re-roll the Wound roll instead.",
+    "detachment": "delve-assault-shift"
+  },
+  "hidden-accessways": {
+    "name": "Hidden Accessways",
+    "type": "Dêlve Assault Shift – Strategic Ploy Stratagem",
+    "turn": "opponent",
+    "phases": [
+      "fight"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "Remove a BESERKS, HEARTHKYN or YAEGIRS unit from the battlefield into Strategic Reserves.",
+    "when": "End of your opponent's Fight phase.",
+    "target": "One Cthonian Beserks, Hearthkyn Warriors or Hernkyn Yaegirs unit from your army that is not within Engagement Range of one or more enemy units.",
+    "effect": "Remove your unit from the battlefield and place it into Strategic Reserves.",
+    "detachment": "delve-assault-shift"
+  },
+  "weaveworke-buttress": {
+    "name": "Weavewërke Buttress",
+    "type": "Dêlve Assault Shift – Strategic Ploy Stratagem",
+    "turn": "opponent",
+    "phases": [
+      "shooting"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "Targeted INFANTRY subtracts 1 from Wound rolls against it until end of phase.",
+    "when": "Your opponent's Shooting phase, just after an enemy unit has selected its targets, if units from your army have Hostile Acquisition.",
+    "target": "One LEAGUES OF VOTANN INFANTRY unit from your army that was selected as the target of one or more of the attacking unit's attacks.",
+    "effect": "Until the end of the phase, each time an attack targets your unit, subtract 1 from the Wound roll.",
+    "detachment": "delve-assault-shift"
+  },
+  "tectonic-fracture": {
+    "name": "Tectonic Fracture",
+    "type": "Dêlve Assault Shift – Strategic Ploy Stratagem",
+    "turn": "your",
+    "phases": [
+      "shooting"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "Enemy unit loses -2\" Move. Spend 2YP to also subtract 2 from their Charge rolls.",
+    "when": "Your Shooting phase, just after a CTHONIAN EARTHSHAKERS unit from your army has shot.",
+    "target": "That Cthonian Earthshakers unit.",
+    "effect": "Each time you use this Stratagem, you can spend 2YP. Select one enemy unit hit by one or more of your unit's attacks this phase. Until the start of your next Shooting phase, subtract 2 from that unit's Move characteristic and, if you spent YP during this use of this Stratagem, subtract 2 from Charge rolls made for that unit.",
+    "detachment": "delve-assault-shift"
+  },
+  "augmented-assault": {
+    "name": "Augmented Assault",
+    "type": "Dêlve Assault Shift – Strategic Ploy Stratagem",
+    "turn": "your",
+    "phases": [
+      "movement"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "BESERKS gain +1-2\" Move (spend up to 2YP) and can charge even after Advancing.",
+    "when": "Your Movement phase.",
+    "target": "One Cthonian Beserks unit from your army that has not been selected to move this phase.",
+    "effect": "Each time you use this Stratagem, you can spend up to 2YP. Until the end of the turn, add X\" to the Move characteristic of models in your unit, where X is the number of YP you spent during this use of this Stratagem, and your unit is eligible to declare a charge in a turn in which it Advanced.",
+    "detachment": "delve-assault-shift"
+  },
+  "unstoppable-force": {
+    "name": "Unstoppable Force",
+    "type": "Dêlve Assault Shift – Strategic Ploy Stratagem",
+    "turn": "either",
+    "phases": [
+      "fight"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "Pile-in and Consolidation moves increased to 6\" this Fight phase.",
+    "when": "Fight phase.",
+    "target": "One LEAGUES OF VOTANN unit from your army that has not been selected to fight this phase.",
+    "effect": "Until the end of the phase, each time your unit Piles In or Consolidates, each model in that unit can move up to 6\" instead of up to 3\".",
+    "detachment": "delve-assault-shift"
   }
 }
