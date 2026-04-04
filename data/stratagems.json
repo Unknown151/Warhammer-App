@@ -448,5 +448,95 @@
     "target": "One LEAGUES OF VOTANN unit from your army that has not been selected to fight this phase.",
     "effect": "Until the end of the phase, each time your unit Piles In or Consolidates, each model in that unit can move up to 6\" instead of up to 3\".",
     "detachment": "delve-assault-shift"
+  },
+  "wall-of-steel": {
+    "name": "Wall of Steel",
+    "type": "Hearthfyre Arsenal – Battle Tactic Stratagem",
+    "turn": "your",
+    "phases": [
+      "charge"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "After IRONKIN STEELJACKS charge, roll D6s vs a non-MONSTER/VEHICLE — each 4+ deals 1MW. Spend 2YP for +2 dice.",
+    "when": "Your Charge phase, just after an Ironkin Steeljacks unit from your army ends a Charge move.",
+    "target": "That IRONKIN STEELJACKS unit.",
+    "effect": "Each time you use this Stratagem, you can spend 2YP. Select one enemy unit (excluding MONSTERS and VEHICLES) within Engagement Range of your unit and roll one D6 for each model in your unit, rolling two additional D6 if you spent YP during this use of this Stratagem: for each 4+, that enemy unit suffers 1 mortal wound (to a maximum of 6 mortal wounds).",
+    "detachment": "hearthfyre-arsenal"
+  },
+  "unwavering-accuracy": {
+    "name": "Unwavering Accuracy",
+    "type": "Hearthfyre Arsenal – Battle Tactic Stratagem",
+    "turn": "your",
+    "phases": [
+      "shooting"
+    ],
+    "cpCost": 2,
+    "ypCost": 0,
+    "summary": "BRÔKHYR THUNDERKYN ignores all modifiers to BS, Hit rolls, Wound rolls, and AP this phase.",
+    "when": "Your Shooting phase.",
+    "target": "One Brôkhyr Thunderkyn unit from your army that has not been selected to shoot this phase.",
+    "effect": "Until the end of the phase, each time a model in your unit makes an attack, you can ignore any or all modifiers to the following: that attack's Ballistic Skill characteristic; the Hit roll; the Wound roll; that attack's Armour Penetration characteristic.",
+    "detachment": "hearthfyre-arsenal"
+  },
+  "preventative-purge": {
+    "name": "Preventative Purge",
+    "type": "Hearthfyre Arsenal – Strategic Ploy Stratagem",
+    "turn": "opponent",
+    "phases": [
+      "movement"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "THUNDERKYN or STEELJACKS shoots at an enemy that just Fell Back, but at -1 to Hit.",
+    "when": "Your opponent's Movement phase, just after an enemy unit ends a Fall Back move.",
+    "target": "One Brôkhyr Thunderkyn or Ironkin Steeljacks unit from your army.",
+    "effect": "Your unit can shoot as if it were your Shooting phase. When doing so, models in your unit can only target that enemy unit (and only if it is an eligible target) and each time a model in your unit makes an attack, subtract 1 from the Hit roll.",
+    "detachment": "hearthfyre-arsenal"
+  },
+  "cogitated-need": {
+    "name": "Cogitated Need",
+    "type": "Hearthfyre Arsenal – Strategic Ploy Stratagem",
+    "turn": "opponent",
+    "phases": [
+      "movement"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "IRONKIN STEELJACKS makes a free Normal move toward the closest objective marker.",
+    "when": "End of your opponent's Movement phase.",
+    "target": "One Ironkin Steeljacks unit from your army.",
+    "effect": "Your unit can make a Normal move. When doing so, your unit must end that move as close as possible to the closest objective marker.",
+    "detachment": "hearthfyre-arsenal"
+  },
+  "first-concern": {
+    "name": "First Concern",
+    "type": "Hearthfyre Arsenal – Strategic Ploy Stratagem",
+    "turn": "your",
+    "phases": [
+      "shooting"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "If unit Remained Stationary this turn, it can make a free Normal move after shooting.",
+    "when": "Your Shooting phase, just after a Brôkhyr, Ironkin Steeljacks or Arkanyst Evaluator unit from your army has shot.",
+    "target": "That BRÔKHYR, IRONKIN STEELJACKS or ARKANYST EVALUATOR unit.",
+    "effect": "If your unit Remained Stationary in your Movement phase this turn, it can make a Normal move.",
+    "detachment": "hearthfyre-arsenal"
+  },
+  "delayed-fire-rounds": {
+    "name": "Delayed-Fire Rounds",
+    "type": "Hearthfyre Arsenal – Wargear Stratagem",
+    "turn": "your",
+    "phases": [
+      "shooting"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "Enemy unit hit this phase suffers 1MW per model that moves (on a 1) until your next Shooting phase.",
+    "when": "Your Shooting phase, just after a Brôkhyr, Ironkin Steeljacks or Arkanyst Evaluator unit from your army has shot.",
+    "target": "That BRÔKHYR, IRONKIN STEELJACKS or ARKANYST EVALUATOR unit.",
+    "effect": "Select one enemy unit (excluding MONSTERS and VEHICLES) hit by one or more of those attacks. Until the start of your next Shooting phase, each time that enemy unit makes a Normal, Advance or Fall Back move, roll one D6 for each model in that unit: for each 1, that unit suffers 1 mortal wound (to a maximum of 6 mortal wounds).",
+    "detachment": "hearthfyre-arsenal"
   }
 }
