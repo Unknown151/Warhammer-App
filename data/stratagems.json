@@ -538,5 +538,96 @@
     "target": "That BRÔKHYR, IRONKIN STEELJACKS or ARKANYST EVALUATOR unit.",
     "effect": "Select one enemy unit (excluding MONSTERS and VEHICLES) hit by one or more of those attacks. Until the start of your next Shooting phase, each time that enemy unit makes a Normal, Advance or Fall Back move, roll one D6 for each model in that unit: for each 1, that unit suffers 1 mortal wound (to a maximum of 6 mortal wounds).",
     "detachment": "hearthfyre-arsenal"
+  },
+  "huntrs-mark": {
+    "name": "Huntr's Mark",
+    "type": "Needgaârd Oathband – Battle Tactic Stratagem",
+    "turn": "your",
+    "phases": [
+      "shooting"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "Re-roll 1s to Hit and Wound for a unit this Shooting phase.",
+    "when": "Your Shooting phase.",
+    "target": "One LEAGUES OF VOTANN unit from your army that has not been selected to shoot this phase.",
+    "effect": "Until the end of the phase, each time a model in your unit makes an attack, re-roll a Hit roll of 1 and re-roll a Wound roll of 1.",
+    "detachment": "needgaard-oathband"
+  },
+  "ancestral-sentence": {
+    "name": "Ancestral Sentence",
+    "type": "Needgaârd Oathband – Battle Tactic Stratagem",
+    "turn": "your",
+    "phases": [
+      "shooting"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "Ranged weapons gain [SUSTAINED HITS 1] (or 2 for 3YP) this phase.",
+    "when": "Your Shooting phase.",
+    "target": "One LEAGUES OF VOTANN unit from your army that has not been selected to shoot this phase.",
+    "effect": "Each time you use this Stratagem, you can spend 3YP. Until the end of the phase, ranged weapons equipped by models in your unit have the [SUSTAINED HITS 1] ability. If you spent YP during this use of this Stratagem, until the end of the phase, those weapons have the [SUSTAINED HITS 2] ability instead.",
+    "detachment": "needgaard-oathband"
+  },
+  "honour-of-the-hold": {
+    "name": "Honour of the Hold",
+    "type": "Needgaârd Oathband – Battle Tactic Stratagem",
+    "turn": "your",
+    "phases": [
+      "fight"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "Melee attacks vs one enemy gain AP-1 (or AP-2 for 3YP) this phase.",
+    "when": "Fight phase.",
+    "target": "One LEAGUES OF VOTANN unit from your army that has not been selected to fight this phase.",
+    "effect": "Each time you use this Stratagem, you can spend 3YP. Select one enemy unit within Engagement Range of your unit. Until the end of the phase, each time a model in your unit makes a melee attack that targets that enemy unit, improve the Armour Penetration characteristic of that attack by 1. If you spent YP during this use of this Stratagem, improve the Armour Penetration characteristic of that attack by 2 instead.",
+    "detachment": "needgaard-oathband"
+  },
+  "reactive-reprisal": {
+    "name": "Reactive Reprisal",
+    "type": "Needgaârd Oathband – Strategic Ploy Stratagem",
+    "turn": "opponent",
+    "phases": [
+      "shooting"
+    ],
+    "cpCost": 2,
+    "ypCost": 0,
+    "summary": "After being shot at (with Fortify Takeover active), shoot back at the attacker.",
+    "when": "Your opponent's Shooting phase, just after an enemy unit has shot, if units from your army have Fortify Takeover.",
+    "target": "One LEAGUES OF VOTANN unit from your army that was selected as the target of one or more of the attacking unit's attacks.",
+    "effect": "Your unit can shoot as if it were your Shooting phase, can only target that enemy unit when doing so, and can only do so if that enemy unit is an eligible target.",
+    "detachment": "needgaard-oathband"
+  },
+  "ordered-retreat": {
+    "name": "Ordered Retreat",
+    "type": "Needgaârd Oathband – Strategic Ploy Stratagem",
+    "turn": "your",
+    "phases": [
+      "movement"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "A unit that Fell Back can still shoot and charge this turn.",
+    "when": "Your Movement phase, just after a LEAGUES OF VOTANN unit from your army Falls Back.",
+    "target": "That LEAGUES OF VOTANN unit.",
+    "effect": "Until the end of the turn, your unit is eligible to shoot and declare a charge in a turn in which it Fell Back.",
+    "detachment": "needgaard-oathband"
+  },
+  "void-hardened": {
+    "name": "Void Hardened",
+    "type": "Needgaârd Oathband – Wargear Stratagem",
+    "turn": "opponent",
+    "phases": [
+      "shooting",
+      "fight"
+    ],
+    "cpCost": 1,
+    "ypCost": 0,
+    "summary": "Worsen the AP of all attacks targeting your unit by 1 (Fortify Takeover active).",
+    "when": "Your opponent's Shooting phase or the Fight phase, just after an enemy unit has selected its targets, if units from your army have Fortify Takeover.",
+    "target": "One LEAGUES OF VOTANN unit from your army that was selected as the target of one or more of the attacking unit's attacks.",
+    "effect": "Until the attacking unit has finished making its attacks, each time an attack targets your unit, worsen the Armour Penetration characteristic of that attack by 1.",
+    "detachment": "needgaard-oathband"
   }
 }
