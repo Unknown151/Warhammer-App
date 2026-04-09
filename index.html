@@ -1484,7 +1484,7 @@ function renderLedUnitCard(ledUnit) {
         <div class="unit-card attached collapsed" data-leader="${ledUnit.leader}" data-card-id="${ledUnit.id}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
                 <div class="card-collapse-info">
-                    <div class="card-collapse-title">${escHtml(leader.name)} + ${escHtml(bodyguard.name)}</div>
+                    <div class="card-collapse-title">${escHtml(bodyguard.name)} + ${escHtml(leader.name)}</div>
                     <div class="card-collapse-subtitle">${escHtml(ledUnit.attachedBannerText)}</div>
                     ${ledUnit.diffLabel ? `<div class="card-collapse-diff">${escHtml(ledUnit.diffLabel)}</div>` : ''}
                 </div>
@@ -2495,8 +2495,8 @@ function buildActiveArmy() {
 
     // Sort alphabetically by unit name
     activeUnits.sort((a, b) => {
-        const nameA = a.type === 'led' ? units[a.leader]?.name : units[a.unit]?.name;
-        const nameB = b.type === 'led' ? units[b.leader]?.name : units[b.unit]?.name;
+        const nameA = a.type === 'led' ? units[a.unit]?.name : units[a.unit]?.name;
+        const nameB = b.type === 'led' ? units[b.unit]?.name : units[b.unit]?.name;
         return (nameA || '').localeCompare(nameB || '');
     });
 
@@ -2560,8 +2560,8 @@ function buildActiveArmy() {
 
     // Re-sort to maintain alphabetical order after grouping
     result.sort((a, b) => {
-        const nameA = a.type === 'led' ? units[a.leader]?.name : units[a.unit]?.name;
-        const nameB = b.type === 'led' ? units[b.leader]?.name : units[b.unit]?.name;
+        const nameA = a.type === 'led' ? units[a.unit]?.name : units[a.unit]?.name;
+        const nameB = b.type === 'led' ? units[b.unit]?.name : units[b.unit]?.name;
         return (nameA || '').localeCompare(nameB || '');
     });
 
