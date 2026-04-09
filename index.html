@@ -1088,13 +1088,13 @@ function exportArmyText() {
         rendered.add(instance.instanceId);
 
         if (instance.leaderId && units[instance.leaderId]) {
-            const leaderInst = { ...instance, unitId: instance.leaderId, leaderId: null, enhancementId: null, weapons: {} };
-            const leaderPts = units[instance.leaderId].points || 0;
+            const leaderPts = (units[instance.leaderId].points || 0) +
+                (instance.enhancementId && enhancements[instance.enhancementId] ? enhancements[instance.enhancementId].points : 0);
+            const leaderInst = { ...instance, unitId: instance.leaderId, modelCount: 1, leaderId: null, weapons: {} };
             const bodyguardPts = calculateInstancePoints({ ...instance, leaderId: null, enhancementId: null });
-            const enhPts = instance.enhancementId && enhancements[instance.enhancementId] ? enhancements[instance.enhancementId].points : 0;
 
             lines.push(unitBlock(leaderInst, leaderPts));
-            lines.push(unitBlock(instance, bodyguardPts + enhPts));
+            lines.push(unitBlock({ ...instance, enhancementId: null }, bodyguardPts));
         } else {
             lines.push(unitBlock(instance, calculateInstancePoints(instance)));
         }
