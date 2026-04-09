@@ -411,7 +411,11 @@
         .config-total-value.pts-over{color:var(--red,#c04)}
         .config-total-value.pts-near{color:var(--gold-bright)}
         /* Progress bar */
-        .points-bar{height:2px;background:var(--bg3);border-radius:2px;margin:.3rem 0 .5rem;overflow:hidden}
+        .points-bar{height:2px;background:var(--bg3);border-radius:2px;margin:.3rem 0 .2rem;overflow:hidden}
+        .points-remaining{font-family:'Share Tech Mono',monospace;font-size:.65rem;text-align:right;padding:.15rem 0 .35rem;letter-spacing:.05em;transition:color .3s}
+        .points-remaining.ok{color:var(--green)}
+        .points-remaining.near{color:var(--gold)}
+        .points-remaining.over{color:var(--red)}
         .points-bar-fill{height:100%;background:var(--green,#4ad482);border-radius:2px;transition:width .4s ease,background .3s}
         .points-bar-fill.near{background:var(--gold)}
         .points-bar-fill.over{background:var(--red,#c04)}
@@ -568,6 +572,7 @@
                 <button class="config-add-btn" onclick="openUnitPicker()" aria-label="Add unit to army">+</button>
             </div>
             <div class="points-bar" id="points-bar" style="display:none"><div class="points-bar-fill" id="points-bar-fill"></div></div>
+            <div class="points-remaining" id="points-remaining" style="display:none"></div>
             <div id="army-list-container"></div>
         </div>
     </main>
@@ -2406,6 +2411,7 @@ function updateConfigPoints() {
     const bar = document.getElementById('points-bar');
     const fill = document.getElementById('points-bar-fill');
     const input = document.getElementById('points-limit-input');
+    const remaining = document.getElementById('points-remaining');
 
     el.textContent = total;
     if (input) input.value = pointsLimit || '';
@@ -2425,10 +2431,17 @@ function updateConfigPoints() {
             fill.classList.toggle('over', over);
             fill.classList.toggle('near', near && !over);
         }
+        if (remaining) {
+            const diff = pointsLimit - total;
+            remaining.style.display = '';
+            remaining.className = 'points-remaining ' + (over ? 'over' : near ? 'near' : 'ok');
+            remaining.textContent = over ? `${Math.abs(diff)} pts over limit` : `${diff} pts remaining`;
+        }
     } else {
         el.classList.remove('pts-over', 'pts-near');
         if (label) label.textContent = '';
         if (bar) bar.style.display = 'none';
+        if (remaining) remaining.style.display = 'none';
     }
 }
 
