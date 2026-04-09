@@ -2509,8 +2509,8 @@ function buildActiveArmy() {
 
     // Sort alphabetically by unit name
     activeUnits.sort((a, b) => {
-        const nameA = a.type === 'led' ? units[a.unit]?.name : units[a.unit]?.name;
-        const nameB = b.type === 'led' ? units[b.unit]?.name : units[b.unit]?.name;
+        const nameA = a.type === 'led' ? units[a.bodyguard]?.name : units[a.unit]?.name;
+        const nameB = b.type === 'led' ? units[b.bodyguard]?.name : units[b.unit]?.name;
         return (nameA || '').localeCompare(nameB || '');
     });
 
@@ -2574,8 +2574,8 @@ function buildActiveArmy() {
 
     // Re-sort to maintain alphabetical order after grouping
     result.sort((a, b) => {
-        const nameA = a.type === 'led' ? units[a.unit]?.name : units[a.unit]?.name;
-        const nameB = b.type === 'led' ? units[b.unit]?.name : units[b.unit]?.name;
+        const nameA = a.type === 'led' ? units[a.bodyguard]?.name : units[a.unit]?.name;
+        const nameB = b.type === 'led' ? units[b.bodyguard]?.name : units[b.unit]?.name;
         return (nameA || '').localeCompare(nameB || '');
     });
 
