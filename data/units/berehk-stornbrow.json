@@ -59,7 +59,7 @@
   "wargear": [],
   "leaderBonus": {
     "text": "SUSTAINED HITS 1 (melee)",
-    "grantsAbilities": ["sustained-hits"]
+    "grantsAbilities": [{"id": "sustained-hits", "display": "Sustained Hits 1", "abilityAppliesTo": "melee"}]
   },
   "canLead": ["cthonian-beserks"]
 }
