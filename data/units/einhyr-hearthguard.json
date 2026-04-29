@@ -17,7 +17,7 @@
     "ld": "7+",
     "oc": 1
   },
-  "wargearExclusiveChoices": ["weavefield-crest", "teleport-crest"],
+  "wargearExclusiveChoices": ["weavefield-crest-hesyr", "teleport-crest"],
   "weapons": {
     "ranged": [
       {

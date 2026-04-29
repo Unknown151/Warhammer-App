@@ -1436,8 +1436,8 @@ function renderSoloUnitCard(entry) {
     if (exclusiveChoices.length) {
         const activeChoice = exclusiveChoices.find(id => selectedWargear.includes(id)) || exclusiveChoices[0];
         extraWargear.push(activeChoice);
-        if (activeChoice === 'weavefield-crest') {
-            displayUnit = { ...displayUnit, invulnerableSave: '5+', invulnerableSource: 'weavefield-crest' };
+        if (activeChoice === 'weavefield-crest-hesyr') {
+            displayUnit = { ...displayUnit, invulnerableSave: '5+', invulnerableSource: 'weavefield-crest-hesyr' };
         } else if (activeChoice === 'teleport-crest') {
             displayUnit = { ...displayUnit, coreAbilities: [...(displayUnit.coreAbilities || []), 'deep-strike'] };
         }
@@ -1584,8 +1584,8 @@ function renderLedUnitCard(ledUnit) {
     const bodyguardExclusiveChoices = bodyguard.wargearExclusiveChoices || [];
     if (bodyguardExclusiveChoices.length) {
         const activeChoice = bodyguardExclusiveChoices.find(id => bodyguardSelectedWargear.includes(id)) || bodyguardExclusiveChoices[0];
-        if (activeChoice === 'weavefield-crest') {
-            displayBodyguard = { ...bodyguard, invulnerableSave: '5+', invulnerableSource: 'weavefield-crest', wargear: [...(bodyguard.wargear || []), 'weavefield-crest'] };
+        if (activeChoice === 'weavefield-crest-hesyr') {
+            displayBodyguard = { ...bodyguard, invulnerableSave: '5+', invulnerableSource: 'weavefield-crest-hesyr', wargear: [...(bodyguard.wargear || []), 'weavefield-crest-hesyr'] };
         } else if (activeChoice === 'teleport-crest') {
             displayBodyguard = { ...bodyguard, coreAbilities: [...(bodyguard.coreAbilities || []), 'deep-strike'], wargear: [...(bodyguard.wargear || []), 'teleport-crest'] };
         }
