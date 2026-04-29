@@ -43,7 +43,7 @@
     ]
   },
   "abilities": ["kindred-hero", "seized-opportunity"],
-  "wargear": ["teleport-crest"],
+  "wargearExclusiveChoices": ["rampart-crest", "teleport-crest"],
   "leaderBonus": {
     "text": "LETHAL HITS (all weapons)",
     "grantsAbilities": ["lethal-hits"]
