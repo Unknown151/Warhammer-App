@@ -17,8 +17,7 @@
     "ld": "7+",
     "oc": 1
   },
-  "invulnerableSave": "5+",
-  "invulnerableSource": "weavefield-crest",
+  "wargearExclusiveChoices": ["weavefield-crest", "teleport-crest"],
   "weapons": {
     "ranged": [
       {
@@ -95,6 +94,5 @@
     ]
   },
   "abilities": ["decisive-destruction"],
-  "wargear": ["weavefield-crest"],
   "canBeLeadBy": ["kahl", "einhyr-champion", "uthar"]
 }

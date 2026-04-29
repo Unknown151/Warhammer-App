@@ -382,6 +382,10 @@
         .wargear-checkbox input[type="checkbox"]{accent-color:var(--gold);width:14px;height:14px;cursor:pointer}
         .wargear-checkbox.disabled input[type="checkbox"]{cursor:not-allowed}
         .wargear-checkbox span{font-size:.7rem;color:var(--text)}
+        .wargear-exclusive-list{display:flex;flex-direction:column;gap:.2rem}
+        .wargear-exclusive-option{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:.4rem .6rem;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;-webkit-user-select:none;font-size:.7rem;color:var(--text)}
+        .wargear-exclusive-option:active{background:var(--bg2)}
+        .wargear-exclusive-option.selected{border-color:var(--gold);background:rgba(212,168,75,.1);color:var(--gold-bright)}
         .config-total{background:var(--bg2);border:1px solid var(--gold-dark);border-radius:6px;padding:.75rem 1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
         .config-total-label{font-family:'Orbitron',sans-serif;font-size:.7rem;color:var(--text2);letter-spacing:.05em}
         .config-total-value{font-family:'Share Tech Mono',monospace;font-size:1.1rem;color:var(--gold-bright);font-weight:700}
@@ -885,6 +889,12 @@ function normalizeInstance(inst) {
     if (!Array.isArray(inst.selectedWargear)) {
         inst.selectedWargear = inst.selectedWargear ? [inst.selectedWargear] : [];
     }
+    // Default exclusive wargear to first choice if none selected
+    const unit = units[inst.unitId];
+    if (unit?.wargearExclusiveChoices?.length) {
+        const hasChoice = unit.wargearExclusiveChoices.some(id => inst.selectedWargear.includes(id));
+        if (!hasChoice) inst.selectedWargear = [...inst.selectedWargear, unit.wargearExclusiveChoices[0]];
+    }
     return inst;
 }
 
@@ -1202,7 +1212,7 @@ function createUnitInstance(unitId) {
         weapons: weapons,
         leaderId: null,
         enhancementId: null,
-        selectedWargear: []
+        selectedWargear: unit.wargearExclusiveChoices?.length ? [unit.wargearExclusiveChoices[0]] : []
     };
 }
 
@@ -1421,6 +1431,18 @@ function renderSoloUnitCard(entry) {
         extraWargear.push('multiwave-comms-array');
     }
 
+    // Apply exclusive wargear choice (e.g. Weavefield Crest vs Teleport Crest)
+    const exclusiveChoices = unit.wargearExclusiveChoices || [];
+    if (exclusiveChoices.length) {
+        const activeChoice = exclusiveChoices.find(id => selectedWargear.includes(id)) || exclusiveChoices[0];
+        extraWargear.push(activeChoice);
+        if (activeChoice === 'weavefield-crest') {
+            displayUnit = { ...displayUnit, invulnerableSave: '5+', invulnerableSource: 'weavefield-crest' };
+        } else if (activeChoice === 'teleport-crest') {
+            displayUnit = { ...displayUnit, coreAbilities: [...(displayUnit.coreAbilities || []), 'deep-strike'] };
+        }
+    }
+
     return `
         <div class="unit-card collapsed" data-unit="${entry.id}" data-card-id="${entry.id}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
@@ -1437,9 +1459,9 @@ function renderSoloUnitCard(entry) {
                 <div class="card-section">
                     ${renderUnitHeader(unit, modelCount)}
                     ${renderUnitStats(displayUnit)}
-                    ${renderDefensiveRow(unit, false, null, soloInlineEnh)}
+                    ${renderDefensiveRow(displayUnit, false, null, soloInlineEnh)}
                     ${renderWeapons(filteredWeapons, wargearInheritedAbilities, wargearAppliesTo, furyActive, closestActive, closestBonuses, firebaseActive, optimalAppActive)}
-                    ${renderSoloAbilities(unit, extraWargear)}
+                    ${renderSoloAbilities(displayUnit, extraWargear)}
                 </div>
                 <div class="keywords">${(unit.keywords || []).map(k => escHtml(k)).join(', ')}</div>
             </div>
@@ -1556,6 +1578,19 @@ function renderLedUnitCard(ledUnit) {
         }
     }
 
+    // Apply exclusive wargear choice for the bodyguard (e.g. Weavefield Crest vs Teleport Crest)
+    let displayBodyguard = bodyguard;
+    const bodyguardSelectedWargear = instance?.selectedWargear || [];
+    const bodyguardExclusiveChoices = bodyguard.wargearExclusiveChoices || [];
+    if (bodyguardExclusiveChoices.length) {
+        const activeChoice = bodyguardExclusiveChoices.find(id => bodyguardSelectedWargear.includes(id)) || bodyguardExclusiveChoices[0];
+        if (activeChoice === 'weavefield-crest') {
+            displayBodyguard = { ...bodyguard, invulnerableSave: '5+', invulnerableSource: 'weavefield-crest', wargear: [...(bodyguard.wargear || []), 'weavefield-crest'] };
+        } else if (activeChoice === 'teleport-crest') {
+            displayBodyguard = { ...bodyguard, coreAbilities: [...(bodyguard.coreAbilities || []), 'deep-strike'], wargear: [...(bodyguard.wargear || []), 'teleport-crest'] };
+        }
+    }
+
     return `
         <div class="unit-card attached collapsed" data-leader="${ledUnit.leader}" data-card-id="${ledUnit.id}">
             <div class="card-collapse-header" onclick="toggleCardCollapse(this)">
@@ -1590,11 +1625,11 @@ function renderLedUnitCard(ledUnit) {
                 </div>
                 <div class="card-section">
                     <div class="sec-label"><span>Bodyguard</span><button class="bodyguard-wipe-toggle" onclick="toggleBodyguardWipe('${ledUnit.leader}', event)">☠ Wiped</button></div>
-                    ${renderUnitHeader(bodyguard, bodyguardModelCount)}
-                    ${renderUnitStats(bodyguard)}
-                    ${renderBodyguardInvuln(bodyguard, leader)}
+                    ${renderUnitHeader(displayBodyguard, bodyguardModelCount)}
+                    ${renderUnitStats(displayBodyguard)}
+                    ${renderBodyguardInvuln(displayBodyguard, leader)}
                     ${renderWeapons(bodyguardWeapons, bodyguardInheritedAbilities, leaderAppliesTo, furyActive, closestActive, closestBonuses, firebaseActive, optimalAppActiveBodyguard)}
-                    ${renderBodyguardAbilities(bodyguard, leader)}
+                    ${renderBodyguardAbilities(displayBodyguard, leader)}
                 </div>
                 <div class="keywords">${ledUnit.combinedKeywords.map(k => escHtml(k)).join(', ')}</div>
             </div>
@@ -2057,6 +2092,11 @@ function renderArmyInstance(instance) {
         bodyContent += renderInstanceEnhancementSelector(instance, instance.unitId);
     }
 
+    // Exclusive wargear selector (pick one, e.g. Weavefield Crest vs Teleport Crest)
+    if (unit.wargearExclusiveChoices?.length) {
+        bodyContent += renderInstanceWargearExclusiveChoiceSelector(instance, unit.wargearExclusiveChoices);
+    }
+
     // Wargear choice selector (for units with optional wargear)
     if (unit.wargearChoices?.length) {
         bodyContent += renderInstanceWargearChoiceSelector(instance, unit.wargearChoices);
@@ -2268,6 +2308,23 @@ function renderInstanceWargearChoiceSelector(instance, wargearChoices) {
     return html;
 }
 
+// Render exclusive wargear choice selector (radio-style, pick one)
+function renderInstanceWargearExclusiveChoiceSelector(instance, wargearExclusiveChoices) {
+    const selected = instance.selectedWargear || [];
+    const currentChoice = wargearExclusiveChoices.find(id => selected.includes(id)) || wargearExclusiveChoices[0];
+    let html = `<div class="config-label">Wargear</div><div class="wargear-exclusive-list">`;
+    wargearExclusiveChoices.forEach(id => {
+        const ab = abilities[id];
+        const isSelected = id === currentChoice;
+        html += `<div class="wargear-exclusive-option ${isSelected ? 'selected' : ''}"
+            onclick="selectInstanceExclusiveWargear('${instance.instanceId}', '${id}')">
+            ${ab?.name || id}
+        </div>`;
+    });
+    html += '</div>';
+    return html;
+}
+
 // Render weapon selector for an instance
 function renderInstanceWeaponSelector(instance) {
     const unit = units[instance.unitId];
@@ -2445,6 +2502,17 @@ function setInstanceEnhancement(instanceId, enhancementId) {
     const instance = armyList.find(i => i.instanceId === instanceId);
     if (instance) {
         instance.enhancementId = enhancementId || null;
+        saveArmyList();
+        renderConfigurationTab();
+        renderUnits();
+    }
+}
+
+// Select exclusive wargear choice for an instance (pick one, replaces previous)
+function selectInstanceExclusiveWargear(instanceId, wargearId) {
+    const instance = armyList.find(i => i.instanceId === instanceId);
+    if (instance) {
+        instance.selectedWargear = [wargearId];
         saveArmyList();
         renderConfigurationTab();
         renderUnits();
