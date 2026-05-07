@@ -6,6 +6,8 @@
   "isLeader": false,
   "points": 100,
   "models": 5,
+  "baseModels": 5,
+  "maxModels": 10,
   "stats": {
     "m": "6\"",
     "t": 6,
