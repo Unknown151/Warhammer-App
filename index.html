@@ -1074,12 +1074,12 @@ function exportArmyText() {
     lines.push('');
 
     // Helper: render one unit block
-    function unitBlock(instance, pts) {
+    function unitBlock(instance, pts, annotation = '') {
         const unit = units[instance.unitId];
         if (!unit) return '';
         const modelCount = instance.modelCount || unit.models || 1;
         const block = [];
-        block.push(`${modelCount}x ${unit.name} (${pts} pts)`);
+        block.push(`${modelCount}x ${unit.name} (${pts} pts)${annotation}`);
 
         // Weapons
         const allWeapons = [...(unit.weapons?.ranged || []), ...(unit.weapons?.melee || [])];
@@ -1113,8 +1113,11 @@ function exportArmyText() {
                 (instance.enhancementId && enhancements[instance.enhancementId] ? enhancements[instance.enhancementId].points : 0);
             const leaderInst = { ...instance, unitId: instance.leaderId, modelCount: 1, leaderId: null, weapons: {} };
             const bodyguardPts = calculateInstancePoints({ ...instance, leaderId: null, enhancementId: null });
+            const bodyguardUnit = units[instance.unitId];
+            const bodyguardCount = instance.modelCount || bodyguardUnit?.models || 1;
+            const attachedNote = ` - Attached to the ${bodyguardCount}x ${bodyguardUnit?.name} below`;
 
-            lines.push(unitBlock(leaderInst, leaderPts));
+            lines.push(unitBlock(leaderInst, leaderPts, attachedNote));
             lines.push(unitBlock({ ...instance, enhancementId: null }, bodyguardPts));
         } else {
             lines.push(unitBlock(instance, calculateInstancePoints(instance)));
