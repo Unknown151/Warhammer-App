@@ -19,6 +19,7 @@
     "ranged": [
       {
         "name": "Autoch-pattern bolt pistol",
+        "count": 4,
         "range": "12\"",
         "a": "1",
         "bs": "4+",
@@ -30,6 +31,7 @@
       },
       {
         "name": "Breacher ordnance",
+        "count": 2,
         "range": "24\"",
         "a": "D6+1",
         "bs": "5+",
@@ -42,6 +44,7 @@
       },
       {
         "name": "Tremor shells",
+        "count": 2,
         "range": "36\"",
         "a": "D6+4",
         "bs": "5+",
@@ -56,6 +59,7 @@
     "melee": [
       {
         "name": "Plasma picks",
+        "count": 2,
         "a": "4",
         "ws": "3+",
         "s": "5",
